@@ -1,6 +1,4 @@
-/* eslint-disable no-console */
-/* eslint-disable @typescript-eslint/no-empty-interface */
-import * as React from 'react';
+import React from 'react';
 import {
   getArchives,
   getHistorcialGamesFromArchiveList,

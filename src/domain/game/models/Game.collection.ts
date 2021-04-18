@@ -1,4 +1,5 @@
-/* eslint-disable operator-assignment, no-param-reassign, no-underscore-dangle, @typescript-eslint/no-inferrable-types */
+/* eslint-disable operator-assignment */
+/* eslint-disable @typescript-eslint/no-inferrable-types */
 import { orderBy } from 'lodash';
 import {
   ICountByDateChartData,

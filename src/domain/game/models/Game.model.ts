@@ -1,4 +1,5 @@
-/* eslint-disable lines-between-class-members, @typescript-eslint/ban-ts-comment, no-underscore-dangle */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable camelcase */
 // @ts-ignore
 import * as parser from '@mliebelt/pgn-parser';
 import {
