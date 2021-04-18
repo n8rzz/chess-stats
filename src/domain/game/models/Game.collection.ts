@@ -118,7 +118,7 @@ export class GameCollection {
     return this._items.reduce((sum: number, game: GameModel) => {
       const gamePlayer = game.getSideForUsername(this.username);
 
-      if (sum !== -1 || sum > gamePlayer.rating) {
+      if (sum !== -1 && gamePlayer.rating <= sum) {
         return sum;
       }
 
