@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   getArchives,
   getHistorcialGamesFromArchiveList,
@@ -6,6 +6,7 @@ import {
 import { GameCollection } from '../../../domain/game/models/Game.collection';
 import { getPlayerStats } from '../../../domain/player/player.service';
 import { IPlayerStats } from '../../../domain/player/player.types';
+import { TimePeriodSection } from '../../shared/time-period-section/TimePeriodSection';
 // import { GameStats } from './GameStats';
 // import { PlayerStats } from './PlayerStats';
 import { UserForm } from './UserForm';
@@ -42,11 +43,29 @@ export const App: React.FC<IProps> = () => {
     }
   };
 
-  const todayGames = gameCollection.createCollectionForPeriod(1);
-  const thisWeekGames = gameCollection.createCollectionForPeriod(7);
-  const thisMonthGames = gameCollection.createCollectionForPeriod(30);
+  const todayCollection = useMemo(
+    // eslint-disable-next-line arrow-body-style
+    () => gameCollection.createCollectionForPeriod(1),
+    [gameCollection],
+  );
 
-  console.log(todayGames, thisWeekGames, thisMonthGames);
+  const sevenDaysCollection = useMemo(
+    // eslint-disable-next-line arrow-body-style
+    () => gameCollection.createCollectionForPeriod(7),
+    [gameCollection],
+  );
+
+  const thirtyDaysCollection = useMemo(
+    // eslint-disable-next-line arrow-body-style
+    () => gameCollection.createCollectionForPeriod(30),
+    [gameCollection],
+  );
+
+  const oneYearCollection = useMemo(
+    // eslint-disable-next-line arrow-body-style
+    () => gameCollection.createCollectionForPeriod(30),
+    [gameCollection],
+  );
 
   return (
     <div>
@@ -54,48 +73,34 @@ export const App: React.FC<IProps> = () => {
 
       <UserForm onSubmit={onSubmit} />
 
-      <div>
-        <h3>{'Today'}</h3>
-        <ul>
-          <li>{'games black / white'}</li>
-          <li>{'openings black / white'}</li>
-          <li>{'link chart rating'}</li>
-        </ul>
-      </div>
+      {isLoading && <div>{'LOADING ...'}</div>}
+      {!isLoading && (
+        <>
+          <TimePeriodSection
+            heading={'Today'}
+            gameCollection={todayCollection}
+          />
+          <TimePeriodSection
+            heading={'7 Days'}
+            gameCollection={sevenDaysCollection}
+          />
+          <TimePeriodSection
+            heading={'30 Days'}
+            gameCollection={thirtyDaysCollection}
+          />
+          <TimePeriodSection
+            heading={'1 Year'}
+            gameCollection={oneYearCollection}
+          />
 
-      <div>
-        <h3>{'This week'}</h3>
-        <ul>
-          <li>{'games black / white'}</li>
-          <li>{'openings black / white'}</li>
-          <li>{'link chart rating'}</li>
-        </ul>
-      </div>
-
-      <div>
-        <h3>{'This Month'}</h3>
-        <ul>
-          <li>{'games black / white'}</li>
-          <li>{'openings black / white'}</li>
-          <li>{'link chart rating'}</li>
-        </ul>
-      </div>
-
-      <div>
-        <h3>{'This Year'}</h3>
-        <ul>
-          <li>{'games black / white'}</li>
-          <li>{'openings black / white'}</li>
-          <li>{'link chart rating'}</li>
-        </ul>
-      </div>
-
-      {/* <PlayerStats
-        isLoading={isLoading}
-        player={playerStatsModel}
-        username={gameCollection.username}
-      />
-      <GameStats isLoading={isLoading} gameCollection={gameCollection} /> */}
+          {/* <PlayerStats
+            isLoading={isLoading}
+            player={playerStatsModel}
+            username={gameCollection.username}
+          />
+          <GameStats isLoading={isLoading} gameCollection={gameCollection} /> */}
+        </>
+      )}
     </div>
   );
 };
