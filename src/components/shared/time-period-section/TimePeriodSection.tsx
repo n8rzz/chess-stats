@@ -14,7 +14,7 @@ export const TimePeriodSection: React.FC<IProps> = (props) => {
       <ul>
         <li>{'games black / white'}</li>
         <li>{'openings black / white'}</li>
-        <li>{'link chart rating'}</li>
+        <li>{'line chart rating'}</li>
       </ul>
     </div>
   );
