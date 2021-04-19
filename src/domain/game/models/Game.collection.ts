@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 /* eslint-disable operator-assignment */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import { orderBy } from 'lodash';
@@ -11,8 +12,10 @@ import {
   IGamesGroupedByDate,
 } from '../games.types';
 import { GameModel } from './Game.model';
+import { setDateFromUtcSeconds } from '../../../util/date.utils';
 
 export class GameCollection {
+  public period: number = 0;
   public username: string = '';
 
   private _items: GameModel[] = [];
@@ -30,7 +33,8 @@ export class GameCollection {
     };
   }
 
-  constructor(username: string, json: IGame[]) {
+  constructor(username: string, json: IGame[], period: number) {
+    this.period = period;
     this.username = username;
 
     if (json.length === 0) {
@@ -54,11 +58,19 @@ export class GameCollection {
     this._orderItemsByEndDate();
   }
 
+  public groupByPeriod(): IGamesGroupedByDate {
+    return this.period === 1 ? this.groupByHour() : this.groupByDay();
+  }
+
   public calculateOhlcForPeriod(): IDayOhlc[] {
-    const gamesByDate = this.groupByDay();
+    const gamesByDate = this.groupByPeriod();
     const unsortedOhlcData = Object.keys(gamesByDate).reduce(
       (sum: IDayOhlc[], dateKey: string) => {
-        const period = new GameCollection(this.username, gamesByDate[dateKey]);
+        const period = new GameCollection(
+          this.username,
+          gamesByDate[dateKey],
+          1,
+        );
 
         return [
           ...sum,
@@ -87,7 +99,7 @@ export class GameCollection {
       (item: GameModel) => item.endDate.getTime() > periodStartDate.getTime(),
     );
 
-    return new GameCollection(this.username, itemsWithinPeriod);
+    return new GameCollection(this.username, itemsWithinPeriod, period);
   }
 
   public findOpeningRating(): number {
@@ -185,12 +197,33 @@ export class GameCollection {
     }, {});
   }
 
+  public groupByHour(): IGamesGroupedByDate {
+    return this._items.reduce(
+      (sum: { [key: string]: GameModel[] }, game: GameModel) => {
+        const gameEndDate = setDateFromUtcSeconds(game.end_time);
+        const hours = gameEndDate.getHours();
+        const endDateWithHours = new Date(gameEndDate.toLocaleDateString());
+        endDateWithHours.setHours(hours);
+        const dateKey = endDateWithHours.toISOString();
+
+        if (typeof sum[dateKey] !== 'undefined') {
+          sum[dateKey].push(game);
+
+          return sum;
+        }
+
+        sum[dateKey] = [game];
+
+        return sum;
+      },
+      {},
+    );
+  }
+
   public groupByDay(): IGamesGroupedByDate {
     return this._items.reduce(
       (sum: { [key: string]: GameModel[] }, game: GameModel) => {
-        const gameEndDate = new Date(0);
-        gameEndDate.setUTCSeconds(game.end_time);
-
+        const gameEndDate = setDateFromUtcSeconds(game.end_time);
         const dateKey = gameEndDate.toLocaleDateString();
 
         if (typeof sum[dateKey] !== 'undefined') {
@@ -212,6 +245,7 @@ export class GameCollection {
   }
 
   private _countGamesByDate(): IGameCountByDate[] {
+    // const gamesByDate = this.groupByPeriod();
     const gamesByDate = this.groupByDay();
     const unsortedGameCountsByDate = Object.keys(gamesByDate).reduce(
       (sum: IGameCountByDate[], gameDate: string) => {

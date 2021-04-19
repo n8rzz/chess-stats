@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 import { validGameResponse } from '../__mocks__/game.mocks';
 import { IGame } from '../games.types';
 import { GameModel } from './Game.model';

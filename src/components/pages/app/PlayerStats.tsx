@@ -24,7 +24,7 @@ export const PlayerStats: React.FC<IProps> = (props) => {
   }
 
   return (
-    <div className={styles.container}>
+    <div className={clsx(styles.container, styles.vr3)}>
       <b>{props.username}</b>
 
       <ul>

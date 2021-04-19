@@ -39,7 +39,7 @@ export const getHistorcialGamesFromArchiveList = async (
     (response: IGame[][]) => {
       const flatGamesResponse = flatten(response);
 
-      return new GameCollection(username, flatGamesResponse);
+      return new GameCollection(username, flatGamesResponse, 0);
     },
   );
 };

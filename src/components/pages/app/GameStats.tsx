@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 import * as React from 'react';
 import dynamic from 'next/dynamic';
 import clsx from 'clsx';

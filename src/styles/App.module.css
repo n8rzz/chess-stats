@@ -20,3 +20,19 @@
 .mixHlistSpaceEvenly {
   justify-content: space-evenly;
 }
+
+.vr1 {
+  margin-bottom: 10px;
+}
+
+.vr2 {
+  margin-bottom: 20px;
+}
+
+.vr3 {
+  margin-bottom: 30px;
+}
+
+.vr4 {
+  margin-bottom: 40px;
+}

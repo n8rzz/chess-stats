@@ -19,7 +19,7 @@ export const App: React.FC<IProps> = () => {
     undefined as any,
   );
   const [gameCollection, setGameCollection] = React.useState<GameCollection>(
-    new GameCollection('', []),
+    new GameCollection('', [], 0),
   );
 
   const onSubmit = async (provider: string, username: string) => {
@@ -63,7 +63,7 @@ export const App: React.FC<IProps> = () => {
 
   const oneYearCollection = useMemo(
     // eslint-disable-next-line arrow-body-style
-    () => gameCollection.createCollectionForPeriod(30),
+    () => gameCollection.createCollectionForPeriod(365),
     [gameCollection],
   );
 
