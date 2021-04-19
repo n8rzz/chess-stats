@@ -23,6 +23,14 @@ export class GameModel implements IGame {
   public readonly url: string = '';
   public readonly white: IGamePlayer = {} as IGamePlayer;
 
+  get endDate(): Date {
+    const end = new Date(0);
+
+    end.setUTCSeconds(this.end_time);
+
+    return end;
+  }
+
   constructor(json: IGame) {
     this.black = json.black;
     this.end_time = json.end_time;

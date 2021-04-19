@@ -9,6 +9,9 @@ interface IProps {
   username: string;
 }
 
+/**
+ * @deprecated
+ */
 export const PlayerStats: React.FC<IProps> = (props) => {
   if (props.isLoading) {
     return <div className={styles.container}>{'LOADING...'}</div>;

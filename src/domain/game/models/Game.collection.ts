@@ -1,6 +1,7 @@
 /* eslint-disable operator-assignment */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import { orderBy } from 'lodash';
+import subDays from 'date-fns/subDays';
 import {
   ICountByDateChartData,
   IDayOhlc,
@@ -77,6 +78,16 @@ export class GameCollection {
     return unsortedOhlcData.sort(
       (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
     );
+  }
+
+  public createCollectionForPeriod(period: number): GameCollection {
+    const today = new Date();
+    const periodStartDate = subDays(today, period);
+    const itemsWithinPeriod = this._items.filter(
+      (item: GameModel) => item.endDate.getTime() > periodStartDate.getTime(),
+    );
+
+    return new GameCollection(this.username, itemsWithinPeriod);
   }
 
   public findOpeningRating(): number {

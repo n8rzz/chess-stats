@@ -12,6 +12,9 @@ interface IProps {
   isLoading: boolean;
 }
 
+/**
+ * @deprecated
+ */
 export const GameStats: React.FC<IProps> = (props) => {
   const ohlcData = React.useMemo(
     () => props.gameCollection.calculateOhlcForPeriod(),
