@@ -1,19 +1,45 @@
 /* eslint-disable arrow-body-style */
 import * as React from 'react';
 import dynamic from 'next/dynamic';
-import {
-  ICountByDateChartData,
-  IDayOhlc,
-} from '../../../domain/game/games.types';
+import { IDayOhlc, GameResult, IDataLabel } from '../../../domain/game/games.types';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 interface IProps {
-  countByDate: ICountByDateChartData;
+  countByDate: IDataLabel<Record<GameResult, number>[]>;
   ohlcData: IDayOhlc[];
 }
 
 export const CandlestickChart: React.FC<IProps> = (props) => {
+  const seriesData = React.useMemo(() => {
+    return [
+      {
+        name: 'agreed',
+        data: props.countByDate.data.map((c) => c.agreed),
+      },
+      {
+        name: 'checkmated',
+        data: props.countByDate.data.map((c) => c.checkmated),
+      },
+      {
+        name: 'resigned',
+        data: props.countByDate.data.map((c) => c.resigned),
+      },
+      {
+        name: 'stalemate',
+        data: props.countByDate.data.map((c) => c.stalemate),
+      },
+      {
+        name: 'timeout',
+        data: props.countByDate.data.map((c) => c.timeout),
+      },
+      {
+        name: 'win',
+        data: props.countByDate.data.map((c) => c.win),
+      },
+    ];
+  }, [props.countByDate]);
+
   return (
     <div>
       <div id={'chart-candlestick'}>
@@ -48,25 +74,23 @@ export const CandlestickChart: React.FC<IProps> = (props) => {
         <Chart
           options={{
             chart: {
-              id: 'game-count-by-day-chart',
+              id: 'win-loss-count-by-period-chart',
+              type: 'bar',
+              stacked: true,
             },
             xaxis: {
               categories: props.countByDate.labels,
             },
             plotOptions: {
               bar: {
+                horizontal: false,
                 dataLabels: {
                   position: 'top',
                 },
               },
             },
           }}
-          series={[
-            {
-              name: 'Games Played',
-              data: props.countByDate.data,
-            },
-          ]}
+          series={seriesData}
           type={'bar'}
           height={150}
         />

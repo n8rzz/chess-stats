@@ -5,7 +5,8 @@ import { orderBy } from 'lodash';
 import format from 'date-fns/format';
 import subDays from 'date-fns/subDays';
 import {
-  ICountByDateChartData,
+  GameResult,
+  IDataLabel,
   IDayOhlc,
   IGame,
   IGameCountByDate,
@@ -23,23 +24,6 @@ export class GameCollection {
 
   get length(): number {
     return this._items.length;
-  }
-
-  get countByDate(): ICountByDateChartData {
-    const gameCountsByDate = this._countGamesByDate();
-    const labels = gameCountsByDate.map((l) => {
-      if (this.period === 1) {
-        return format(new Date(l.date), 'h:mm:ss aa');
-      }
-
-      return l.date;
-    });
-
-    return {
-      labels,
-
-      data: gameCountsByDate.map((c) => c.count),
-    };
   }
 
   constructor(username: string, json: IGame[], period: number) {
@@ -73,32 +57,39 @@ export class GameCollection {
 
   public calculateOhlcForPeriod(): IDayOhlc[] {
     const gamesByDate = this.groupByPeriod();
-    const unsortedOhlcData = Object.keys(gamesByDate).reduce(
-      (sum: IDayOhlc[], dateKey: string) => {
-        const period = new GameCollection(
-          this.username,
-          gamesByDate[dateKey],
-          1,
-        );
+    const unsortedOhlcData = Object.keys(gamesByDate).reduce((sum: IDayOhlc[], dateKey: string) => {
+      const period = new GameCollection(this.username, gamesByDate[dateKey], 1);
 
-        return [
-          ...sum,
-          {
-            date: dateKey,
-            open: period.findOpeningRating(),
-            high: period.findMaxRating(),
-            low: period.findMinRating(),
-            close: period.findClosingRating(),
-            volumn: period.length,
-          },
-        ];
-      },
-      [],
-    );
+      return [
+        ...sum,
+        {
+          date: dateKey,
+          open: period.findOpeningRating(),
+          high: period.findMaxRating(),
+          low: period.findMinRating(),
+          close: period.findClosingRating(),
+          volumn: period.length,
+        },
+      ];
+    }, []);
 
-    return unsortedOhlcData.sort(
-      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
-    );
+    return unsortedOhlcData.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  }
+
+  public countByDate(): IDataLabel<Record<GameResult, number>[]> {
+    const gameCountsByDate = this._countGameResultsByPeriod();
+    const labels = gameCountsByDate.map((l) => {
+      if (this.period === 1) {
+        return format(new Date(l.date), 'h:mm:ss aa');
+      }
+
+      return l.date;
+    });
+
+    return {
+      labels,
+      data: gameCountsByDate.map((d) => d.count),
+    };
   }
 
   public createCollectionForPeriod(period: number): GameCollection {
@@ -185,96 +176,99 @@ export class GameCollection {
 
   public findLatestGameDate(): Date {
     const latestGame = this._items[this.length - 1];
-    const lateestDate = new Date(0);
+    const latestDate = new Date(0);
 
-    lateestDate.setUTCSeconds(latestGame.end_time);
+    latestDate.setUTCSeconds(latestGame.end_time);
 
-    return lateestDate;
+    return latestDate;
   }
 
   public gatherGameResults(): { [key: string]: number } {
-    return this._items.reduce(
-      (sum: { [key: string]: number }, item: GameModel) => {
-        const result = item.getResult(this.username);
+    return this._items.reduce((sum: { [key: string]: number }, item: GameModel) => {
+      const result = item.getResult(this.username);
 
-        if (typeof sum[result] === 'undefined') {
-          sum[result] = 0;
-        }
+      if (typeof sum[result] === 'undefined') {
+        sum[result] = 0;
+      }
 
-        sum[result] = sum[result] + 1;
+      sum[result] = sum[result] + 1;
 
-        return sum;
-      },
-      {},
-    );
+      return sum;
+    }, {});
   }
 
   public groupByHour(): IGamesGroupedByDate {
-    return this._items.reduce(
-      (sum: { [key: string]: GameModel[] }, game: GameModel) => {
-        const gameEndDate = setDateFromUtcSeconds(game.end_time);
-        const hours = gameEndDate.getHours();
-        const endDateWithHours = new Date(gameEndDate.toLocaleDateString());
-        endDateWithHours.setHours(hours);
-        const dateKey = endDateWithHours.toISOString();
+    return this._items.reduce((sum: { [key: string]: GameModel[] }, game: GameModel) => {
+      const gameEndDate = setDateFromUtcSeconds(game.end_time);
+      const hours = gameEndDate.getHours();
+      const endDateWithHours = new Date(gameEndDate.toLocaleDateString());
 
-        if (typeof sum[dateKey] !== 'undefined') {
-          sum[dateKey].push(game);
+      endDateWithHours.setHours(hours);
 
-          return sum;
-        }
+      const dateKey = endDateWithHours.toISOString();
 
-        sum[dateKey] = [game];
+      if (typeof sum[dateKey] !== 'undefined') {
+        sum[dateKey].push(game);
 
         return sum;
-      },
-      {},
-    );
+      }
+
+      sum[dateKey] = [game];
+
+      return sum;
+    }, {});
   }
 
   public groupByDay(): IGamesGroupedByDate {
-    return this._items.reduce(
-      (sum: { [key: string]: GameModel[] }, game: GameModel) => {
-        const gameEndDate = setDateFromUtcSeconds(game.end_time);
-        const dateKey = gameEndDate.toLocaleDateString();
+    return this._items.reduce((sum: { [key: string]: GameModel[] }, game: GameModel) => {
+      const gameEndDate = setDateFromUtcSeconds(game.end_time);
+      const dateKey = gameEndDate.toLocaleDateString();
 
-        if (typeof sum[dateKey] !== 'undefined') {
-          sum[dateKey].push(game);
-
-          return sum;
-        }
-
-        sum[dateKey] = [game];
+      if (typeof sum[dateKey] !== 'undefined') {
+        sum[dateKey].push(game);
 
         return sum;
-      },
-      {},
-    );
+      }
+
+      sum[dateKey] = [game];
+
+      return sum;
+    }, {});
   }
 
   public toJson(): IGame[] {
     return this._items.map((model: GameModel): IGame => model.toJson());
   }
 
-  private _countGamesByDate(): IGameCountByDate[] {
+  private _countGameListByResult = (gameList: GameModel[], result: GameResult): number => {
+    const gamesListForResult = gameList.filter((game: GameModel) => game.getResult(this.username) === result);
+
+    return gamesListForResult.length;
+  };
+
+  private _countGameResultsByPeriod(): IGameCountByDate[] {
     const gamesByDate = this.groupByPeriod();
-    const unsortedGameCountsByDate = Object.keys(gamesByDate).reduce(
-      (sum: IGameCountByDate[], gameDate: string) => {
-        const entry: IGameCountByDate = {
-          date: gameDate,
-          count: gamesByDate[gameDate].length,
-        };
+    const sortedKeys = Object.keys(gamesByDate).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
-        sum.push(entry);
+    return sortedKeys.reduce((sum: IGameCountByDate[], gameDate: string) => {
+      const gamesForDate = gamesByDate[gameDate];
 
-        return sum;
-      },
-      [],
-    );
+      const entry: IGameCountByDate = {
+        date: gameDate,
+        count: {
+          [GameResult.Agreed]: this._countGameListByResult(gamesForDate, GameResult.Agreed),
+          [GameResult.Checkmated]: this._countGameListByResult(gamesForDate, GameResult.Checkmated),
+          [GameResult.Resigned]: this._countGameListByResult(gamesForDate, GameResult.Resigned),
+          [GameResult.Stalemate]: this._countGameListByResult(gamesForDate, GameResult.Stalemate),
+          [GameResult.Timeout]: this._countGameListByResult(gamesForDate, GameResult.Timeout),
+          [GameResult.Win]: this._countGameListByResult(gamesForDate, GameResult.Win),
+        },
+      };
 
-    return unsortedGameCountsByDate.sort(
-      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
-    );
+      sum.push(entry);
+
+      return sum;
+    }, []);
   }
 
   private _orderItemsByEndDate(): void {

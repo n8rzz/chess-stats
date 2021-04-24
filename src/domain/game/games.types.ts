@@ -55,7 +55,7 @@ export interface IGamesGroupedByDate {
 
 export interface IGameCountByDate {
   date: string;
-  count: number;
+  count: Record<GameResult, number>;
 }
 
 export interface IDayOhlc {
@@ -72,7 +72,12 @@ export interface IGamesBySide {
   white: number;
 }
 
-export interface ICountByDateChartData {
-  data: number[];
+export interface IDataLabel<T = number[]> {
+  data: T;
   labels: string[];
+}
+
+export interface IWinLossCount {
+  losses: number[];
+  wins: number[];
 }
