@@ -1,11 +1,12 @@
+/* eslint-disable object-curly-newline */
 /* eslint-disable arrow-body-style */
 import React from 'react';
 import clsx from 'clsx';
 import dynamic from 'next/dynamic';
+import { Grid, Header, List, Statistic } from 'semantic-ui-react';
 import styles from '../../../styles/App.module.css';
 import { GameCollection } from '../../../domain/game/models/Game.collection';
 import { CandlestickChart } from '../../ui/candlestick/CandlestickChart';
-import { Grid, Header, List, Statistic } from 'semantic-ui-react';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 

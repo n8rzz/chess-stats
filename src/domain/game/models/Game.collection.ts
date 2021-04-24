@@ -2,6 +2,7 @@
 /* eslint-disable operator-assignment */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import { orderBy } from 'lodash';
+import format from 'date-fns/format';
 import subDays from 'date-fns/subDays';
 import {
   ICountByDateChartData,
@@ -26,10 +27,18 @@ export class GameCollection {
 
   get countByDate(): ICountByDateChartData {
     const gameCountsByDate = this._countGamesByDate();
+    const labels = gameCountsByDate.map((l) => {
+      if (this.period === 1) {
+        return format(new Date(l.date), 'h:mm:ss aa');
+      }
+
+      return l.date;
+    });
 
     return {
+      labels,
+
       data: gameCountsByDate.map((c) => c.count),
-      labels: gameCountsByDate.map((l) => l.date),
     };
   }
 
@@ -183,7 +192,7 @@ export class GameCollection {
     return lateestDate;
   }
 
-  public gatherGameResults(): any {
+  public gatherGameResults(): { [key: string]: number } {
     return this._items.reduce((sum: any, item: GameModel) => {
       const result = item.getResult(this.username);
 
@@ -245,8 +254,7 @@ export class GameCollection {
   }
 
   private _countGamesByDate(): IGameCountByDate[] {
-    // const gamesByDate = this.groupByPeriod();
-    const gamesByDate = this.groupByDay();
+    const gamesByDate = this.groupByPeriod();
     const unsortedGameCountsByDate = Object.keys(gamesByDate).reduce(
       (sum: IGameCountByDate[], gameDate: string) => {
         const entry: IGameCountByDate = {
