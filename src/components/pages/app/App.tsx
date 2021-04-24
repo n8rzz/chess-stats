@@ -1,4 +1,6 @@
 import React, { useMemo } from 'react';
+import { Header } from 'semantic-ui-react';
+import styles from '../../../styles/App.module.css';
 import {
   getArchives,
   getHistorcialGamesFromArchiveList,
@@ -8,7 +10,6 @@ import { getPlayerStats } from '../../../domain/player/player.service';
 import { IPlayerStats } from '../../../domain/player/player.types';
 import { TimePeriodSection } from '../../shared/time-period-section/TimePeriodSection';
 import { PlayerStats } from './PlayerStats';
-// import { GameStats } from './GameStats';
 import { UserForm } from './UserForm';
 
 interface IProps {}
@@ -69,12 +70,16 @@ export const App: React.FC<IProps> = () => {
 
   return (
     <div>
-      <h1>{'Chess Stats'}</h1>
+      <Header as={'h1'}>{'Chess Stats'}</Header>
 
-      <UserForm onSubmit={onSubmit} />
+      <div className={styles.vr4}>
+        <UserForm onSubmit={onSubmit} />
+      </div>
 
-      {isLoading && <div>{'LOADING ...'}</div>}
-      {!isLoading && gameCollection.length === 0 && <div>{'No Games'}</div>}
+      {isLoading && <div className={styles.container}>{'LOADING ...'}</div>}
+      {!isLoading && gameCollection.length === 0 && (
+        <div className={styles.container}>{'No Games'}</div>
+      )}
       {!isLoading && gameCollection.length > 0 && (
         <>
           <PlayerStats

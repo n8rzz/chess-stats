@@ -1,9 +1,11 @@
 import * as React from 'react';
 import dynamic from 'next/dynamic';
 import clsx from 'clsx';
+import { Segment, Grid, Divider, Statistic, Header } from 'semantic-ui-react';
 import styles from '../../../styles/App.module.css';
 import { IPlayerStats } from '../../../domain/player/player.types';
 import { setDateFromUtcSeconds } from '../../../util/date.utils';
+import { GameTypeStats } from './player-stats/game-type-stats/GameTypeStats';
 
 // eslint-disable-next-line arrow-body-style
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
@@ -25,100 +27,10 @@ export const PlayerStats: React.FC<IProps> = (props) => {
 
   return (
     <div className={clsx(styles.container, styles.vr3)}>
-      <b>{props.username}</b>
+      <Header as={'h2'}>{'All-Time Records'}</Header>
 
-      <ul>
-        <li>
-          <h3>{'Rapid'}</h3>
-          <ul className={clsx(styles.hlist, styles.mixHlistSpaceEvenly)}>
-            <li>
-              <Chart
-                series={[
-                  props.player.chess_rapid.record.win,
-                  props.player.chess_rapid.record.loss,
-                  props.player.chess_rapid.record.draw,
-                ]}
-                options={{
-                  title: {
-                    text: 'Record',
-                    align: 'left',
-                  },
-                  labels: ['win', 'loss', 'draw'],
-                }}
-                type={'pie'}
-                height={150}
-              />
-            </li>
-            <li>
-              <ul>
-                <li>
-                  {'last: '}
-                  {props.player.chess_rapid.last.rating}{' '}
-                  <span>
-                    {setDateFromUtcSeconds(
-                      props.player.chess_rapid.last.date,
-                    ).toLocaleString()}
-                  </span>
-                </li>
-                <li>
-                  {'Best: '}
-                  {props.player.chess_rapid.best.rating}{' '}
-                  <span>
-                    {setDateFromUtcSeconds(
-                      props.player.chess_rapid.best.date,
-                    ).toLocaleString()}
-                  </span>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </li>
-        <li>
-          <h3>{'Blitz'}</h3>
-          <ul className={clsx(styles.hlist, styles.mixHlistSpaceEvenly)}>
-            <li>
-              <Chart
-                series={[
-                  props.player.chess_blitz.record.win,
-                  props.player.chess_blitz.record.loss,
-                  props.player.chess_blitz.record.draw,
-                ]}
-                options={{
-                  title: {
-                    text: 'Record',
-                    align: 'left',
-                  },
-                  labels: ['win', 'loss', 'draw'],
-                }}
-                type={'pie'}
-                height={150}
-              />
-            </li>
-            <li>
-              <ul>
-                <li>
-                  {'last: '}
-                  {props.player.chess_blitz.last.rating}{' '}
-                  <span>
-                    {setDateFromUtcSeconds(
-                      props.player.chess_blitz.last.date,
-                    ).toLocaleString()}
-                  </span>
-                </li>
-                <li>
-                  {'Best: '}
-                  {props.player.chess_blitz.best.rating}{' '}
-                  <span>
-                    {setDateFromUtcSeconds(
-                      props.player.chess_blitz.best.date,
-                    ).toLocaleString()}
-                  </span>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </li>
-      </ul>
+      <GameTypeStats label={'Rapid'} stats={props.player.chess_rapid} />
+      <GameTypeStats label={'Rapid'} stats={props.player.chess_rapid} />
     </div>
   );
 };

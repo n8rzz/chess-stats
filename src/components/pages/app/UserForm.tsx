@@ -1,6 +1,7 @@
 /* eslint-disable arrow-body-style */
 /* eslint-disable react/jsx-curly-newline */
 import * as React from 'react';
+import { Button, Select, Input } from 'semantic-ui-react';
 import styles from '../../../styles/App.module.css';
 
 interface IProps {
@@ -22,7 +23,7 @@ export const UserForm: React.FC<IProps> = (props) => {
       <form autoComplete={'off'} onSubmit={onClickSubmit}>
         <ul className={styles.hlist}>
           <li>
-            <input
+            <Input
               type={'text'}
               placeholder={'username'}
               name={'username'}
@@ -31,15 +32,21 @@ export const UserForm: React.FC<IProps> = (props) => {
             />
           </li>
           <li>
-            <select
+            <Select
+              disabled
               name={'provider'}
-              onChange={(event) => setProvider(event.currentTarget.value)}
-            >
-              <option value={'chess.com'}>{'chess.com'}</option>
-            </select>
+              options={[
+                {
+                  key: 1,
+                  text: 'Chess.com',
+                  value: 'chess.com',
+                },
+              ]}
+              defaultValue={'chess.com'}
+            />
           </li>
           <li>
-            <input type={'submit'} value={'Submit'} />
+            <Button type={'submit'}>{'Submit'}</Button>
           </li>
         </ul>
       </form>
