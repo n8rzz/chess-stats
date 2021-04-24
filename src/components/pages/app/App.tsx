@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Header } from 'semantic-ui-react';
+import { Header, Tab } from 'semantic-ui-react';
 import styles from '../../../styles/App.module.css';
 import {
   getArchives,
@@ -70,7 +70,9 @@ export const App: React.FC<IProps> = () => {
 
   return (
     <div>
-      <Header as={'h1'}>{'Chess Stats'}</Header>
+      <div className={styles.container}>
+        <Header as={'h1'}>{'Chess Stats'}</Header>
+      </div>
 
       <div className={styles.vr4}>
         <UserForm onSubmit={onSubmit} />
@@ -80,32 +82,57 @@ export const App: React.FC<IProps> = () => {
       {!isLoading && gameCollection.length === 0 && (
         <div className={styles.container}>{'No Games'}</div>
       )}
-      {!isLoading && gameCollection.length > 0 && (
+      {gameCollection.length > 0 && (
         <>
           <PlayerStats
             isLoading={isLoading}
             player={playerStatsModel}
             username={gameCollection.username}
           />
-          <TimePeriodSection
-            heading={'Today'}
-            gameCollection={todayCollection}
-          />
-          <TimePeriodSection
-            heading={'7 Days'}
-            gameCollection={sevenDaysCollection}
-          />
-          <TimePeriodSection
-            heading={'30 Days'}
-            gameCollection={thirtyDaysCollection}
-          />
-          <TimePeriodSection
-            heading={'1 Year'}
-            gameCollection={oneYearCollection}
-          />
 
-          {/*
-          <GameStats isLoading={isLoading} gameCollection={gameCollection} /> */}
+          <div className={styles.container}>
+            <Tab
+              menu={{ pointing: true, secondary: true }}
+              panes={[
+                {
+                  menuItem: 'Today',
+                  render: () => (
+                    <TimePeriodSection
+                      heading={'Today'}
+                      gameCollection={todayCollection}
+                    />
+                  ),
+                },
+                {
+                  menuItem: '7 Days',
+                  render: () => (
+                    <TimePeriodSection
+                      heading={'7 Days'}
+                      gameCollection={sevenDaysCollection}
+                    />
+                  ),
+                },
+                {
+                  menuItem: '30 Days',
+                  render: () => (
+                    <TimePeriodSection
+                      heading={'30 Days'}
+                      gameCollection={thirtyDaysCollection}
+                    />
+                  ),
+                },
+                {
+                  menuItem: '1 Year',
+                  render: () => (
+                    <TimePeriodSection
+                      heading={'1 Year'}
+                      gameCollection={oneYearCollection}
+                    />
+                  ),
+                },
+              ]}
+            />
+          </div>
         </>
       )}
     </div>

@@ -20,7 +20,7 @@ export const CandlestickChart: React.FC<IProps> = (props) => {
         <Chart
           options={{
             title: {
-              text: 'Daily Rating',
+              text: 'Rating over time',
               align: 'left',
             },
             xaxis: {

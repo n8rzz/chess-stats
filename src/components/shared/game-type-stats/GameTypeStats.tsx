@@ -1,22 +1,38 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
 import {
-  Segment, Grid, Header, Statistic,
+  Segment,
+  Grid,
+  Header,
+  Statistic,
+  Dimmer,
+  Loader,
 } from 'semantic-ui-react';
-import { setDateFromUtcSeconds } from '../../../../../util/date.utils';
-import { IChessStats } from '../../../../../domain/player/player.types';
+import { setDateFromUtcSeconds } from '../../../util/date.utils';
+import { IChessStats } from '../../../domain/player/player.types';
 
 // eslint-disable-next-line arrow-body-style
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 interface IProps {
   label: string;
+  isLoading: boolean;
   stats: IChessStats;
 }
 
 export const GameTypeStats: React.FC<IProps> = (props) => {
+  if (props.isLoading) {
+    return (
+      <Segment>
+        <Dimmer active={true} inverted={true}>
+          <Loader content={'Loading'} />
+        </Dimmer>
+      </Segment>
+    );
+  }
+
   return (
-    <Segment>
+    <Segment raised={true} size={'big'}>
       <Grid columns={3} textAlign={'center'} divided={true}>
         <Grid.Row verticalAlign={'middle'}>
           <Grid.Column>

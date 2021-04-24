@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import styles from '../../../styles/App.module.css';
 import { GameCollection } from '../../../domain/game/models/Game.collection';
 import { CandlestickChart } from '../../ui/candlestick/CandlestickChart';
+import { Grid, Header, List, Statistic } from 'semantic-ui-react';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
@@ -30,73 +31,71 @@ export const TimePeriodSection: React.FC<IProps> = (props) => {
 
   return (
     <div className={clsx(styles.container, styles.vr3)}>
-      <h3>{props.heading}</h3>
-
       <section className={clsx(styles.container, styles.vr2)}>
-        <div className={styles.vr3}>
-          <ul className={styles.hlist}>
-            <li>
-              {'Start:'}
-              <span>
-                {`${props.gameCollection
+        <List size={'large'} horizontal={true} relaxed={true}>
+          <List.Item>
+            <Header as={'h3'}>{props.heading}</Header>
+          </List.Item>
+          <List.Item>
+            <Statistic size={'mini'}>
+              <Statistic.Value>
+                {props.gameCollection
                   .findEarliestGameDate()
-                  .toLocaleDateString()}`}
-              </span>
-            </li>
-            <li>
-              {'end:'}
-              <span>
-                {`${props.gameCollection
-                  .findLatestGameDate()
-                  .toLocaleDateString()}`}
-              </span>
-            </li>
-            <li>
-              {'Total Games: '}
-              {props.gameCollection.length}
-            </li>
-          </ul>
-        </div>
-      </section>
+                  .toLocaleDateString()}
+              </Statistic.Value>
+              <Statistic.Label>{'Start'}</Statistic.Label>
+            </Statistic>
+          </List.Item>
+          <List.Item>
+            <Statistic size={'mini'}>
+              <Statistic.Value>
+                {props.gameCollection.findLatestGameDate().toLocaleDateString()}
+              </Statistic.Value>
+              <Statistic.Label>{'End'}</Statistic.Label>
+            </Statistic>
+          </List.Item>
+          <List.Item>
+            <Statistic size={'mini'}>
+              <Statistic.Value>{props.gameCollection.length}</Statistic.Value>
+              <Statistic.Label>{'Games'}</Statistic.Label>
+            </Statistic>
+          </List.Item>
+        </List>
 
-      <ul>
-        <li>
-          <section className={clsx(styles.container, styles.vr2)}>
-            <ul className={clsx(styles.hlist, styles.mixHlistSpaceEvenly)}>
-              <li>
-                <Chart
-                  series={[gamesBySide.black, gamesBySide.white]}
-                  options={{
-                    title: {
-                      text: 'Games by Side',
-                      align: 'left',
-                    },
-                    labels: ['black', 'white'],
-                  }}
-                  type={'pie'}
-                  height={150}
-                />
-              </li>
-              <li>
-                <Chart
-                  series={Object.keys(gameResults).map(
-                    (key: string) => gameResults[key],
-                  )}
-                  options={{
-                    title: {
-                      text: 'Games by Side',
-                      align: 'left',
-                    },
-                    labels: Object.keys(gameResults),
-                  }}
-                  type={'pie'}
-                  height={150}
-                />
-              </li>
-            </ul>
-          </section>
-        </li>
-      </ul>
+        <Grid columns={2}>
+          <Grid.Column>
+            <Chart
+              series={[gamesBySide.black, gamesBySide.white]}
+              options={{
+                title: {
+                  text: 'Side',
+                  align: 'left',
+                },
+                labels: ['black', 'white'],
+              }}
+              type={'pie'}
+              height={150}
+            />
+          </Grid.Column>
+
+          <Grid.Column>
+            <Chart
+              series={Object.keys(gameResults).map(
+                (key: string) => gameResults[key],
+              )}
+              options={{
+                title: {
+                  text: 'Result',
+                  align: 'left',
+                },
+                labels: Object.keys(gameResults),
+              }}
+              type={'pie'}
+              height={150}
+            />
+          </Grid.Column>
+        </Grid>
+      </section>
 
       <section className={clsx(styles.container, styles.vr2)}>
         <CandlestickChart
