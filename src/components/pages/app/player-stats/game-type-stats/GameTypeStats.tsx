@@ -1,6 +1,8 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
-import { Segment, Grid, Header, Statistic } from 'semantic-ui-react';
+import {
+  Segment, Grid, Header, Statistic,
+} from 'semantic-ui-react';
 import { setDateFromUtcSeconds } from '../../../../../util/date.utils';
 import { IChessStats } from '../../../../../domain/player/player.types';
 

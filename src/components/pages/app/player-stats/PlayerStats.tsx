@@ -1,14 +1,9 @@
 import * as React from 'react';
-import dynamic from 'next/dynamic';
 import clsx from 'clsx';
-import { Segment, Grid, Divider, Statistic, Header } from 'semantic-ui-react';
+import { Header } from 'semantic-ui-react';
 import styles from '../../../styles/App.module.css';
-import { IPlayerStats } from '../../../domain/player/player.types';
-import { setDateFromUtcSeconds } from '../../../util/date.utils';
-import { GameTypeStats } from './player-stats/game-type-stats/GameTypeStats';
-
-// eslint-disable-next-line arrow-body-style
-const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
+import { IPlayerStats } from '../../../../domain/player/player.types';
+import { GameTypeStats } from './game-type-stats/GameTypeStats';
 
 interface IProps {
   isLoading: boolean;

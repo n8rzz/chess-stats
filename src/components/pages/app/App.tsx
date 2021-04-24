@@ -9,7 +9,7 @@ import { GameCollection } from '../../../domain/game/models/Game.collection';
 import { getPlayerStats } from '../../../domain/player/player.service';
 import { IPlayerStats } from '../../../domain/player/player.types';
 import { TimePeriodSection } from '../../shared/time-period-section/TimePeriodSection';
-import { PlayerStats } from './PlayerStats';
+import { PlayerStats } from './player-stats/PlayerStats';
 import { UserForm } from './UserForm';
 
 interface IProps {}

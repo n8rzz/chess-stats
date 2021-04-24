@@ -1,5 +1,4 @@
 /* eslint-disable arrow-body-style */
-/* eslint-disable react/jsx-curly-newline */
 import * as React from 'react';
 import { Button, Select, Input } from 'semantic-ui-react';
 import styles from '../../../styles/App.module.css';

@@ -1,6 +1,7 @@
-/* eslint-disable object-curly-newline */
 /* eslint-disable max-len */
-import { ChessRules, GameResult, IGame, TimeClass } from '../games.types';
+import {
+  ChessRules, GameResult, IGame, TimeClass,
+} from '../games.types';
 
 export const gameListForDate: IGame[] = [
   {
