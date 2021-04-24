@@ -43,14 +43,26 @@ export const GameTypeStats: React.FC<IProps> = (props) => {
                 props.stats.record.draw,
               ]}
               options={{
+                dataLabels: {
+                  enabled: false,
+                },
                 title: {
                   align: 'left',
                   text: `${props.label}`,
                 },
                 labels: ['win', 'loss', 'draw'],
+                legend: {
+                  formatter: (seriesName, opts) =>
+                    [
+                      seriesName,
+                      ' - ',
+                      opts.w.globals.series[opts.seriesIndex],
+                    ].join(''),
+                  position: 'right',
+                },
               }}
               type={'pie'}
-              height={150}
+              height={125}
             />
           </Grid.Column>
 

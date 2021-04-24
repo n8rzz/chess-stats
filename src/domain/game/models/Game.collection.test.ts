@@ -7,7 +7,7 @@ describe('GameCollection', () => {
     test('should return the lowest rating from #_items', () => {
       const collection = new GameCollection('n8rzz', gameListForDate, 1);
 
-      expect(collection.calculateMaxRating()).toEqual(647);
+      expect(collection.findMaxRating()).toEqual(647);
     });
   });
 
@@ -15,7 +15,7 @@ describe('GameCollection', () => {
     test('should return the highest rating from #_items', () => {
       const collection = new GameCollection('n8rzz', gameListForDate, 1);
 
-      expect(collection.calculateMaxRating()).toEqual(668);
+      expect(collection.findMaxRating()).toEqual(668);
     });
   });
 });

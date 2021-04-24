@@ -3,7 +3,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import dynamic from 'next/dynamic';
-import { Grid, Header, List, Statistic } from 'semantic-ui-react';
+import { Container, Grid, List, Statistic } from 'semantic-ui-react';
 import styles from '../../../styles/App.module.css';
 import { GameCollection } from '../../../domain/game/models/Game.collection';
 import { CandlestickChart } from '../../ui/candlestick/CandlestickChart';
@@ -31,68 +31,128 @@ export const TimePeriodSection: React.FC<IProps> = (props) => {
   );
 
   return (
-    <div className={clsx(styles.container, styles.vr3)}>
+    <div className={styles.container}>
       <section className={clsx(styles.container, styles.vr2)}>
-        <List size={'large'} horizontal={true} relaxed={true}>
-          <List.Item>
-            <Header as={'h3'}>{props.heading}</Header>
-          </List.Item>
-          <List.Item>
-            <Statistic size={'mini'}>
-              <Statistic.Value>
-                {props.gameCollection
-                  .findEarliestGameDate()
-                  .toLocaleDateString()}
-              </Statistic.Value>
-              <Statistic.Label>{'Start'}</Statistic.Label>
-            </Statistic>
-          </List.Item>
-          <List.Item>
-            <Statistic size={'mini'}>
-              <Statistic.Value>
-                {props.gameCollection.findLatestGameDate().toLocaleDateString()}
-              </Statistic.Value>
-              <Statistic.Label>{'End'}</Statistic.Label>
-            </Statistic>
-          </List.Item>
-          <List.Item>
-            <Statistic size={'mini'}>
-              <Statistic.Value>{props.gameCollection.length}</Statistic.Value>
-              <Statistic.Label>{'Games'}</Statistic.Label>
-            </Statistic>
-          </List.Item>
-        </List>
-
-        <Grid columns={2}>
+        <Grid columns={3}>
           <Grid.Column>
             <Chart
               series={[gamesBySide.black, gamesBySide.white]}
               options={{
+                dataLabels: {
+                  enabled: false,
+                },
                 title: {
                   text: 'Side',
                   align: 'left',
                 },
                 labels: ['black', 'white'],
+                legend: {
+                  position: 'left',
+                  formatter: (seriesName, opts) =>
+                    [
+                      seriesName,
+                      ' - ',
+                      opts.w.globals.series[opts.seriesIndex],
+                    ].join(''),
+                  horizontalAlign: 'left',
+                },
               }}
               type={'pie'}
-              height={150}
+              height={175}
             />
           </Grid.Column>
 
           <Grid.Column>
+            <Container className={clsx(styles.container)} textAlign={'center'}>
+              <List
+                className={styles.mixContainerCenter}
+                size={'mini'}
+                horizontal={true}
+                relaxed={true}
+              >
+                <List.Item>
+                  <Statistic size={'mini'}>
+                    <Statistic.Value>
+                      {props.gameCollection
+                        .findEarliestGameDate()
+                        .toLocaleDateString()}
+                    </Statistic.Value>
+                    <Statistic.Label>{'Start'}</Statistic.Label>
+                  </Statistic>
+                </List.Item>
+                <List.Item>
+                  <Statistic size={'mini'}>
+                    <Statistic.Value>
+                      {props.gameCollection
+                        .findLatestGameDate()
+                        .toLocaleDateString()}
+                    </Statistic.Value>
+                    <Statistic.Label>{'End'}</Statistic.Label>
+                  </Statistic>
+                </List.Item>
+              </List>
+            </Container>
+
+            <Container className={clsx(styles.container)} textAlign={'center'}>
+              <List size={'mini'} horizontal={true} relaxed={true}>
+                <List.Item>
+                  <Statistic size={'mini'}>
+                    <Statistic.Value>
+                      {props.gameCollection.findMinRating()}
+                    </Statistic.Value>
+                    <Statistic.Label>{'Period Low'}</Statistic.Label>
+                  </Statistic>
+                </List.Item>
+                <List.Item>
+                  <Statistic size={'tiny'}>
+                    <Statistic.Value>
+                      {props.gameCollection.length}
+                    </Statistic.Value>
+                    <Statistic.Label>{'Games'}</Statistic.Label>
+                  </Statistic>
+                </List.Item>
+                <List.Item>
+                  <Statistic size={'mini'}>
+                    <Statistic.Value>
+                      {props.gameCollection.findMaxRating()}
+                    </Statistic.Value>
+                    <Statistic.Label>{'Period High'}</Statistic.Label>
+                  </Statistic>
+                </List.Item>
+              </List>
+            </Container>
+          </Grid.Column>
+
+          <Grid.Column>
+            {/*
+              radar chart may be a better choice
+              https://apexcharts.com/react-chart-demos/radar-charts/basic/
+            */}
             <Chart
               series={Object.keys(gameResults).map(
                 (key: string) => gameResults[key],
               )}
               options={{
+                dataLabels: {
+                  enabled: false,
+                },
                 title: {
                   text: 'Result',
-                  align: 'left',
+                  align: 'right',
                 },
                 labels: Object.keys(gameResults),
+                legend: {
+                  formatter: (seriesName, opts) =>
+                    [
+                      seriesName,
+                      ' - ',
+                      opts.w.globals.series[opts.seriesIndex],
+                    ].join(''),
+                  horizontalAlign: 'right',
+                },
               }}
               type={'pie'}
-              height={150}
+              height={175}
             />
           </Grid.Column>
         </Grid>

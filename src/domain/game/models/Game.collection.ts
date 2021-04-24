@@ -86,8 +86,8 @@ export class GameCollection {
           {
             date: dateKey,
             open: period.findOpeningRating(),
-            high: period.calculateMaxRating(),
-            low: period.calculateMinRating(),
+            high: period.findMaxRating(),
+            low: period.findMinRating(),
             close: period.findClosingRating(),
             volumn: period.length,
           },
@@ -146,7 +146,7 @@ export class GameCollection {
     );
   }
 
-  public calculateMaxRating(): number {
+  public findMaxRating(): number {
     return this._items.reduce((sum: number, game: GameModel) => {
       const gamePlayer = game.getSideForUsername(this.username);
 
@@ -160,7 +160,7 @@ export class GameCollection {
     }, -1);
   }
 
-  public calculateMinRating(): number {
+  public findMinRating(): number {
     return this._items.reduce((sum: number, game: GameModel) => {
       const gamePlayer = game.getSideForUsername(this.username);
 
@@ -193,17 +193,20 @@ export class GameCollection {
   }
 
   public gatherGameResults(): { [key: string]: number } {
-    return this._items.reduce((sum: any, item: GameModel) => {
-      const result = item.getResult(this.username);
+    return this._items.reduce(
+      (sum: { [key: string]: number }, item: GameModel) => {
+        const result = item.getResult(this.username);
 
-      if (typeof sum[result] === 'undefined') {
-        sum[result] = 0;
-      }
+        if (typeof sum[result] === 'undefined') {
+          sum[result] = 0;
+        }
 
-      sum[result] = sum[result] + 1;
+        sum[result] = sum[result] + 1;
 
-      return sum;
-    }, {});
+        return sum;
+      },
+      {},
+    );
   }
 
   public groupByHour(): IGamesGroupedByDate {
