@@ -6,7 +6,7 @@ import { IDayOhlc, GameResult, IDataLabel } from '../../../domain/game/games.typ
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 interface IProps {
-  countByDate: IDataLabel<Record<GameResult, number>[]>;
+  countByDate: IDataLabel<Record<GameResult, number[]>>;
   ohlcData: IDayOhlc[];
 }
 
@@ -15,27 +15,27 @@ export const CandlestickChart: React.FC<IProps> = (props) => {
     return [
       {
         name: 'agreed',
-        data: props.countByDate.data.map((c) => c.agreed),
+        data: props.countByDate.data.agreed,
       },
       {
         name: 'checkmated',
-        data: props.countByDate.data.map((c) => c.checkmated),
+        data: props.countByDate.data.checkmated,
       },
       {
         name: 'resigned',
-        data: props.countByDate.data.map((c) => c.resigned),
+        data: props.countByDate.data.resigned,
       },
       {
         name: 'stalemate',
-        data: props.countByDate.data.map((c) => c.stalemate),
+        data: props.countByDate.data.stalemate,
       },
       {
         name: 'timeout',
-        data: props.countByDate.data.map((c) => c.timeout),
+        data: props.countByDate.data.timeout,
       },
       {
         name: 'win',
-        data: props.countByDate.data.map((c) => c.win),
+        data: props.countByDate.data.win,
       },
     ];
   }, [props.countByDate]);
@@ -88,6 +88,9 @@ export const CandlestickChart: React.FC<IProps> = (props) => {
                   position: 'top',
                 },
               },
+            },
+            dataLabels: {
+              enabled: false,
             },
           }}
           series={seriesData}

@@ -1,13 +1,6 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
-import {
-  Segment,
-  Grid,
-  Header,
-  Statistic,
-  Dimmer,
-  Loader,
-} from 'semantic-ui-react';
+import { Segment, Grid, Header, Statistic, Dimmer, Loader } from 'semantic-ui-react';
 import { setDateFromUtcSeconds } from '../../../util/date.utils';
 import { IChessStats } from '../../../domain/player/player.types';
 
@@ -37,11 +30,7 @@ export const GameTypeStats: React.FC<IProps> = (props) => {
         <Grid.Row verticalAlign={'middle'}>
           <Grid.Column>
             <Chart
-              series={[
-                props.stats.record.win,
-                props.stats.record.loss,
-                props.stats.record.draw,
-              ]}
+              series={[props.stats.record.win, props.stats.record.loss, props.stats.record.draw]}
               options={{
                 dataLabels: {
                   enabled: false,
@@ -52,12 +41,7 @@ export const GameTypeStats: React.FC<IProps> = (props) => {
                 },
                 labels: ['win', 'loss', 'draw'],
                 legend: {
-                  formatter: (seriesName, opts) =>
-                    [
-                      seriesName,
-                      ' - ',
-                      opts.w.globals.series[opts.seriesIndex],
-                    ].join(''),
+                  formatter: (seriesName, opts) => `${seriesName} - ${opts.w.globals.series[opts.seriesIndex]}`,
                   position: 'right',
                 },
               }}
@@ -70,9 +54,7 @@ export const GameTypeStats: React.FC<IProps> = (props) => {
             <Header as={'h3'}>{'Last'}</Header>
             <Statistic>
               <Statistic.Value>{props.stats.last.rating}</Statistic.Value>
-              <Statistic.Label>
-                {setDateFromUtcSeconds(props.stats.last.date).toLocaleString()}
-              </Statistic.Label>
+              <Statistic.Label>{setDateFromUtcSeconds(props.stats.last.date).toLocaleString()}</Statistic.Label>
             </Statistic>
           </Grid.Column>
 
@@ -80,9 +62,7 @@ export const GameTypeStats: React.FC<IProps> = (props) => {
             <Header as={'h3'}>{'Best'}</Header>
             <Statistic>
               <Statistic.Value>{props.stats.best.rating}</Statistic.Value>
-              <Statistic.Label>
-                {setDateFromUtcSeconds(props.stats.best.date).toLocaleString()}
-              </Statistic.Label>
+              <Statistic.Label>{setDateFromUtcSeconds(props.stats.best.date).toLocaleString()}</Statistic.Label>
             </Statistic>
           </Grid.Column>
         </Grid.Row>

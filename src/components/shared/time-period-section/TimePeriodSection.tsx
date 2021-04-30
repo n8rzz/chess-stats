@@ -18,7 +18,6 @@ interface IProps {
 export const TimePeriodSection: React.FC<IProps> = (props) => {
   const ohlcData = React.useMemo(() => props.gameCollection.calculateOhlcForPeriod(), [props.gameCollection]);
   const gamesBySide = React.useMemo(() => props.gameCollection.countGamesBySide(), [props.gameCollection]);
-
   const gameResults = React.useMemo(() => props.gameCollection.gatherGameResults(), [props.gameCollection]);
 
   return (
@@ -74,8 +73,7 @@ export const TimePeriodSection: React.FC<IProps> = (props) => {
                 labels: ['black', 'white'],
                 legend: {
                   position: 'left',
-                  formatter: (seriesName, opts) =>
-                    [seriesName, ' - ', opts.w.globals.series[opts.seriesIndex]].join(''),
+                  formatter: (seriesName, opts) => `${seriesName} - ${opts.w.globals.series[opts.seriesIndex]}`,
                   horizontalAlign: 'left',
                 },
               }}
@@ -101,8 +99,7 @@ export const TimePeriodSection: React.FC<IProps> = (props) => {
                 },
                 labels: Object.keys(gameResults),
                 legend: {
-                  formatter: (seriesName, opts) =>
-                    [seriesName, ' - ', opts.w.globals.series[opts.seriesIndex]].join(''),
+                  formatter: (seriesName, opts) => `${seriesName} - ${opts.w.globals.series[opts.seriesIndex]}`,
                   horizontalAlign: 'right',
                 },
               }}

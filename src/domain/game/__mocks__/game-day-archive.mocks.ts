@@ -1,7 +1,80 @@
 /* eslint-disable max-len */
-import {
-  ChessRules, GameResult, IGame, TimeClass,
-} from '../games.types';
+import { ChessRules, GameResult, IGame, TimeClass } from '../games.types';
+
+export const gameListForSinglePeriod: IGame[] = [
+  {
+    black: {
+      rating: 619,
+      result: GameResult.Win,
+      '@id': 'https://api.chess.com/pub/player/fistyourface',
+      username: 'fistyourface',
+    },
+    end_time: 1618638144,
+    fen: 'r5k1/ppp3pp/2np4/b3P3/4P1n1/P1NP2P1/1PP4q/R1B2RK1 w - -',
+    pgn:
+      '[Event "Live Chess"]\n[Site "Chess.com"]\n[Date "2021.04.17"]\n[Round "-"]\n[White "n8rzz"]\n[Black "fistyourface"]\n[Result "0-1"]\n[CurrentPosition "r5k1/ppp3pp/2np4/b3P3/4P1n1/P1NP2P1/1PP4q/R1B2RK1 w - -"]\n[Timezone "UTC"]\n[ECO "C46"]\n[ECOUrl "https://www.chess.com/openings/Three-Knights-Opening-3...Bb4"]\n[UTCDate "2021.04.17"]\n[UTCTime "05:35:30"]\n[WhiteElo "647"]\n[BlackElo "619"]\n[TimeControl "600"]\n[Termination "fistyourface won by checkmate"]\n[StartTime "05:35:30"]\n[EndDate "2021.04.17"]\n[EndTime "05:42:24"]\n[Link "https://www.chess.com/game/live/12376613803"]\n\n1. e4 {[%clk 0:10:00]} 1... e5 {[%clk 0:09:58.3]} 2. Nf3 {[%clk 0:09:57.2]} 2... Nc6 {[%clk 0:09:43.8]} 3. Nc3 {[%clk 0:09:54.8]} 3... Bb4 {[%clk 0:09:21.4]} 4. a3 {[%clk 0:09:45.2]} 4... Ba5 {[%clk 0:09:11]} 5. Bc4 {[%clk 0:09:40.3]} 5... Nf6 {[%clk 0:09:01.6]} 6. O-O {[%clk 0:09:36.8]} 6... O-O {[%clk 0:08:35.7]} 7. d3 {[%clk 0:09:13.6]} 7... d6 {[%clk 0:08:15.7]} 8. Bxf7+ {[%clk 0:08:38.3]} 8... Rxf7 {[%clk 0:07:55.9]} 9. Ng5 {[%clk 0:08:29.4]} 9... Bg4 {[%clk 0:07:30.2]} 10. f3 {[%clk 0:08:08.9]} 10... Bh5 {[%clk 0:07:19.5]} 11. Nxf7 {[%clk 0:08:02.5]} 11... Kxf7 {[%clk 0:07:08.7]} 12. f4 {[%clk 0:07:49.8]} 12... Bxd1 {[%clk 0:07:01.1]} 13. Rxd1 {[%clk 0:07:47.3]} 13... Ng4 {[%clk 0:06:39.3]} 14. Rf1 {[%clk 0:07:42.1]} 14... Qh4 {[%clk 0:06:15.7]} 15. fxe5+ {[%clk 0:07:36.3]} 15... Kg8 {[%clk 0:05:52.4]} 16. g3 {[%clk 0:07:30.1]} 16... Qxh2# {[%clk 0:05:44.8]} 0-1\n',
+    pgn_json: {},
+    rated: true,
+    rules: ChessRules.Chess,
+    time_class: TimeClass.Rapid,
+    time_control: '600',
+    url: 'https://www.chess.com/game/live/12376613803',
+    white: {
+      rating: 647,
+      result: GameResult.Checkmated,
+      '@id': 'https://api.chess.com/pub/player/n8rzz',
+      username: 'n8rzz',
+    },
+  },
+  {
+    black: {
+      rating: 654,
+      result: GameResult.Win,
+      '@id': 'https://api.chess.com/pub/player/n8rzz',
+      username: 'n8rzz',
+    },
+    end_time: 1618639025,
+    fen: '1r6/pp5p/2n2kp1/4p3/6QR/6P1/PPr4P/5K2 w - -',
+    pgn:
+      '[Event "Live Chess"]\n[Site "Chess.com"]\n[Date "2021.04.17"]\n[Round "-"]\n[White "fistyourface"]\n[Black "n8rzz"]\n[Result "0-1"]\n[CurrentPosition "1r6/pp5p/2n2kp1/4p3/6QR/6P1/PPr4P/5K2 w - -"]\n[Timezone "UTC"]\n[ECO "B02"]\n[ECOUrl "https://www.chess.com/openings/Alekhines-Defense-Samisch-Attack"]\n[UTCDate "2021.04.17"]\n[UTCTime "05:42:50"]\n[WhiteElo "612"]\n[BlackElo "654"]\n[TimeControl "600"]\n[Termination "n8rzz won on time"]\n[StartTime "05:42:50"]\n[EndDate "2021.04.17"]\n[EndTime "05:57:05"]\n[Link "https://www.chess.com/game/live/12377183441"]\n\n1. e4 {[%clk 0:10:00]} 1... Nf6 {[%clk 0:10:00]} 2. e5 {[%clk 0:09:50.1]} 2... Nd5 {[%clk 0:09:53.2]} 3. Nc3 {[%clk 0:09:22.2]} 3... e6 {[%clk 0:09:50.4]} 4. Nf3 {[%clk 0:08:58.1]} 4... Nc6 {[%clk 0:09:49]} 5. d4 {[%clk 0:08:35.6]} 5... d6 {[%clk 0:09:36]} 6. Bg5 {[%clk 0:08:16.4]} 6... Be7 {[%clk 0:09:30.1]} 7. Bb5 {[%clk 0:08:08.7]} 7... O-O {[%clk 0:09:26.1]} 8. O-O {[%clk 0:08:04.6]} 8... f6 {[%clk 0:09:21]} 9. Bh4 {[%clk 0:07:53.1]} 9... dxe5 {[%clk 0:08:57.5]} 10. dxe5 {[%clk 0:06:58.5]} 10... fxe5 {[%clk 0:08:52]} 11. Re1 {[%clk 0:06:49]} 11... Bxh4 {[%clk 0:08:40]} 12. Nxh4 {[%clk 0:06:19.2]} 12... Qxh4 {[%clk 0:08:29.3]} 13. g3 {[%clk 0:06:05.6]} 13... Qf6 {[%clk 0:08:14.6]} 14. Qg4 {[%clk 0:05:13]} 14... Qxf2+ {[%clk 0:07:55.2]} 15. Kh1 {[%clk 0:04:51.8]} 15... Qd4 {[%clk 0:07:14.1]} 16. Re4 {[%clk 0:04:00.3]} 16... Qf2 {[%clk 0:06:57.7]} 17. Rf1 {[%clk 0:03:33]} 17... Qxf1+ {[%clk 0:06:55.5]} 18. Bxf1 {[%clk 0:03:22.2]} 18... Rxf1+ {[%clk 0:06:53.8]} 19. Kg2 {[%clk 0:03:08.2]} 19... Rc1 {[%clk 0:06:33.4]} 20. Nxd5 {[%clk 0:02:12.2]} 20... Rxc2+ {[%clk 0:06:26]} 21. Kf1 {[%clk 0:01:43.5]} 21... g6 {[%clk 0:06:19.2]} 22. Nxc7 {[%clk 0:01:26.8]} 22... Rb8 {[%clk 0:06:17]} 23. Nxe6 {[%clk 0:01:16.8]} 23... Bxe6 {[%clk 0:06:15.2]} 24. Qxe6+ {[%clk 0:01:11.1]} 24... Kg7 {[%clk 0:06:11.7]} 25. Qd7+ {[%clk 0:00:38.6]} 25... Kh6 {[%clk 0:06:08.2]} 26. Rh4+ {[%clk 0:00:27.7]} 26... Kg5 {[%clk 0:06:01.5]} 27. Qg4+ {[%clk 0:00:08.6]} 27... Kf6 {[%clk 0:05:59.2]} 0-1\n',
+    pgn_json: {},
+    rated: true,
+    rules: ChessRules.Chess,
+    time_class: TimeClass.Rapid,
+    time_control: '600',
+    url: 'https://www.chess.com/game/live/12377183441',
+    white: {
+      rating: 612,
+      result: GameResult.Timeout,
+      '@id': 'https://api.chess.com/pub/player/fistyourface',
+      username: 'fistyourface',
+    },
+  },
+  {
+    black: {
+      rating: 605,
+      result: GameResult.Checkmated,
+      '@id': 'https://api.chess.com/pub/player/fistyourface',
+      username: 'fistyourface',
+    },
+    end_time: 1618639614,
+    fen: 'r2q2k1/ppp2pQp/6pn/7N/8/1B6/P1P2K1P/8 b - -',
+    pgn:
+      '[Event "Live Chess"]\n[Site "Chess.com"]\n[Date "2021.04.17"]\n[Round "-"]\n[White "n8rzz"]\n[Black "fistyourface"]\n[Result "1-0"]\n[CurrentPosition "r2q2k1/ppp2pQp/6pn/7N/8/1B6/P1P2K1P/8 b - -"]\n[Timezone "UTC"]\n[ECO "C55"]\n[ECOUrl "https://www.chess.com/openings/Italian-Game-Two-Knights-Defense-4.O-O"]\n[UTCDate "2021.04.17"]\n[UTCTime "05:57:20"]\n[WhiteElo "661"]\n[BlackElo "605"]\n[TimeControl "600"]\n[Termination "n8rzz won by checkmate"]\n[StartTime "05:57:20"]\n[EndDate "2021.04.17"]\n[EndTime "06:06:54"]\n[Link "https://www.chess.com/game/live/12377833777"]\n\n1. e4 {[%clk 0:10:00]} 1... e5 {[%clk 0:10:00]} 2. Nf3 {[%clk 0:09:56.9]} 2... Nc6 {[%clk 0:09:56.8]} 3. Bc4 {[%clk 0:09:53.4]} 3... Nf6 {[%clk 0:09:48.3]} 4. O-O {[%clk 0:09:52]} 4... d5 {[%clk 0:09:40.5]} 5. Bb3 {[%clk 0:09:45]} 5... dxe4 {[%clk 0:09:30.6]} 6. Ne1 {[%clk 0:09:35]} 6... Bg4 {[%clk 0:09:17.4]} 7. f3 {[%clk 0:09:32.1]} 7... exf3 {[%clk 0:09:14.6]} 8. gxf3 {[%clk 0:09:28.8]} 8... Bc5+ {[%clk 0:09:04.3]} 9. d4 {[%clk 0:09:21.9]} 9... Bxd4+ {[%clk 0:08:57.5]} 10. Kg2 {[%clk 0:09:16.2]} 10... Bh5 {[%clk 0:08:43.2]} 11. Nd3 {[%clk 0:09:10.1]} 11... O-O {[%clk 0:08:31.4]} 12. Qe1 {[%clk 0:09:00.6]} 12... Re8 {[%clk 0:08:19.9]} 13. Qg3 {[%clk 0:08:55.4]} 13... g6 {[%clk 0:07:44.4]} 14. Bh6 {[%clk 0:08:41.2]} 14... Bxb2 {[%clk 0:07:13.9]} 15. Nd2 {[%clk 0:08:33.2]} 15... Bxa1 {[%clk 0:06:55.5]} 16. Rxa1 {[%clk 0:08:29.5]} 16... e4 {[%clk 0:06:38.5]} 17. fxe4 {[%clk 0:08:22.3]} 17... Nxe4 {[%clk 0:06:24.1]} 18. Nxe4 {[%clk 0:07:42.1]} 18... Rxe4 {[%clk 0:06:19.8]} 19. Re1 {[%clk 0:07:40.7]} 19... Rxe1 {[%clk 0:05:37.1]} 20. Qxe1 {[%clk 0:07:38.5]} 20... Ne7 {[%clk 0:05:06]} 21. Qc3 {[%clk 0:07:24.4]} 21... Nf5 {[%clk 0:04:50.8]} 22. Nf4 {[%clk 0:07:18]} 22... Ne3+ {[%clk 0:04:35.6]} 23. Kf2 {[%clk 0:07:12.1]} 23... Nf5 {[%clk 0:03:37]} 24. Nxh5 {[%clk 0:07:08.1]} 24... Nxh6 {[%clk 0:03:32.7]} 25. Qg7# {[%clk 0:07:06.5]} 1-0\n',
+    pgn_json: {},
+    rated: true,
+    rules: ChessRules.Chess,
+    time_class: TimeClass.Rapid,
+    time_control: '600',
+    url: 'https://www.chess.com/game/live/12377833777',
+    white: {
+      rating: 661,
+      result: GameResult.Win,
+      '@id': 'https://api.chess.com/pub/player/n8rzz',
+      username: 'n8rzz',
+    },
+  },
+];
 
 export const gameListForDate: IGame[] = [
   {

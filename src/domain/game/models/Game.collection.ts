@@ -76,7 +76,7 @@ export class GameCollection {
     return unsortedOhlcData.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   }
 
-  public countByDate(): IDataLabel<Record<GameResult, number>[]> {
+  public countByDate(): { labels: string[]; data: Record<GameResult, number[]> } {
     const gameCountsByDate = this._countGameResultsByPeriod();
     const labels = gameCountsByDate.map((l) => {
       if (this.period === 1) {
@@ -86,9 +86,18 @@ export class GameCollection {
       return l.date;
     });
 
+    const resultCounts = gameCountsByDate.map((d) => d.count);
+
     return {
       labels,
-      data: gameCountsByDate.map((d) => d.count),
+      data: {
+        [GameResult.Agreed]: resultCounts.map((c) => c.agreed),
+        [GameResult.Checkmated]: resultCounts.map((c) => c.checkmated),
+        [GameResult.Resigned]: resultCounts.map((c) => c.resigned),
+        [GameResult.Stalemate]: resultCounts.map((c) => c.stalemate),
+        [GameResult.Timeout]: resultCounts.map((c) => c.timeout),
+        [GameResult.Win]: resultCounts.map((c) => c.win),
+      },
     };
   }
 
