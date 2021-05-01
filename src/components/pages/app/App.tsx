@@ -1,27 +1,21 @@
 import React, { useMemo } from 'react';
 import { Header, Tab } from 'semantic-ui-react';
 import styles from '../../../styles/App.module.css';
-import {
-  getArchives,
-  getHistorcialGamesFromArchiveList,
-} from '../../../domain/game/games.service';
+import { getArchives, getHistorcialGamesFromArchiveList } from '../../../domain/game/games.service';
 import { GameCollection } from '../../../domain/game/models/Game.collection';
 import { getPlayerStats } from '../../../domain/player/player.service';
 import { IPlayerStats } from '../../../domain/player/player.types';
 import { TimePeriodSection } from '../../shared/time-period-section/TimePeriodSection';
 import { PlayerStats } from './player-stats/PlayerStats';
 import { UserForm } from './UserForm';
+import clsx from 'clsx';
 
 interface IProps {}
 
 export const App: React.FC<IProps> = () => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const [playerStatsModel, setPlayerStatsModel] = React.useState<IPlayerStats>(
-    undefined as any,
-  );
-  const [gameCollection, setGameCollection] = React.useState<GameCollection>(
-    new GameCollection('', [], 0),
-  );
+  const [playerStatsModel, setPlayerStatsModel] = React.useState<IPlayerStats>(undefined as any);
+  const [gameCollection, setGameCollection] = React.useState<GameCollection>(new GameCollection('', [], 0));
 
   const onSubmit = async (provider: string, username: string) => {
     setIsLoading(true);
@@ -29,10 +23,7 @@ export const App: React.FC<IProps> = () => {
     try {
       const playerStats = await getPlayerStats(username);
       const gameArchiveList = await getArchives(username);
-      const collection = await getHistorcialGamesFromArchiveList(
-        gameArchiveList,
-        username,
-      );
+      const collection = await getHistorcialGamesFromArchiveList(gameArchiveList, username);
 
       setPlayerStatsModel(playerStats);
       setGameCollection(collection);
@@ -79,60 +70,34 @@ export const App: React.FC<IProps> = () => {
       </div>
 
       {isLoading && <div className={styles.container}>{'LOADING ...'}</div>}
-      {!isLoading && gameCollection.length === 0 && (
-        <div className={styles.container}>{'No Games'}</div>
-      )}
+      {!isLoading && gameCollection.length === 0 && <div className={styles.container}>{'No Games'}</div>}
       {gameCollection.length > 0 && (
         <>
-          <PlayerStats
-            isLoading={isLoading}
-            player={playerStatsModel}
-            username={gameCollection.username}
-          />
-
-          <div className={styles.container}>
+          <div className={clsx(styles.container, styles.vr3)}>
             <Tab
               menu={{ pointing: true, secondary: true }}
               panes={[
                 {
                   menuItem: 'Today',
-                  render: () => (
-                    <TimePeriodSection
-                      heading={'Today'}
-                      gameCollection={todayCollection}
-                    />
-                  ),
+                  render: () => <TimePeriodSection heading={'Today'} gameCollection={todayCollection} />,
                 },
                 {
                   menuItem: '7 Days',
-                  render: () => (
-                    <TimePeriodSection
-                      heading={'7 Days'}
-                      gameCollection={sevenDaysCollection}
-                    />
-                  ),
+                  render: () => <TimePeriodSection heading={'7 Days'} gameCollection={sevenDaysCollection} />,
                 },
                 {
                   menuItem: '30 Days',
-                  render: () => (
-                    <TimePeriodSection
-                      heading={'30 Days'}
-                      gameCollection={thirtyDaysCollection}
-                    />
-                  ),
+                  render: () => <TimePeriodSection heading={'30 Days'} gameCollection={thirtyDaysCollection} />,
                 },
                 {
                   menuItem: '1 Year',
-                  render: () => (
-                    <TimePeriodSection
-                      heading={'1 Year'}
-                      gameCollection={oneYearCollection}
-                    />
-                  ),
+                  render: () => <TimePeriodSection heading={'1 Year'} gameCollection={oneYearCollection} />,
                 },
               ]}
             />
           </div>
+
+          <PlayerStats isLoading={isLoading} label={'Rapid'} stats={playerStatsModel?.chess_rapid} />
         </>
       )}
     </div>
