@@ -4,6 +4,11 @@ export interface IDateRating {
   rating: number;
 }
 
+export interface IHighLow {
+  highest: IDateRating;
+  lowest: IDateRating;
+}
+
 export interface IChessStats {
   last: {
     rating: number;
@@ -26,14 +31,8 @@ export interface IPlayerStats {
   chess_blitz: IChessStats;
   chess_rapid: IChessStats;
   fide: number;
-  tactics: {
-    highest: IDateRating;
-    lowest: IDateRating;
-  };
-  lessons: {
-    highest: IDateRating;
-    lowest: IDateRating;
-  };
+  tactics: IHighLow;
+  lessons: IHighLow;
   puzzle_rush: {
     daily: {
       total_attempts: number;

@@ -51,16 +51,18 @@ export const GameTypeStats: React.FC<IProps> = (props) => {
           </Grid.Column>
 
           <Grid.Column>
-            <Header as={'h3'}>{'Last'}</Header>
             <Statistic>
+              <Header as={'h3'}>{'Last'}</Header>
+
               <Statistic.Value>{props.stats.last.rating}</Statistic.Value>
               <Statistic.Label>{setDateFromUtcSeconds(props.stats.last.date).toLocaleString()}</Statistic.Label>
             </Statistic>
           </Grid.Column>
 
           <Grid.Column>
-            <Header as={'h3'}>{'Best'}</Header>
             <Statistic>
+              <Header as={'h3'}>{'Best'}</Header>
+
               <Statistic.Value>{props.stats.best.rating}</Statistic.Value>
               <Statistic.Label>{setDateFromUtcSeconds(props.stats.best.date).toLocaleString()}</Statistic.Label>
             </Statistic>

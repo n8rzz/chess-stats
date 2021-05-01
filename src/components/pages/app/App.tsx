@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { Header, Tab } from 'semantic-ui-react';
+import clsx from 'clsx';
 import styles from '../../../styles/App.module.css';
 import { getArchives, getHistorcialGamesFromArchiveList } from '../../../domain/game/games.service';
 import { GameCollection } from '../../../domain/game/models/Game.collection';
@@ -8,7 +9,7 @@ import { IPlayerStats } from '../../../domain/player/player.types';
 import { TimePeriodSection } from '../../shared/time-period-section/TimePeriodSection';
 import { PlayerStats } from './player-stats/PlayerStats';
 import { UserForm } from './UserForm';
-import clsx from 'clsx';
+import { HighLowScore } from '../../shared/high-low-score/HighLowScore';
 
 interface IProps {}
 
@@ -97,6 +98,7 @@ export const App: React.FC<IProps> = () => {
             />
           </div>
 
+          <HighLowScore isLoading={isLoading} label={'Tactics'} highLow={playerStatsModel.tactics} />
           <PlayerStats isLoading={isLoading} label={'Rapid'} stats={playerStatsModel?.chess_rapid} />
         </>
       )}
