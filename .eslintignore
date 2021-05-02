@@ -1,0 +1,6 @@
+.github
+.jest-cache
+.vscode
+node_modules
+build
+*.d.ts

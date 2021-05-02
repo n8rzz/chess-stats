@@ -1,0 +1,10 @@
+*.d.ts
+*.min
+.github
+.jest-cache
+.coverage
+.next
+.out
+build
+node_modules
+package.json
