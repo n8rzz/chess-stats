@@ -4,12 +4,11 @@ import { Segment, Grid, Header, Statistic, Dimmer, Loader } from 'semantic-ui-re
 import { setDateFromUtcSeconds } from '../../../util/date.utils';
 import { IChessStats } from '../../../domain/player/player.types';
 
-// eslint-disable-next-line arrow-body-style
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 interface IProps {
-  label: string;
   isLoading: boolean;
+  label: string;
   stats: IChessStats;
 }
 

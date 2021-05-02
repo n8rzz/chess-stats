@@ -1,18 +1,7 @@
-/* eslint-disable arrow-body-style */
-/* eslint-disable operator-assignment */
-/* eslint-disable @typescript-eslint/no-inferrable-types */
 import { orderBy } from 'lodash';
 import format from 'date-fns/format';
 import subDays from 'date-fns/subDays';
-import {
-  GameResult,
-  IDataLabel,
-  IDayOhlc,
-  IGame,
-  IGameCountByDate,
-  IGamesBySide,
-  IGamesGroupedByDate,
-} from '../games.types';
+import { GameResult, IDayOhlc, IGame, IGameCountByDate, IGamesBySide, IGamesGroupedByDate } from '../games.types';
 import { GameModel } from './Game.model';
 import { setDateFromUtcSeconds } from '../../../util/date.utils';
 
@@ -76,7 +65,7 @@ export class GameCollection {
     return unsortedOhlcData.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   }
 
-  public countByDate(): { labels: string[]; data: Record<GameResult, number[]> } {
+  public countByDate(): { data: Record<GameResult, number[]>; labels: string[] } {
     const gameCountsByDate = this._countGameResultsByPeriod();
     const labels = gameCountsByDate.map((l) => {
       if (this.period === 1) {
@@ -154,6 +143,7 @@ export class GameCollection {
         return sum;
       }
 
+      // eslint-disable-next-line no-param-reassign
       sum = gamePlayer.rating;
 
       return sum;
@@ -168,6 +158,7 @@ export class GameCollection {
         return sum;
       }
 
+      // eslint-disable-next-line no-param-reassign
       sum = gamePlayer.rating;
 
       return sum;

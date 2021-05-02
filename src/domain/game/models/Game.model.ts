@@ -1,14 +1,6 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable camelcase */
 // @ts-ignore
 import * as parser from '@mliebelt/pgn-parser';
-import {
-  ChessRules,
-  GameResult,
-  IGame,
-  IGamePlayer,
-  TimeClass,
-} from '../games.types';
+import { ChessRules, GameResult, IGame, IGamePlayer, TimeClass } from '../games.types';
 
 export class GameModel implements IGame {
   public readonly black: IGamePlayer = {} as IGamePlayer;

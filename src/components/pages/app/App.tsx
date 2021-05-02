@@ -36,29 +36,10 @@ export const App: React.FC<IProps> = () => {
     }
   };
 
-  const todayCollection = useMemo(
-    // eslint-disable-next-line arrow-body-style
-    () => gameCollection.createCollectionForPeriod(1),
-    [gameCollection],
-  );
-
-  const sevenDaysCollection = useMemo(
-    // eslint-disable-next-line arrow-body-style
-    () => gameCollection.createCollectionForPeriod(7),
-    [gameCollection],
-  );
-
-  const thirtyDaysCollection = useMemo(
-    // eslint-disable-next-line arrow-body-style
-    () => gameCollection.createCollectionForPeriod(30),
-    [gameCollection],
-  );
-
-  const oneYearCollection = useMemo(
-    // eslint-disable-next-line arrow-body-style
-    () => gameCollection.createCollectionForPeriod(365),
-    [gameCollection],
-  );
+  const todayCollection = useMemo(() => gameCollection.createCollectionForPeriod(1), [gameCollection]);
+  const sevenDaysCollection = useMemo(() => gameCollection.createCollectionForPeriod(7), [gameCollection]);
+  const thirtyDaysCollection = useMemo(() => gameCollection.createCollectionForPeriod(30), [gameCollection]);
+  const oneYearCollection = useMemo(() => gameCollection.createCollectionForPeriod(365), [gameCollection]);
 
   return (
     <div>
@@ -80,18 +61,22 @@ export const App: React.FC<IProps> = () => {
               panes={[
                 {
                   menuItem: 'Today',
+                  // eslint-disable-next-line react/display-name
                   render: () => <TimePeriodSection heading={'Today'} gameCollection={todayCollection} />,
                 },
                 {
                   menuItem: '7 Days',
+                  // eslint-disable-next-line react/display-name
                   render: () => <TimePeriodSection heading={'7 Days'} gameCollection={sevenDaysCollection} />,
                 },
                 {
                   menuItem: '30 Days',
+                  // eslint-disable-next-line react/display-name
                   render: () => <TimePeriodSection heading={'30 Days'} gameCollection={thirtyDaysCollection} />,
                 },
                 {
                   menuItem: '1 Year',
+                  // eslint-disable-next-line react/display-name
                   render: () => <TimePeriodSection heading={'1 Year'} gameCollection={oneYearCollection} />,
                 },
               ]}

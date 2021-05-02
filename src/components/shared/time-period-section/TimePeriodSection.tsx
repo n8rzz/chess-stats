@@ -1,5 +1,3 @@
-/* eslint-disable object-curly-newline */
-/* eslint-disable arrow-body-style */
 import React from 'react';
 import clsx from 'clsx';
 import dynamic from 'next/dynamic';
@@ -11,8 +9,8 @@ import { CandlestickChart } from '../../ui/candlestick/CandlestickChart';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 interface IProps {
-  heading: string;
   gameCollection: GameCollection;
+  heading: string;
 }
 
 export const TimePeriodSection: React.FC<IProps> = (props) => {

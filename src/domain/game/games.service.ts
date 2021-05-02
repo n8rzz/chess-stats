@@ -1,4 +1,3 @@
-/* eslint-disable arrow-body-style */
 import axios, { AxiosResponse } from 'axios';
 import { flatten } from 'lodash';
 import { GameCollection } from './models/Game.collection';
@@ -26,7 +25,6 @@ export const getHistorcialGamesFromArchiveList = async (
     const archiveUrl = archiveList[i];
 
     try {
-      // eslint-disable-next-line no-await-in-loop
       const response = await getGameArchiveForUrl(archiveUrl);
 
       gameArchiveForMonthRequestList.push(response);

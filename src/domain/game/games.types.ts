@@ -1,5 +1,3 @@
-/* eslint-disable camelcase */
-/* eslint-disable no-shadow */
 import { GameModel } from './models/Game.model';
 
 export enum GameResult {
@@ -54,13 +52,13 @@ export interface IGamesGroupedByDate {
 }
 
 export interface IGameCountByDate {
-  date: string;
   count: Record<GameResult, number>;
+  date: string;
 }
 
 export interface IDayOhlc {
-  date: string;
   close: number;
+  date: string;
   high: number;
   low: number;
   open: number;

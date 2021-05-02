@@ -1,4 +1,3 @@
-/* eslint-disable arrow-body-style */
 import * as React from 'react';
 import { Button, Select, Input } from 'semantic-ui-react';
 import styles from '../../../styles/App.module.css';
@@ -9,7 +8,7 @@ interface IProps {
 
 export const UserForm: React.FC<IProps> = (props) => {
   const [username, setUsername] = React.useState<string>('n8rzz');
-  const [provider, setProvider] = React.useState<string>('chess.com');
+  const [provider] = React.useState<string>('chess.com');
 
   const onClickSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -32,7 +31,7 @@ export const UserForm: React.FC<IProps> = (props) => {
           </li>
           <li>
             <Select
-              disabled
+              disabled={true}
               name={'provider'}
               options={[
                 {

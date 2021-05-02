@@ -6,9 +6,9 @@ import { IHighLow } from '../../../domain/player/player.types';
 import { setDateFromUtcSeconds } from '../../../util/date.utils';
 
 interface IProps {
+  highLow: IHighLow;
   isLoading: boolean;
   label: string;
-  highLow: IHighLow;
 }
 
 export const HighLowScore: React.FC<IProps> = (props) => {

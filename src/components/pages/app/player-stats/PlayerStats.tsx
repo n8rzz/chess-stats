@@ -1,7 +1,6 @@
-/* eslint-disable object-curly-newline */
 import * as React from 'react';
 import clsx from 'clsx';
-import { Dimmer, Header, Loader, Segment } from 'semantic-ui-react';
+import { Header } from 'semantic-ui-react';
 import styles from '../../../../styles/App.module.css';
 import { IChessStats } from '../../../../domain/player/player.types';
 import { GameTypeStats } from '../../../shared/game-type-stats/GameTypeStats';

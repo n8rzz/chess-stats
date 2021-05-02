@@ -1,6 +1,4 @@
-import {
-  ChessRules, GameResult, IGame, TimeClass,
-} from '../games.types';
+import { ChessRules, GameResult, IGame, TimeClass } from '../games.types';
 
 export const validGameResponse: IGame = {
   url: 'https://www.chess.com/game/live/12366380735',

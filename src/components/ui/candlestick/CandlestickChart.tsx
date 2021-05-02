@@ -1,4 +1,3 @@
-/* eslint-disable arrow-body-style */
 import * as React from 'react';
 import dynamic from 'next/dynamic';
 import { IDayOhlc, GameResult, IDataLabel } from '../../../domain/game/games.types';
@@ -101,5 +100,6 @@ export const CandlestickChart: React.FC<IProps> = (props) => {
     </div>
   );
 };
+
 CandlestickChart.displayName = 'CandlestickChart';
 CandlestickChart.defaultProps = {};
