@@ -1,19 +1,21 @@
 import * as React from 'react';
 import { Button, Select, Input } from 'semantic-ui-react';
 import styles from '../../../styles/App.module.css';
+import { Timeframe, timeframeOptionList } from './app.constants';
 
 interface IProps {
-  onSubmit: (provider: string, username: string) => void;
+  onSubmit: (provider: string, username: string, timeframe: Timeframe) => void;
 }
 
 export const UserForm: React.FC<IProps> = (props) => {
   const [username, setUsername] = React.useState<string>('n8rzz');
+  const [selectedTimeframe, setSelectedTimeframe] = React.useState<Timeframe>(Timeframe.SevenDays);
   const [provider] = React.useState<string>('chess.com');
 
   const onClickSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    props.onSubmit(provider, username);
+    props.onSubmit(provider, username, selectedTimeframe);
   };
 
   return (
@@ -31,6 +33,14 @@ export const UserForm: React.FC<IProps> = (props) => {
           </li>
           <li>
             <Select
+              name={'timeframe'}
+              options={timeframeOptionList}
+              defaultValue={selectedTimeframe}
+              onChange={(_, data) => setSelectedTimeframe(data.value as Timeframe)}
+            />
+          </li>
+          {/* <li>
+            <Select
               disabled={true}
               name={'provider'}
               options={[
@@ -42,7 +52,7 @@ export const UserForm: React.FC<IProps> = (props) => {
               ]}
               defaultValue={'chess.com'}
             />
-          </li>
+          </li> */}
           <li>
             <Button type={'submit'}>{'Submit'}</Button>
           </li>

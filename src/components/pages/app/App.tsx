@@ -10,6 +10,7 @@ import { TimePeriodSection } from '../../shared/time-period-section/TimePeriodSe
 import { PlayerStats } from './player-stats/PlayerStats';
 import { UserForm } from './UserForm';
 import { HighLowScore } from '../../shared/high-low-score/HighLowScore';
+import { Timeframe, timeframeLabel } from './app.constants';
 
 interface IProps {}
 
@@ -17,15 +18,19 @@ export const App: React.FC<IProps> = () => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [playerStatsModel, setPlayerStatsModel] = React.useState<IPlayerStats>(undefined as any);
   const [gameCollection, setGameCollection] = React.useState<GameCollection>(new GameCollection('', [], 0));
+  const [defaultActiveTabIndex, setDefaultActiveTabIndex] = React.useState<number>(1);
 
-  const onSubmit = async (provider: string, username: string) => {
+  const onSubmit = async (provider: string, username: string, selectedTimeframe: Timeframe) => {
     setIsLoading(true);
+
+    const nextActiveTabIndex = Object.keys(timeframeLabel).indexOf(selectedTimeframe);
 
     try {
       const playerStats = await getPlayerStats(username);
       const gameArchiveList = await getArchives(username);
       const collection = await getHistorcialGamesFromArchiveList(gameArchiveList, username);
 
+      setDefaultActiveTabIndex(nextActiveTabIndex);
       setPlayerStatsModel(playerStats);
       setGameCollection(collection);
       setIsLoading(false);
@@ -39,6 +44,8 @@ export const App: React.FC<IProps> = () => {
   const todayCollection = useMemo(() => gameCollection.createCollectionForPeriod(1), [gameCollection]);
   const sevenDaysCollection = useMemo(() => gameCollection.createCollectionForPeriod(7), [gameCollection]);
   const thirtyDaysCollection = useMemo(() => gameCollection.createCollectionForPeriod(30), [gameCollection]);
+  const ninetyDaysCollection = useMemo(() => gameCollection.createCollectionForPeriod(90), [gameCollection]);
+  const sixMonthsCollection = useMemo(() => gameCollection.createCollectionForPeriod(180), [gameCollection]);
   const oneYearCollection = useMemo(() => gameCollection.createCollectionForPeriod(365), [gameCollection]);
 
   return (
@@ -57,27 +64,62 @@ export const App: React.FC<IProps> = () => {
         <>
           <div className={clsx(styles.container, styles.vr3)}>
             <Tab
+              defaultActiveIndex={defaultActiveTabIndex}
               menu={{ pointing: true, secondary: true }}
               panes={[
                 {
-                  menuItem: 'Today',
+                  menuItem: timeframeLabel[Timeframe.Today],
                   // eslint-disable-next-line react/display-name
-                  render: () => <TimePeriodSection heading={'Today'} gameCollection={todayCollection} />,
+                  render: () => (
+                    <TimePeriodSection heading={timeframeLabel[Timeframe.Today]} gameCollection={todayCollection} />
+                  ),
                 },
                 {
-                  menuItem: '7 Days',
+                  menuItem: timeframeLabel[Timeframe.SevenDays],
                   // eslint-disable-next-line react/display-name
-                  render: () => <TimePeriodSection heading={'7 Days'} gameCollection={sevenDaysCollection} />,
+                  render: () => (
+                    <TimePeriodSection
+                      heading={timeframeLabel[Timeframe.SevenDays]}
+                      gameCollection={sevenDaysCollection}
+                    />
+                  ),
                 },
                 {
-                  menuItem: '30 Days',
+                  menuItem: timeframeLabel[Timeframe.ThirtyDays],
                   // eslint-disable-next-line react/display-name
-                  render: () => <TimePeriodSection heading={'30 Days'} gameCollection={thirtyDaysCollection} />,
+                  render: () => (
+                    <TimePeriodSection
+                      heading={timeframeLabel[Timeframe.ThirtyDays]}
+                      gameCollection={thirtyDaysCollection}
+                    />
+                  ),
                 },
                 {
-                  menuItem: '1 Year',
+                  menuItem: timeframeLabel[Timeframe.NinetyDays],
                   // eslint-disable-next-line react/display-name
-                  render: () => <TimePeriodSection heading={'1 Year'} gameCollection={oneYearCollection} />,
+                  render: () => (
+                    <TimePeriodSection
+                      heading={timeframeLabel[Timeframe.NinetyDays]}
+                      gameCollection={ninetyDaysCollection}
+                    />
+                  ),
+                },
+                {
+                  menuItem: timeframeLabel[Timeframe.SixMonths],
+                  // eslint-disable-next-line react/display-name
+                  render: () => (
+                    <TimePeriodSection
+                      heading={timeframeLabel[Timeframe.SixMonths]}
+                      gameCollection={sixMonthsCollection}
+                    />
+                  ),
+                },
+                {
+                  menuItem: timeframeLabel[Timeframe.OneYear],
+                  // eslint-disable-next-line react/display-name
+                  render: () => (
+                    <TimePeriodSection heading={timeframeLabel[Timeframe.OneYear]} gameCollection={oneYearCollection} />
+                  ),
                 },
               ]}
             />
