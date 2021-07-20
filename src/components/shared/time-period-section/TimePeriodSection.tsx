@@ -25,7 +25,7 @@ export const TimePeriodSection: React.FC<IProps> = (props) => {
           <List.Item>
             <Statistic size={'mini'}>
               <Statistic.Value>{props.gameCollection.findEarliestGameDate().toLocaleDateString()}</Statistic.Value>
-              <Statistic.Label>{'Start'}</Statistic.Label>
+              <Statistic.Label>{`Start - ${props.gameCollection.findEarliestRating()}`}</Statistic.Label>
             </Statistic>
           </List.Item>
           <List.Item>
@@ -49,7 +49,7 @@ export const TimePeriodSection: React.FC<IProps> = (props) => {
           <List.Item>
             <Statistic size={'mini'}>
               <Statistic.Value>{props.gameCollection.findLatestGameDate().toLocaleDateString()}</Statistic.Value>
-              <Statistic.Label>{'End'}</Statistic.Label>
+              <Statistic.Label>{`End ${props.gameCollection.findLatestRating()}`}</Statistic.Label>
             </Statistic>
           </List.Item>
         </List>

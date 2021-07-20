@@ -11,6 +11,14 @@ export class GameCollection {
 
   private _items: GameModel[] = [];
 
+  get firstGame(): GameModel {
+    return this._items[0];
+  }
+
+  get lastGame(): GameModel {
+    return this._items[this.length - 1];
+  }
+
   get length(): number {
     return this._items.length;
   }
@@ -166,21 +174,31 @@ export class GameCollection {
   }
 
   public findEarliestGameDate(): Date {
-    const earliestGame = this._items[0];
     const earliestDate = new Date(0);
 
-    earliestDate.setUTCSeconds(earliestGame.end_time);
+    earliestDate.setUTCSeconds(this.firstGame.end_time);
 
     return earliestDate;
   }
 
+  public findEarliestRating(): number {
+    const gamePlayer = this.firstGame.getSideForUsername(this.username);
+
+    return gamePlayer.rating;
+  }
+
   public findLatestGameDate(): Date {
-    const latestGame = this._items[this.length - 1];
     const latestDate = new Date(0);
 
-    latestDate.setUTCSeconds(latestGame.end_time);
+    latestDate.setUTCSeconds(this.lastGame.end_time);
 
     return latestDate;
+  }
+
+  public findLatestRating(): number {
+    const gamePlayer = this.lastGame.getSideForUsername(this.username);
+
+    return gamePlayer.rating;
   }
 
   public gatherGameResults(): { [key: string]: number } {
