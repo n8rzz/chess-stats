@@ -89,21 +89,19 @@ export class GameCollection {
       values: closeValues,
     });
 
-    const movingAverageChartData = ohlcData
-      .reverse()
-      .reduce((sum: IMovingAverageChartData[], entry: IDayOhlc, i: number) => {
-        if (smaResult[i] == null) {
-          return sum;
-        }
+    const movingAverageChartData = ohlcData.reduce((sum: IMovingAverageChartData[], entry: IDayOhlc, i: number) => {
+      if (smaResult[i] == null) {
+        return sum;
+      }
 
-        return [
-          ...sum,
-          {
-            date: entry.date,
-            value: smaResult[i],
-          },
-        ];
-      }, []);
+      return [
+        ...sum,
+        {
+          date: entry.date,
+          value: smaResult[i],
+        },
+      ];
+    }, []);
 
     return movingAverageChartData.reverse();
   }
