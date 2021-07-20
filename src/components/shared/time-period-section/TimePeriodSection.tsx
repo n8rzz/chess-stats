@@ -15,6 +15,9 @@ interface IProps {
 
 export const TimePeriodSection: React.FC<IProps> = (props) => {
   const ohlcData = React.useMemo(() => props.gameCollection.calculateOhlcForPeriod(), [props.gameCollection]);
+  const movingAverage = React.useMemo(() => props.gameCollection.calculateMovingAverageWithOhlcAndPeriod(ohlcData, 5), [
+    props.gameCollection,
+  ]);
   const gamesBySide = React.useMemo(() => props.gameCollection.countGamesBySide(), [props.gameCollection]);
   const gameResults = React.useMemo(() => props.gameCollection.gatherGameResults(), [props.gameCollection]);
 
@@ -109,7 +112,11 @@ export const TimePeriodSection: React.FC<IProps> = (props) => {
       </section>
 
       <section className={clsx(styles.container, styles.vr2)}>
-        <CandlestickChart countByDate={props.gameCollection.countByDate()} ohlcData={ohlcData} />
+        <CandlestickChart
+          countByDate={props.gameCollection.countByDate()}
+          ohlcData={ohlcData}
+          movingAverage={movingAverage}
+        />
       </section>
 
       <section>{'openings black / white'}</section>

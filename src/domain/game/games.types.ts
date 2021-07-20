@@ -62,7 +62,7 @@ export interface IDayOhlc {
   high: number;
   low: number;
   open: number;
-  volumn: number;
+  volume: number;
 }
 
 export interface IGamesBySide {
@@ -78,4 +78,9 @@ export interface IDataLabel<T = number[]> {
 export interface IWinLossCount {
   losses: number[];
   wins: number[];
+}
+
+export interface IMovingAverageChartData {
+  date: string;
+  value: number;
 }

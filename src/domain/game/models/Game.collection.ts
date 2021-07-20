@@ -1,7 +1,16 @@
 import { orderBy } from 'lodash';
 import format from 'date-fns/format';
 import subDays from 'date-fns/subDays';
-import { GameResult, IDayOhlc, IGame, IGameCountByDate, IGamesBySide, IGamesGroupedByDate } from '../games.types';
+import { sma } from 'technicalindicators';
+import {
+  GameResult,
+  IDayOhlc,
+  IGame,
+  IGameCountByDate,
+  IGamesBySide,
+  IGamesGroupedByDate,
+  IMovingAverageChartData,
+} from '../games.types';
 import { GameModel } from './Game.model';
 import { setDateFromUtcSeconds } from '../../../util/date.utils';
 
@@ -65,12 +74,38 @@ export class GameCollection {
           high: period.findMaxRating(),
           low: period.findMinRating(),
           close: period.findClosingRating(),
-          volumn: period.length,
+          volume: period.length,
         },
       ];
     }, []);
 
     return unsortedOhlcData.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  }
+
+  public calculateMovingAverageWithOhlcAndPeriod(ohlcData: IDayOhlc[], period: number): IMovingAverageChartData[] {
+    const closeValues = ohlcData.map((entry) => entry.close);
+    const smaResult = sma({
+      period,
+      values: closeValues,
+    });
+
+    const movingAverageChartData = ohlcData
+      .reverse()
+      .reduce((sum: IMovingAverageChartData[], entry: IDayOhlc, i: number) => {
+        if (smaResult[i] == null) {
+          return sum;
+        }
+
+        return [
+          ...sum,
+          {
+            date: entry.date,
+            value: smaResult[i],
+          },
+        ];
+      }, []);
+
+    return movingAverageChartData.reverse();
   }
 
   public countByDate(): { data: Record<GameResult, number[]>; labels: string[] } {
