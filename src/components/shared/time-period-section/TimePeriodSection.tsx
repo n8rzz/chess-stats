@@ -5,6 +5,7 @@ import { Container, Grid, List, Statistic } from 'semantic-ui-react';
 import styles from '../../../styles/App.module.css';
 import { GameCollection } from '../../../domain/game/models/Game.collection';
 import { CandlestickChart } from '../../ui/candlestick/CandlestickChart';
+import { Openings } from '../../pages/app/openings/Openings';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
@@ -119,7 +120,9 @@ export const TimePeriodSection: React.FC<IProps> = (props) => {
         />
       </section>
 
-      <section>{'openings black / white'}</section>
+      <section>
+        <Openings collection={props.gameCollection} />
+      </section>
     </div>
   );
 };

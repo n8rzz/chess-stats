@@ -13,39 +13,39 @@ interface IProps {
 }
 
 export const CandlestickChart: React.FC<IProps> = (props) => {
-  const seriesData = React.useMemo(() => {
-    return [
-      {
-        name: 'agreed',
-        data: props.countByDate.data.agreed,
-      },
-      {
-        name: 'checkmated',
-        data: props.countByDate.data.checkmated,
-      },
-      {
-        name: 'resigned',
-        data: props.countByDate.data.resigned,
-      },
-      {
-        name: 'stalemate',
-        data: props.countByDate.data.stalemate,
-      },
-      {
-        name: 'timeout',
-        data: props.countByDate.data.timeout,
-      },
-      {
-        name: 'win',
-        data: props.countByDate.data.win,
-      },
-    ];
-  }, [props.countByDate]);
+  // const seriesData = React.useMemo(() => {
+  //   return [
+  //     {
+  //       name: 'agreed',
+  //       data: props.countByDate.data.agreed,
+  //     },
+  //     {
+  //       name: 'checkmated',
+  //       data: props.countByDate.data.checkmated,
+  //     },
+  //     {
+  //       name: 'resigned',
+  //       data: props.countByDate.data.resigned,
+  //     },
+  //     {
+  //       name: 'stalemate',
+  //       data: props.countByDate.data.stalemate,
+  //     },
+  //     {
+  //       name: 'timeout',
+  //       data: props.countByDate.data.timeout,
+  //     },
+  //     {
+  //       name: 'win',
+  //       data: props.countByDate.data.win,
+  //     },
+  //   ];
+  // }, [props.countByDate]);
 
   return (
     <div>
       <section className={clsx(styles.container, styles.vr2)}>
-        <div id={'chart-candlestick'}>
+        <div id={'rating-over-time-chart-candlestick'}>
           <Chart
             options={{
               title: {
@@ -68,12 +68,6 @@ export const CandlestickChart: React.FC<IProps> = (props) => {
                 data: props.ohlcData.map((item: IDayOhlc) => ({
                   x: item.date,
                   y: [item.open, item.high, item.low, item.close],
-                })),
-              },
-              {
-                data: props.movingAverage.map((item: IMovingAverageChartData) => ({
-                  x: item.date,
-                  y: item.value,
                 })),
               },
             ]}
@@ -104,9 +98,34 @@ export const CandlestickChart: React.FC<IProps> = (props) => {
                 enabled: false,
               },
             }}
-            series={seriesData}
+            series={[
+              {
+                name: 'agreed',
+                data: props.countByDate.data.agreed,
+              },
+              {
+                name: 'checkmated',
+                data: props.countByDate.data.checkmated,
+              },
+              {
+                name: 'resigned',
+                data: props.countByDate.data.resigned,
+              },
+              {
+                name: 'stalemate',
+                data: props.countByDate.data.stalemate,
+              },
+              {
+                name: 'timeout',
+                data: props.countByDate.data.timeout,
+              },
+              {
+                name: 'win',
+                data: props.countByDate.data.win,
+              },
+            ]}
             type={'bar'}
-            height={150}
+            height={300}
           />
         </div>
       </section>

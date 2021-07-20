@@ -10,6 +10,7 @@ import {
   IGamesBySide,
   IGamesGroupedByDate,
   IMovingAverageChartData,
+  PieceColor,
 } from '../games.types';
 import { GameModel } from './Game.model';
 import { setDateFromUtcSeconds } from '../../../util/date.utils';
@@ -248,6 +249,40 @@ export class GameCollection {
     }, {});
   }
 
+  public gatherOpeningMovesForSide(side: PieceColor): { [key: string]: number } {
+    const gamesForSide = this._gatherGamesForSide(side);
+
+    return gamesForSide.reduce((sum: any, game: GameModel) => {
+      console.log('$$$ ', game.getOpeningMovesForGame(side, 10));
+      const move = game.getFirstMoveForPieceColor(side);
+      const result = game.getResult(this.username);
+
+      if (typeof sum[move] !== 'undefined' && typeof sum[move][result] !== 'undefined') {
+        sum[move][result]++;
+
+        return sum;
+      }
+
+      if (typeof sum[move] === 'undefined') {
+        sum[move] = {
+          [result]: 1,
+        };
+
+        return sum;
+      }
+
+      if (typeof sum[move][result] === 'undefined') {
+        sum[move][result] = 1;
+
+        return sum;
+      }
+
+      sum[move][result]++;
+
+      return sum;
+    }, {});
+  }
+
   public groupByHour(): IGamesGroupedByDate {
     return this._items.reduce((sum: { [key: string]: GameModel[] }, game: GameModel) => {
       const gameEndDate = setDateFromUtcSeconds(game.end_time);
@@ -320,6 +355,18 @@ export class GameCollection {
 
       return sum;
     }, []);
+  }
+
+  private _gatherGamesForSide(side: PieceColor): GameModel[] {
+    const foundGamesForSide = this._items.reduce((sum: GameModel[], item: GameModel) => {
+      if (item[side].username !== this.username) {
+        return sum;
+      }
+
+      return [...sum, item];
+    }, []);
+
+    return foundGamesForSide;
   }
 
   private _orderItemsByEndDate(): void {

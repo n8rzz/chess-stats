@@ -18,6 +18,11 @@ export enum ChessRules {
   Chess = 'chess',
 }
 
+export enum PieceColor {
+  Black = 'black',
+  White = 'white',
+}
+
 export interface IGamePlayer {
   '@id': string;
   rating: number;

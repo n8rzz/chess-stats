@@ -1,6 +1,6 @@
 // @ts-ignore
 import * as parser from '@mliebelt/pgn-parser';
-import { ChessRules, GameResult, IGame, IGamePlayer, TimeClass } from '../games.types';
+import { ChessRules, GameResult, IGame, IGamePlayer, PieceColor, TimeClass } from '../games.types';
 
 export class GameModel implements IGame {
   public readonly black: IGamePlayer = {} as IGamePlayer;
@@ -36,6 +36,24 @@ export class GameModel implements IGame {
     this.white = json.white;
 
     this._parsePgn(json.pgn);
+  }
+
+  public getFirstMoveForPieceColor(side: PieceColor): string {
+    const firstMoveIndex = side === PieceColor.White ? 0 : 1;
+
+    return this.pgn_json[firstMoveIndex].notation.notation;
+  }
+
+  public getOpeningMovesForGame(side: PieceColor, moveCount: number = 10): { [key: string]: any } {
+    // const moves = this.pgn_json.slice(0, moveCount);
+
+    return this.pgn_json.reduce((sum: string[], move: any) => {
+      if (move.notation == null) {
+        return sum;
+      }
+
+      return [...sum, move.notation.notation];
+    }, []);
   }
 
   public getResult(username: string): GameResult {
