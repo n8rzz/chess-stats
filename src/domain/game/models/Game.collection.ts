@@ -262,24 +262,17 @@ export class GameCollection {
 
     return gamesForSide.reduce((sum: any, game: GameModel) => {
       // getMoveAtIndexForPieceColor(side, index)
+      const movesForGame = game.getPlayerMovesForGame(side);
       const move = game.getFirstMoveForPieceColor(side);
       const result = game.getResult(this.username);
       const ratingEffect = gameResultToWinLossDraw[result];
 
-      if (typeof ratingEffect === 'undefined') {
-        debugger;
-      }
+      console.log('---', movesForGame);
 
       if (typeof sum[move] === 'undefined') {
         sum[move] = {
           [ratingEffect]: 1,
         };
-
-        return sum;
-      }
-
-      if (typeof sum[move][ratingEffect] !== 'undefined') {
-        sum[move][ratingEffect]++;
 
         return sum;
       }

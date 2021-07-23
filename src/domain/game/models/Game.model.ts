@@ -45,9 +45,9 @@ export class GameModel implements IGame {
     return this.pgn_json[firstMoveIndex].notation.notation;
   }
 
-  public getMovesForGame(side: PieceColor, moveCount: number = 10): string[] {
-    return this.pgn_json.reduce((sum: string[], move: any) => {
-      if (move.notation == null) {
+  public getPlayerMovesForGame(side: PieceColor): string[] {
+    return this.pgn_json.reduce((sum: string[], move: PgnItem) => {
+      if (move.notation == null || move.turn !== pieceColorToPgnTurn[side]) {
         return sum;
       }
 

@@ -70,7 +70,7 @@ export interface IMovingAverageChartData {
 
 export interface PgnItem {
   commentDiag: unknown;
-  moveNumber: 1;
+  moveNumber: number;
   nag: unknown;
   notation: {
     check: unknown;

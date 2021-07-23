@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
-import { ChessRules, GameResult, IGame, TimeClass } from '../games.types';
+import { GameResult, ChessRules, TimeClass } from '../games.constants';
+import { IGame } from '../games.types';
 
 export const gameListForSinglePeriod: IGame[] = [
   {
