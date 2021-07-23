@@ -3,17 +3,16 @@ import format from 'date-fns/format';
 import subDays from 'date-fns/subDays';
 import { sma } from 'technicalindicators';
 import {
-  GameResult,
   IDayOhlc,
   IGame,
   IGameCountByDate,
   IGamesBySide,
   IGamesGroupedByDate,
   IMovingAverageChartData,
-  PieceColor,
 } from '../games.types';
 import { GameModel } from './Game.model';
 import { setDateFromUtcSeconds } from '../../../util/date.utils';
+import { GameResult, gameResultToWinLossDraw, PieceColor } from '../games.constants';
 
 export class GameCollection {
   public period: number = 0;
@@ -116,17 +115,26 @@ export class GameCollection {
 
       return l.date;
     });
-
     const resultCounts = gameCountsByDate.map((d) => d.count);
 
     return {
       labels,
       data: {
+        [GameResult.Abandoned]: resultCounts.map((c) => c.abandoned),
         [GameResult.Agreed]: resultCounts.map((c) => c.agreed),
+        [GameResult.Agreed]: resultCounts.map((c) => c.agreed),
+        [GameResult.BughousePartnerLose]: resultCounts.map((c) => c.bughousepartnerlose),
         [GameResult.Checkmated]: resultCounts.map((c) => c.checkmated),
+        [GameResult.FiftyMove]: resultCounts.map((c) => c.fiftymove),
+        [GameResult.Insufficient]: resultCounts.map((c) => c.insufficient),
+        [GameResult.KingOfTheHill]: resultCounts.map((c) => c.kingofthehill),
+        [GameResult.Lose]: resultCounts.map((c) => c.lose),
+        [GameResult.Repetition]: resultCounts.map((c) => c.repetition),
         [GameResult.Resigned]: resultCounts.map((c) => c.resigned),
         [GameResult.Stalemate]: resultCounts.map((c) => c.stalemate),
+        [GameResult.ThreeCheck]: resultCounts.map((c) => c.threecheck),
         [GameResult.Timeout]: resultCounts.map((c) => c.timeout),
+        [GameResult.TimeVsInsufficient]: resultCounts.map((c) => c.timevsinsufficient),
         [GameResult.Win]: resultCounts.map((c) => c.win),
       },
     };
@@ -253,31 +261,36 @@ export class GameCollection {
     const gamesForSide = this._gatherGamesForSide(side);
 
     return gamesForSide.reduce((sum: any, game: GameModel) => {
-      console.log('$$$ ', game.getOpeningMovesForGame(side, 10));
+      // getMoveAtIndexForPieceColor(side, index)
       const move = game.getFirstMoveForPieceColor(side);
       const result = game.getResult(this.username);
+      const ratingEffect = gameResultToWinLossDraw[result];
 
-      if (typeof sum[move] !== 'undefined' && typeof sum[move][result] !== 'undefined') {
-        sum[move][result]++;
-
-        return sum;
+      if (typeof ratingEffect === 'undefined') {
+        debugger;
       }
 
       if (typeof sum[move] === 'undefined') {
         sum[move] = {
-          [result]: 1,
+          [ratingEffect]: 1,
         };
 
         return sum;
       }
 
-      if (typeof sum[move][result] === 'undefined') {
-        sum[move][result] = 1;
+      if (typeof sum[move][ratingEffect] !== 'undefined') {
+        sum[move][ratingEffect]++;
 
         return sum;
       }
 
-      sum[move][result]++;
+      if (typeof sum[move][ratingEffect] === 'undefined') {
+        sum[move][ratingEffect] = 1;
+
+        return sum;
+      }
+
+      sum[move][ratingEffect]++;
 
       return sum;
     }, {});
@@ -342,11 +355,20 @@ export class GameCollection {
       const entry: IGameCountByDate = {
         date: gameDate,
         count: {
+          [GameResult.Abandoned]: this._countGameListByResult(gamesForDate, GameResult.Abandoned),
           [GameResult.Agreed]: this._countGameListByResult(gamesForDate, GameResult.Agreed),
+          [GameResult.BughousePartnerLose]: this._countGameListByResult(gamesForDate, GameResult.BughousePartnerLose),
           [GameResult.Checkmated]: this._countGameListByResult(gamesForDate, GameResult.Checkmated),
+          [GameResult.FiftyMove]: this._countGameListByResult(gamesForDate, GameResult.FiftyMove),
+          [GameResult.Insufficient]: this._countGameListByResult(gamesForDate, GameResult.Insufficient),
+          [GameResult.KingOfTheHill]: this._countGameListByResult(gamesForDate, GameResult.KingOfTheHill),
+          [GameResult.Lose]: this._countGameListByResult(gamesForDate, GameResult.Lose),
+          [GameResult.Repetition]: this._countGameListByResult(gamesForDate, GameResult.Repetition),
           [GameResult.Resigned]: this._countGameListByResult(gamesForDate, GameResult.Resigned),
           [GameResult.Stalemate]: this._countGameListByResult(gamesForDate, GameResult.Stalemate),
+          [GameResult.ThreeCheck]: this._countGameListByResult(gamesForDate, GameResult.ThreeCheck),
           [GameResult.Timeout]: this._countGameListByResult(gamesForDate, GameResult.Timeout),
+          [GameResult.TimeVsInsufficient]: this._countGameListByResult(gamesForDate, GameResult.TimeVsInsufficient),
           [GameResult.Win]: this._countGameListByResult(gamesForDate, GameResult.Win),
         },
       };

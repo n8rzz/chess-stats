@@ -1,27 +1,5 @@
+import { GameResult, ChessRules, TimeClass, PgnTurn } from './games.constants';
 import { GameModel } from './models/Game.model';
-
-export enum GameResult {
-  Agreed = 'agreed',
-  Checkmated = 'checkmated',
-  Resigned = 'resigned',
-  Stalemate = 'stalemate',
-  Timeout = 'timeout',
-  Win = 'win',
-}
-
-export enum TimeClass {
-  Blitz = 'blitz',
-  Rapid = 'rapid',
-}
-
-export enum ChessRules {
-  Chess = 'chess',
-}
-
-export enum PieceColor {
-  Black = 'black',
-  White = 'white',
-}
 
 export interface IGamePlayer {
   '@id': string;
@@ -88,4 +66,21 @@ export interface IWinLossCount {
 export interface IMovingAverageChartData {
   date: string;
   value: number;
+}
+
+export interface PgnItem {
+  commentDiag: unknown;
+  moveNumber: 1;
+  nag: unknown;
+  notation: {
+    check: unknown;
+    col: string;
+    fig: unknown;
+    notation: string;
+    promotion: unknown;
+    row: string;
+    strike: unknown;
+  };
+  turn: PgnTurn;
+  variations: string[];
 }

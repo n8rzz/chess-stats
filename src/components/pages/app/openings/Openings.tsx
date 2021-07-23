@@ -4,7 +4,7 @@ import { Header, Tab } from 'semantic-ui-react';
 import styles from '../../../../styles/App.module.css';
 import type { GameCollection } from '../../../../domain/game/models/Game.collection';
 import { OpeningsTabPane } from './OpeningsTabPane';
-import { PieceColor } from '../../../../domain/game/games.types';
+import { PieceColor } from '../../../../domain/game/games.constants';
 
 interface IProps {
   collection: GameCollection;

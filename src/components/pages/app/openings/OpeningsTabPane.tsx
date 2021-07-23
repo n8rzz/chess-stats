@@ -1,5 +1,5 @@
 import React from 'react';
-import { PieceColor } from '../../../../domain/game/games.types';
+import type { PieceColor } from '../../../../domain/game/games.constants';
 import { GameCollection } from '../../../../domain/game/models/Game.collection';
 
 interface IProps {

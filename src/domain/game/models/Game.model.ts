@@ -1,13 +1,14 @@
 // @ts-ignore
 import * as parser from '@mliebelt/pgn-parser';
-import { ChessRules, GameResult, IGame, IGamePlayer, PieceColor, TimeClass } from '../games.types';
+import { ChessRules, TimeClass, PieceColor, GameResult, pieceColorToPgnTurn } from '../games.constants';
+import { IGame, IGamePlayer, PgnItem } from '../games.types';
 
 export class GameModel implements IGame {
   public readonly black: IGamePlayer = {} as IGamePlayer;
   public readonly end_time: number = -1;
   public readonly fen: string = '';
   public readonly pgn: string = '';
-  public pgn_json: any = {};
+  public pgn_json: PgnItem[] = [];
   public readonly rated: boolean = false;
   public readonly rules: ChessRules = ChessRules.Chess;
   public readonly time_class: TimeClass = TimeClass.Rapid;
@@ -44,9 +45,7 @@ export class GameModel implements IGame {
     return this.pgn_json[firstMoveIndex].notation.notation;
   }
 
-  public getOpeningMovesForGame(side: PieceColor, moveCount: number = 10): { [key: string]: any } {
-    // const moves = this.pgn_json.slice(0, moveCount);
-
+  public getMovesForGame(side: PieceColor, moveCount: number = 10): string[] {
     return this.pgn_json.reduce((sum: string[], move: any) => {
       if (move.notation == null) {
         return sum;
@@ -54,6 +53,14 @@ export class GameModel implements IGame {
 
       return [...sum, move.notation.notation];
     }, []);
+  }
+
+  public getMoveForNumberAndPieceColor(side: PieceColor, number: number): string {
+    const move = this.pgn_json.find(
+      (move: PgnItem) => move.moveNumber === number && move.turn === pieceColorToPgnTurn[side],
+    );
+
+    return move?.notation.notation ?? '';
   }
 
   public getResult(username: string): GameResult {
@@ -84,7 +91,8 @@ export class GameModel implements IGame {
 
   private _parsePgn(rawPgn: string): void {
     const splitPgn = rawPgn.split('\n');
+    const pgnWithResult = parser.parse(splitPgn[splitPgn.length - 2]);
 
-    this.pgn_json = parser.parse(splitPgn[splitPgn.length - 2]);
+    this.pgn_json = pgnWithResult.slice(0, pgnWithResult.length);
   }
 }
