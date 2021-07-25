@@ -30,8 +30,6 @@ export const StackedBarChart: React.FC<IProps> = (props) => {
     props.onClickDataItem(move, value);
   }, []);
 
-  console.log('$$$ chartData', chartData);
-
   return (
     <div className={styles.stackedBarChart}>
       {props.title && <div className={styles.stackedBarChartHd}>{props.title}</div>}

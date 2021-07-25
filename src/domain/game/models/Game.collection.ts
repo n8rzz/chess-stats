@@ -128,7 +128,6 @@ export class GameCollection {
       data: {
         [GameResult.Abandoned]: resultCounts.map((c) => c.abandoned),
         [GameResult.Agreed]: resultCounts.map((c) => c.agreed),
-        [GameResult.Agreed]: resultCounts.map((c) => c.agreed),
         [GameResult.BughousePartnerLose]: resultCounts.map((c) => c.bughousepartnerlose),
         [GameResult.Checkmated]: resultCounts.map((c) => c.checkmated),
         [GameResult.FiftyMove]: resultCounts.map((c) => c.fiftymove),
@@ -157,16 +156,13 @@ export class GameCollection {
   }
 
   public findOpeningRating(): number {
-    const game = this._items[0];
-    const gamePlayer = game.getSideForUsername(this.username);
+    const gamePlayer = this.firstGame.getSideForUsername(this.username);
 
     return gamePlayer.rating;
   }
 
   public findClosingRating(): number {
-    const lastIndex = this.length - 1;
-    const game = this._items[lastIndex];
-    const gamePlayer = game.getSideForUsername(this.username);
+    const gamePlayer = this.lastGame.getSideForUsername(this.username);
 
     return gamePlayer.rating;
   }
