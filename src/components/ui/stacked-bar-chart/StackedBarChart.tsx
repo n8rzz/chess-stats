@@ -6,47 +6,46 @@ import { StackedBarChartRow } from './StackedBarChartRow';
 interface IProps {
   moveNumber: number;
   onClickDataItem: (move: string, value: WinLossDraw) => void;
+  title?: string;
   winLossDrawBySideAndOpening: any;
 }
 
 export const StackedBarChart: React.FC<IProps> = (props) => {
+  const chartData = React.useMemo(() => {
+    return Object.keys(props.winLossDrawBySideAndOpening).map((key) => {
+      const item = props.winLossDrawBySideAndOpening[key];
+
+      return {
+        axisLabel: key,
+        data: [
+          { label: WinLossDraw.Win, value: item.win ?? 0 },
+          { label: WinLossDraw.Draw, value: item.draw ?? 0 },
+          { label: WinLossDraw.Loss, value: item.loss ?? 0 },
+        ],
+      };
+    });
+  }, [props.moveNumber, props.winLossDrawBySideAndOpening]);
+
   const onClickDataItem = React.useCallback((move: string, value: WinLossDraw) => {
     props.onClickDataItem(move, value);
   }, []);
 
-  // const chartData = React.useMemo(
-  //   () => [
-  //     {
-  //       name: 'e4',
-  //       data: [30, 20, 10],
-  //     },
-  //     {
-  //       name: 'd4',
-  //       data: [20, 20, 60],
-  //     },
-  //     {
-  //       name: 'a3',
-  //       data: [0, 0, 100],
-  //     },
-  //   ],
-  //   [],
-  // );
+  console.log('$$$ chartData', chartData);
 
   return (
-    <div>
-      <div className={styles.stackedBarChart}>
-        <div className={styles.stackedBarChartHd}>stackedBarChart - Title</div>
-        <div className={styles.stackedBarChartBd}>
-          <StackedBarChartRow
-            data={[
-              { label: WinLossDraw.Win, value: 4 },
-              { label: WinLossDraw.Draw, value: 2 },
-              { label: WinLossDraw.Loss, value: 8 },
-            ]}
-            onClickDataItem={onClickDataItem}
-            xaxisLabel={'e4'}
-          />
-        </div>
+    <div className={styles.stackedBarChart}>
+      {props.title && <div className={styles.stackedBarChartHd}>{props.title}</div>}
+      <div className={styles.stackedBarChartBd}>
+        {chartData.map((item) => {
+          return (
+            <StackedBarChartRow
+              data={item.data}
+              onClickDataItem={onClickDataItem}
+              leftXaxisLabel={item.axisLabel}
+              key={item.axisLabel}
+            />
+          );
+        })}
       </div>
     </div>
   );

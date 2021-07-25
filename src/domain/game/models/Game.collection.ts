@@ -57,6 +57,12 @@ export class GameCollection {
     this._orderItemsByEndDate();
   }
 
+  public buildBarchartDataForSideAtMoveNumber(side: PieceColor, moveNumber: number) {
+    const moveForSide = this.gatherOpeningMovesForSide(side, moveNumber);
+
+    return moveForSide;
+  }
+
   public groupByPeriod(): IGamesGroupedByDate {
     return this.period === 1 ? this.groupByHour() : this.groupByDay();
   }

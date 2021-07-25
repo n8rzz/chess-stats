@@ -11,7 +11,7 @@ interface IProps {
 export const OpeningsTabPane: React.FC<IProps> = (props) => {
   const [moveNumber, setMoveNumber] = React.useState<number>(1);
 
-  const firstMoveList = React.useMemo(() => props.collection.gatherOpeningMovesForSide(props.side, moveNumber), [
+  const chartData = React.useMemo(() => props.collection.buildBarchartDataForSideAtMoveNumber(props.side, moveNumber), [
     props.collection,
     props.side,
   ]);
@@ -27,17 +27,10 @@ export const OpeningsTabPane: React.FC<IProps> = (props) => {
 
   return (
     <div>
-      <ul>
-        {Object.keys(firstMoveList).map((move: string) => (
-          <li key={move}>
-            {move}: {JSON.stringify(firstMoveList[move])}
-          </li>
-        ))}
-      </ul>
       <StackedBarChart
         moveNumber={moveNumber}
-        winLossDrawBySideAndOpening={null}
         onClickDataItem={handleOpeningMoveChange}
+        winLossDrawBySideAndOpening={chartData}
       />
     </div>
   );

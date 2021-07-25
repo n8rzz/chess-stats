@@ -42,6 +42,7 @@
 }
 
 .stackedBarChartHd {
+  padding: 5px 0;
 }
 
 .stackedBarChartBd {
@@ -74,13 +75,25 @@
 }
 
 .stackedBarChartBdRowDataItem {
-  background-color: #cccccc;
+  border-radius: 3px;
   cursor: pointer;
   margin-right: 2px;
   overflow: hidden;
-  transition: all 200ms ease-in-out;
+  transition: all 300ms ease-in-out;
 }
 
 .stackedBarChartBdRowDataItem:hover {
   background-color: #999999;
+}
+
+.mixStackedBarChartBdRowDataItemWin {
+  background-color: #97d297;
+}
+
+.mixStackedBarChartBdRowDataItemDraw {
+  background-color: #bce6ff;
+}
+
+.mixStackedBarChartBdRowDataItemLoss {
+  background-color: #ffb5aa;
 }
