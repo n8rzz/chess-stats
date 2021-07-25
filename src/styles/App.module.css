@@ -36,3 +36,51 @@
 .vr4 {
   margin-bottom: 40px;
 }
+
+/* --- */
+.stackedBarChart {
+}
+
+.stackedBarChartHd {
+}
+
+.stackedBarChartBd {
+  margin-top: 5px;
+}
+
+.stackedBarChartBdRow {
+  align-items: center;
+  display: flex;
+}
+
+.stackedBarChartBdRow + .stackedBarChartBdRow {
+  margin-top: 5px;
+}
+
+.stackedBarChartBdRowDataItem,
+.stackedBarChartBdRowXaxisLabel {
+  padding: 4px;
+}
+
+.stackedBarChartBdRowXaxisLabel {
+  min-width: 50px;
+  padding-right: 10px;
+  text-align: right;
+}
+
+.stackedBarChartBdRowData {
+  display: flex;
+  flex-grow: 1;
+}
+
+.stackedBarChartBdRowDataItem {
+  background-color: #cccccc;
+  cursor: pointer;
+  margin-right: 2px;
+  overflow: hidden;
+  transition: all 200ms ease-in-out;
+}
+
+.stackedBarChartBdRowDataItem:hover {
+  background-color: #999999;
+}

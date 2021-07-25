@@ -1,8 +1,9 @@
 import * as React from 'react';
 import dynamic from 'next/dynamic';
 import styles from '../../../styles/App.module.css';
-import { IDayOhlc, GameResult, IDataLabel, IMovingAverageChartData } from '../../../domain/game/games.types';
+import { IDayOhlc, IDataLabel, IMovingAverageChartData } from '../../../domain/game/games.types';
 import clsx from 'clsx';
+import { GameResult } from '../../../domain/game/games.constants';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
@@ -13,34 +14,14 @@ interface IProps {
 }
 
 export const CandlestickChart: React.FC<IProps> = (props) => {
-  // const seriesData = React.useMemo(() => {
-  //   return [
-  //     {
-  //       name: 'agreed',
-  //       data: props.countByDate.data.agreed,
-  //     },
-  //     {
-  //       name: 'checkmated',
-  //       data: props.countByDate.data.checkmated,
-  //     },
-  //     {
-  //       name: 'resigned',
-  //       data: props.countByDate.data.resigned,
-  //     },
-  //     {
-  //       name: 'stalemate',
-  //       data: props.countByDate.data.stalemate,
-  //     },
-  //     {
-  //       name: 'timeout',
-  //       data: props.countByDate.data.timeout,
-  //     },
-  //     {
-  //       name: 'win',
-  //       data: props.countByDate.data.win,
-  //     },
-  //   ];
-  // }, [props.countByDate]);
+  const chartData = React.useMemo(
+    () =>
+      props.ohlcData.map((item: IDayOhlc) => ({
+        x: item.date,
+        y: [item.open, item.high, item.low, item.close],
+      })),
+    [],
+  );
 
   return (
     <div>
@@ -63,14 +44,7 @@ export const CandlestickChart: React.FC<IProps> = (props) => {
                 },
               ],
             }}
-            series={[
-              {
-                data: props.ohlcData.map((item: IDayOhlc) => ({
-                  x: item.date,
-                  y: [item.open, item.high, item.low, item.close],
-                })),
-              },
-            ]}
+            series={[{ data: chartData }]}
             type={'candlestick'}
             height={300}
           />

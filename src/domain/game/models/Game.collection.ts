@@ -257,17 +257,13 @@ export class GameCollection {
     }, {});
   }
 
-  public gatherOpeningMovesForSide(side: PieceColor): { [key: string]: number } {
+  public gatherOpeningMovesForSide(side: PieceColor, moveNumber: number): { [key: string]: number } {
     const gamesForSide = this._gatherGamesForSide(side);
 
     return gamesForSide.reduce((sum: any, game: GameModel) => {
-      // getMoveAtIndexForPieceColor(side, index)
-      const movesForGame = game.getPlayerMovesForGame(side);
       const move = game.getFirstMoveForPieceColor(side);
       const result = game.getResult(this.username);
       const ratingEffect = gameResultToWinLossDraw[result];
-
-      console.log('---', movesForGame);
 
       if (typeof sum[move] === 'undefined') {
         sum[move] = {
