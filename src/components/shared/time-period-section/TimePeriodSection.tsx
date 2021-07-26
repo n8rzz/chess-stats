@@ -12,6 +12,7 @@ const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 interface IProps {
   gameCollection: GameCollection;
   heading: string;
+  isLoading: boolean;
 }
 
 export const TimePeriodSection: React.FC<IProps> = (props) => {

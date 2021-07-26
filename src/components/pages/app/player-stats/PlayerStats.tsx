@@ -1,6 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { Header } from 'semantic-ui-react';
+import { Dimmer, Header, Loader, Segment } from 'semantic-ui-react';
 import styles from '../../../../styles/App.module.css';
 import { IChessStats } from '../../../../domain/player/player.types';
 import { GameTypeStats } from '../../../shared/game-type-stats/GameTypeStats';
@@ -12,6 +12,16 @@ interface IProps {
 }
 
 export const PlayerStats: React.FC<IProps> = (props) => {
+  if (props.isLoading) {
+    return (
+      <Segment placeholder={true}>
+        <Dimmer active={true} inverted={true}>
+          <Loader content={'Loading...'} indeterminate={true} />
+        </Dimmer>
+      </Segment>
+    );
+  }
+
   if (props?.stats == null) {
     return <div className={styles.container}>{'No Player'}</div>;
   }

@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Header, Tab } from 'semantic-ui-react';
+import { Dimmer, Header, Loader, Segment, Tab } from 'semantic-ui-react';
 import clsx from 'clsx';
 import styles from '../../../styles/App.module.css';
 import { getArchives, getHistorcialGamesFromArchiveList } from '../../../domain/game/games.service';
@@ -58,7 +58,13 @@ export const App: React.FC<IProps> = () => {
         <UserForm onSubmit={onSubmit} />
       </div>
 
-      {isLoading && <div className={styles.container}>{'LOADING ...'}</div>}
+      {isLoading && (
+        <Segment placeholder={true}>
+          <Dimmer active={true} inverted={true}>
+            <Loader content={'Loading...'} indeterminate={true} />
+          </Dimmer>
+        </Segment>
+      )}
       {!isLoading && gameCollection.length === 0 && <div className={styles.container}>{'No Games'}</div>}
       {gameCollection.length > 0 && (
         <>
@@ -71,7 +77,11 @@ export const App: React.FC<IProps> = () => {
                   menuItem: timeframeLabel[Timeframe.Today],
                   // eslint-disable-next-line react/display-name
                   render: () => (
-                    <TimePeriodSection heading={timeframeLabel[Timeframe.Today]} gameCollection={todayCollection} />
+                    <TimePeriodSection
+                      heading={timeframeLabel[Timeframe.Today]}
+                      gameCollection={todayCollection}
+                      isLoading={isLoading}
+                    />
                   ),
                 },
                 {
@@ -81,6 +91,7 @@ export const App: React.FC<IProps> = () => {
                     <TimePeriodSection
                       heading={timeframeLabel[Timeframe.SevenDays]}
                       gameCollection={sevenDaysCollection}
+                      isLoading={isLoading}
                     />
                   ),
                 },
@@ -91,6 +102,7 @@ export const App: React.FC<IProps> = () => {
                     <TimePeriodSection
                       heading={timeframeLabel[Timeframe.ThirtyDays]}
                       gameCollection={thirtyDaysCollection}
+                      isLoading={isLoading}
                     />
                   ),
                 },
@@ -101,6 +113,7 @@ export const App: React.FC<IProps> = () => {
                     <TimePeriodSection
                       heading={timeframeLabel[Timeframe.NinetyDays]}
                       gameCollection={ninetyDaysCollection}
+                      isLoading={isLoading}
                     />
                   ),
                 },
@@ -111,6 +124,7 @@ export const App: React.FC<IProps> = () => {
                     <TimePeriodSection
                       heading={timeframeLabel[Timeframe.SixMonths]}
                       gameCollection={sixMonthsCollection}
+                      isLoading={isLoading}
                     />
                   ),
                 },
@@ -118,7 +132,11 @@ export const App: React.FC<IProps> = () => {
                   menuItem: timeframeLabel[Timeframe.OneYear],
                   // eslint-disable-next-line react/display-name
                   render: () => (
-                    <TimePeriodSection heading={timeframeLabel[Timeframe.OneYear]} gameCollection={oneYearCollection} />
+                    <TimePeriodSection
+                      heading={timeframeLabel[Timeframe.OneYear]}
+                      gameCollection={oneYearCollection}
+                      isLoading={isLoading}
+                    />
                   ),
                 },
               ]}

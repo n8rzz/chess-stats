@@ -14,9 +14,9 @@ interface IProps {
 export const HighLowScore: React.FC<IProps> = (props) => {
   if (props.isLoading) {
     return (
-      <Segment>
+      <Segment placeholder={true}>
         <Dimmer active={true} inverted={true}>
-          <Loader content={'Loading'} />
+          <Loader content={'Loading...'} indeterminate={true} />
         </Dimmer>
       </Segment>
     );
