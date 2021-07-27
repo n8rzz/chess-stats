@@ -37,6 +37,14 @@
   margin-bottom: 40px;
 }
 
+.mixIsGreenText {
+  color: #26b926 !important;
+}
+
+.mixIsRedText {
+  color: #ff4b30 !important;
+}
+
 /* --- */
 .stackedBarChart {
 }

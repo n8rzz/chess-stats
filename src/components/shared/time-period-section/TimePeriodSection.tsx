@@ -1,11 +1,12 @@
 import React from 'react';
 import clsx from 'clsx';
 import dynamic from 'next/dynamic';
-import { Container, Grid, List, Statistic } from 'semantic-ui-react';
+import { Dimmer, Grid, Loader, Segment } from 'semantic-ui-react';
 import styles from '../../../styles/App.module.css';
 import { GameCollection } from '../../../domain/game/models/Game.collection';
 import { CandlestickChart } from '../../ui/candlestick/CandlestickChart';
 import { Openings } from '../../pages/app/openings/Openings';
+import { TimePeriodSummary } from './TimePeriodSummary';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
@@ -16,7 +17,7 @@ interface IProps {
 }
 
 export const TimePeriodSection: React.FC<IProps> = (props) => {
-  const ohlcData = React.useMemo(() => props.gameCollection.calculateOhlcForPeriod(), [props.gameCollection]);
+  const ohlcData = React.useMemo(() => props.gameCollection.calculateOhlcForPeriod(), [props.gameCollection.period]);
   const movingAverage = React.useMemo(() => props.gameCollection.calculateMovingAverageWithOhlcAndPeriod(ohlcData, 5), [
     props.gameCollection,
   ]);
@@ -25,40 +26,15 @@ export const TimePeriodSection: React.FC<IProps> = (props) => {
 
   return (
     <div className={styles.container}>
-      <Container className={clsx(styles.container)} textAlign={'center'}>
-        <List className={styles.mixContainerCenter} size={'mini'} horizontal={true} relaxed={true}>
-          <List.Item>
-            <Statistic size={'mini'}>
-              <Statistic.Value>{props.gameCollection.findEarliestGameDate().toLocaleDateString()}</Statistic.Value>
-              <Statistic.Label>{`Start - ${props.gameCollection.findEarliestRating()}`}</Statistic.Label>
-            </Statistic>
-          </List.Item>
-          <List.Item>
-            <Statistic size={'tiny'}>
-              <Statistic.Value>{props.gameCollection.findMinRating()}</Statistic.Value>
-              <Statistic.Label>{'Period Low'}</Statistic.Label>
-            </Statistic>
-          </List.Item>
-          <List.Item>
-            <Statistic size={'small'}>
-              <Statistic.Value>{props.gameCollection.length}</Statistic.Value>
-              <Statistic.Label>{'Games'}</Statistic.Label>
-            </Statistic>
-          </List.Item>
-          <List.Item>
-            <Statistic size={'tiny'}>
-              <Statistic.Value>{props.gameCollection.findMaxRating()}</Statistic.Value>
-              <Statistic.Label>{'Period High'}</Statistic.Label>
-            </Statistic>
-          </List.Item>
-          <List.Item>
-            <Statistic size={'mini'}>
-              <Statistic.Value>{props.gameCollection.findLatestGameDate().toLocaleDateString()}</Statistic.Value>
-              <Statistic.Label>{`End ${props.gameCollection.findLatestRating()}`}</Statistic.Label>
-            </Statistic>
-          </List.Item>
-        </List>
-      </Container>
+      {props.isLoading && (
+        <Segment placeholder={true}>
+          <Dimmer active={true} inverted={true}>
+            <Loader content={'Loading...'} indeterminate={true} />
+          </Dimmer>
+        </Segment>
+      )}
+
+      <TimePeriodSummary gameCollection={props.gameCollection} isLoading={props.isLoading} />
 
       <section className={clsx(styles.container, styles.vr2)}>
         <Grid columns={2}>

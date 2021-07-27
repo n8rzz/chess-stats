@@ -20,7 +20,7 @@ export const CandlestickChart: React.FC<IProps> = (props) => {
         x: item.date,
         y: [item.open, item.high, item.low, item.close],
       })),
-    [],
+    [props.ohlcData],
   );
 
   return (

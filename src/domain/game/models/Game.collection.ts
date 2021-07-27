@@ -32,6 +32,14 @@ export class GameCollection {
     return this._items.length;
   }
 
+  get isOpenLessThanClose(): boolean {
+    return this.findEarliestRating() < this.findLatestRating();
+  }
+
+  get isOpenGreaterThanClose(): boolean {
+    return this.findEarliestRating() > this.findLatestRating();
+  }
+
   constructor(username: string, json: IGame[], period: number) {
     this.period = period;
     this.username = username;

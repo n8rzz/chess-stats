@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Dimmer, Header, Loader, Segment, Tab } from 'semantic-ui-react';
+import { Dimmer, Header, Loader, Segment, Tab, TabProps } from 'semantic-ui-react';
 import clsx from 'clsx';
 import styles from '../../../styles/App.module.css';
 import { getArchives, getHistorcialGamesFromArchiveList } from '../../../domain/game/games.service';
@@ -18,7 +18,16 @@ export const App: React.FC<IProps> = () => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [playerStatsModel, setPlayerStatsModel] = React.useState<IPlayerStats>(undefined as any);
   const [gameCollection, setGameCollection] = React.useState<GameCollection>(new GameCollection('', [], 0));
-  const [defaultActiveTabIndex, setDefaultActiveTabIndex] = React.useState<number>(1);
+  const [activeTabIndex, setActiveTabIndex] = React.useState<number>(1);
+
+  const onActiveTabChange = React.useCallback(
+    (event: React.SyntheticEvent<HTMLDivElement>, data: TabProps) => {
+      setIsLoading(true);
+      setActiveTabIndex(data.activeTabIndex);
+      setIsLoading(false);
+    },
+    [isLoading, activeTabIndex],
+  );
 
   const onSubmit = async (provider: string, username: string, selectedTimeframe: Timeframe) => {
     setIsLoading(true);
@@ -30,7 +39,7 @@ export const App: React.FC<IProps> = () => {
       const gameArchiveList = await getArchives(username);
       const collection = await getHistorcialGamesFromArchiveList(gameArchiveList, username);
 
-      setDefaultActiveTabIndex(nextActiveTabIndex);
+      setActiveTabIndex(nextActiveTabIndex);
       setPlayerStatsModel(playerStats);
       setGameCollection(collection);
       setIsLoading(false);
@@ -70,7 +79,8 @@ export const App: React.FC<IProps> = () => {
         <>
           <div className={clsx(styles.container, styles.vr3)}>
             <Tab
-              defaultActiveIndex={defaultActiveTabIndex}
+              activeIndex={activeTabIndex}
+              onTabChange={onActiveTabChange}
               menu={{ pointing: true, secondary: true }}
               panes={[
                 {
