@@ -10,9 +10,9 @@ export interface IStackedBarChartRowItem {
 
 interface IProps {
   data: IStackedBarChartRowItem[];
-  leftXaxisLabel: string;
+  leftAxisLabel: string;
   onClickDataItem: (move: string, value: WinLossDraw) => void;
-  rightXaxisLabel?: string;
+  rightAxisLabel: string;
 }
 
 export const StackedBarChartRow: React.FC<IProps> = (props) => {
@@ -28,7 +28,7 @@ export const StackedBarChartRow: React.FC<IProps> = (props) => {
 
   return (
     <div className={styles.stackedBarChartBdRow}>
-      <div className={styles.stackedBarChartBdRowXaxisLabel}>{props.leftXaxisLabel}</div>
+      <div className={styles.stackedBarChartBdRowLeftAxisLabel}>{props.leftAxisLabel}</div>
       <div className={styles.stackedBarChartBdRowData}>
         {props.data.map((dataItem: IStackedBarChartRowItem, index: number) => {
           if (dataItem.value === 0) {
@@ -44,14 +44,15 @@ export const StackedBarChartRow: React.FC<IProps> = (props) => {
                 [styles.mixStackedBarChartBdRowDataItemLoss]: dataItem.label === WinLossDraw.Loss,
               })}
               style={{ width: `${valuePercentages[index]}%` }}
-              key={`${props.leftXaxisLabel}-${dataItem.label}`}
-              onClick={() => props.onClickDataItem(props.leftXaxisLabel, dataItem.label)}
+              key={`${props.leftAxisLabel}-${dataItem.label}`}
+              onClick={() => props.onClickDataItem(props.leftAxisLabel, dataItem.label)}
             >
-              {dataItem.label}
+              {dataItem.value}
             </div>
           );
         })}
       </div>
+      <div className={styles.stackedBarChartBdRowRightAxisLabel}>{props.rightAxisLabel}</div>
     </div>
   );
 };

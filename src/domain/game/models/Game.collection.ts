@@ -66,9 +66,7 @@ export class GameCollection {
   }
 
   public buildBarchartDataForSideAtMoveNumber(side: PieceColor, moveNumber: number) {
-    const moveForSide = this.gatherOpeningMovesForSide(side, moveNumber);
-
-    return moveForSide;
+    return this.gatherOpeningMovesForSide(side, moveNumber);
   }
 
   public groupByPeriod(): IGamesGroupedByDate {
@@ -271,7 +269,7 @@ export class GameCollection {
     const gamesForSide = this._gatherGamesForSide(side);
 
     return gamesForSide.reduce((sum: any, game: GameModel) => {
-      const move = game.getFirstMoveForPieceColor(side);
+      const move = game.buildWhiteBlackMoveKeyForMoveNumber(1);
       const result = game.getResult(this.username);
       const ratingEffect = gameResultToWinLossDraw[result];
 

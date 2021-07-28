@@ -39,10 +39,19 @@ export class GameModel implements IGame {
     this._parsePgn(json.pgn);
   }
 
-  public getFirstMoveForPieceColor(side: PieceColor): string {
-    const firstMoveIndex = side === PieceColor.White ? 0 : 1;
+  public findMovesForMoveNumber(moveNumber: number): PgnItem[] {
+    return this.pgn_json.filter((move: PgnItem) => move.moveNumber === moveNumber);
+  }
 
-    return this.pgn_json[firstMoveIndex].notation.notation;
+  public buildWhiteBlackMoveKeyForMoveNumber(moveNumber: number): string {
+    const moves = this.findMovesForMoveNumber(moveNumber);
+    const key = moves[0].notation.notation;
+
+    if (moves.length === 1) {
+      return key;
+    }
+
+    return `${key}:${moves[1].notation.notation}`;
   }
 
   public getPlayerMovesForGame(side: PieceColor): string[] {

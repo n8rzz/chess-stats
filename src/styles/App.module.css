@@ -50,7 +50,16 @@
 }
 
 .stackedBarChartHd {
+  font-size: 110%;
+  font-weight: 600;
+  margin-left: 15px;
   padding: 5px 0;
+}
+
+.stackedBarChartHdSubHd {
+  font-size: 90%;
+  font-style: italic;
+  margin: 0 0 10px 15px;
 }
 
 .stackedBarChartBd {
@@ -71,10 +80,19 @@
   padding: 4px;
 }
 
-.stackedBarChartBdRowXaxisLabel {
-  min-width: 50px;
+.stackedBarChartBdRowLeftAxisLabel,
+.stackedBarChartBdRowRightAxisLabel {
+  min-width: 60px;
+}
+
+.stackedBarChartBdRowLeftAxisLabel {
   padding-right: 10px;
   text-align: right;
+}
+
+.stackedBarChartBdRowRightAxisLabel {
+  padding-left: 10px;
+  text-align: left;
 }
 
 .stackedBarChartBdRowData {

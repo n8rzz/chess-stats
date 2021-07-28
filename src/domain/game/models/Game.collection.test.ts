@@ -217,7 +217,7 @@ describe('GameCollection', () => {
         const collection = new GameCollection('n8rzz', gameListForDate, 1);
         const result = collection.gatherOpeningMovesForSide(PieceColor.White, 1);
         const keysFromResult = Object.keys(result);
-        const expectedKeysFromResult = ['e4'];
+        const expectedKeysFromResult = ['e4:e5'];
 
         expect(keysFromResult).toEqual(expectedKeysFromResult);
       });

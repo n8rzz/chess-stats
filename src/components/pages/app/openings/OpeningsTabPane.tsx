@@ -25,11 +25,16 @@ export const OpeningsTabPane: React.FC<IProps> = (props) => {
     [props.collection, moveNumber],
   );
 
+  console.log('=== openings', chartData);
+
   return (
     <div>
       <StackedBarChart
+        moveList={['e5:d4', 'c4:Nf6']}
         moveNumber={moveNumber}
         onClickDataItem={handleOpeningMoveChange}
+        side={props.side}
+        title={`Playing as ${props.side}`}
         winLossDrawBySideAndOpening={chartData}
       />
     </div>
