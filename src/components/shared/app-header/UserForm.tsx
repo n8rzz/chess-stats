@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Button, Select, Input } from 'semantic-ui-react';
 import styles from '../../../styles/App.module.css';
-import { Timeframe, timeframeOptionList } from './app.constants';
+import { Timeframe, timeframeOptionList } from '../../pages/app/app.constants';
 
 interface IProps {
   onSubmit: (provider: string, username: string, timeframe: Timeframe) => void;

@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Dimmer, Header, Loader, Segment, Tab, TabProps } from 'semantic-ui-react';
+import { Dimmer, Loader, Segment, Tab, TabProps } from 'semantic-ui-react';
 import clsx from 'clsx';
 import styles from '../../../styles/App.module.css';
 import { getArchives, getHistorcialGamesFromArchiveList } from '../../../domain/game/games.service';
@@ -8,9 +8,10 @@ import { getPlayerStats } from '../../../domain/player/player.service';
 import { IPlayerStats } from '../../../domain/player/player.types';
 import { TimePeriodSection } from '../../shared/time-period-section/TimePeriodSection';
 import { PlayerStats } from './player-stats/PlayerStats';
-import { UserForm } from './UserForm';
 import { HighLowScore } from '../../shared/high-low-score/HighLowScore';
 import { Timeframe, timeframeLabel } from './app.constants';
+import { AppHeader } from '../../shared/app-header/AppHeader';
+import { EmptyView } from './EmptyView';
 
 interface IProps {}
 
@@ -56,17 +57,84 @@ export const App: React.FC<IProps> = () => {
   const ninetyDaysCollection = useMemo(() => gameCollection.createCollectionForPeriod(90), [gameCollection]);
   const sixMonthsCollection = useMemo(() => gameCollection.createCollectionForPeriod(180), [gameCollection]);
   const oneYearCollection = useMemo(() => gameCollection.createCollectionForPeriod(365), [gameCollection]);
+  const isEmpty = useMemo(() => !isLoading && gameCollection.length === 0, [isLoading, gameCollection.length]);
+
+  const tabPanes = useMemo(() => {
+    return [
+      {
+        menuItem: timeframeLabel[Timeframe.Today],
+        // eslint-disable-next-line react/display-name
+        render: () => (
+          <TimePeriodSection
+            heading={timeframeLabel[Timeframe.Today]}
+            gameCollection={todayCollection}
+            isLoading={isLoading}
+          />
+        ),
+      },
+      {
+        menuItem: timeframeLabel[Timeframe.SevenDays],
+        // eslint-disable-next-line react/display-name
+        render: () => (
+          <TimePeriodSection
+            heading={timeframeLabel[Timeframe.SevenDays]}
+            gameCollection={sevenDaysCollection}
+            isLoading={isLoading}
+          />
+        ),
+      },
+      {
+        menuItem: timeframeLabel[Timeframe.ThirtyDays],
+        // eslint-disable-next-line react/display-name
+        render: () => (
+          <TimePeriodSection
+            heading={timeframeLabel[Timeframe.ThirtyDays]}
+            gameCollection={thirtyDaysCollection}
+            isLoading={isLoading}
+          />
+        ),
+      },
+      {
+        menuItem: timeframeLabel[Timeframe.NinetyDays],
+        // eslint-disable-next-line react/display-name
+        render: () => (
+          <TimePeriodSection
+            heading={timeframeLabel[Timeframe.NinetyDays]}
+            gameCollection={ninetyDaysCollection}
+            isLoading={isLoading}
+          />
+        ),
+      },
+      {
+        menuItem: timeframeLabel[Timeframe.SixMonths],
+        // eslint-disable-next-line react/display-name
+        render: () => (
+          <TimePeriodSection
+            heading={timeframeLabel[Timeframe.SixMonths]}
+            gameCollection={sixMonthsCollection}
+            isLoading={isLoading}
+          />
+        ),
+      },
+      {
+        menuItem: timeframeLabel[Timeframe.OneYear],
+        // eslint-disable-next-line react/display-name
+        render: () => (
+          <TimePeriodSection
+            heading={timeframeLabel[Timeframe.OneYear]}
+            gameCollection={oneYearCollection}
+            isLoading={isLoading}
+          />
+        ),
+      },
+    ];
+  }, [isLoading, gameCollection]);
 
   return (
     <div>
-      <div className={styles.container}>
-        <Header as={'h1'}>{'Chess Stats'}</Header>
-      </div>
+      <AppHeader onClickSearch={onSubmit} />
 
-      <div className={styles.vr4}>
-        <UserForm onSubmit={onSubmit} />
-      </div>
-
+      {isEmpty && <EmptyView />}
       {isLoading && (
         <Segment placeholder={true}>
           <Dimmer active={true} inverted={true}>
@@ -74,88 +142,20 @@ export const App: React.FC<IProps> = () => {
           </Dimmer>
         </Segment>
       )}
-      {!isLoading && gameCollection.length === 0 && <div className={styles.container}>{'No Games'}</div>}
       {gameCollection.length > 0 && (
-        <>
+        <React.Fragment>
           <div className={clsx(styles.container, styles.vr3)}>
             <Tab
               activeIndex={activeTabIndex}
               onTabChange={onActiveTabChange}
-              menu={{ pointing: true, secondary: true }}
-              panes={[
-                {
-                  menuItem: timeframeLabel[Timeframe.Today],
-                  // eslint-disable-next-line react/display-name
-                  render: () => (
-                    <TimePeriodSection
-                      heading={timeframeLabel[Timeframe.Today]}
-                      gameCollection={todayCollection}
-                      isLoading={isLoading}
-                    />
-                  ),
-                },
-                {
-                  menuItem: timeframeLabel[Timeframe.SevenDays],
-                  // eslint-disable-next-line react/display-name
-                  render: () => (
-                    <TimePeriodSection
-                      heading={timeframeLabel[Timeframe.SevenDays]}
-                      gameCollection={sevenDaysCollection}
-                      isLoading={isLoading}
-                    />
-                  ),
-                },
-                {
-                  menuItem: timeframeLabel[Timeframe.ThirtyDays],
-                  // eslint-disable-next-line react/display-name
-                  render: () => (
-                    <TimePeriodSection
-                      heading={timeframeLabel[Timeframe.ThirtyDays]}
-                      gameCollection={thirtyDaysCollection}
-                      isLoading={isLoading}
-                    />
-                  ),
-                },
-                {
-                  menuItem: timeframeLabel[Timeframe.NinetyDays],
-                  // eslint-disable-next-line react/display-name
-                  render: () => (
-                    <TimePeriodSection
-                      heading={timeframeLabel[Timeframe.NinetyDays]}
-                      gameCollection={ninetyDaysCollection}
-                      isLoading={isLoading}
-                    />
-                  ),
-                },
-                {
-                  menuItem: timeframeLabel[Timeframe.SixMonths],
-                  // eslint-disable-next-line react/display-name
-                  render: () => (
-                    <TimePeriodSection
-                      heading={timeframeLabel[Timeframe.SixMonths]}
-                      gameCollection={sixMonthsCollection}
-                      isLoading={isLoading}
-                    />
-                  ),
-                },
-                {
-                  menuItem: timeframeLabel[Timeframe.OneYear],
-                  // eslint-disable-next-line react/display-name
-                  render: () => (
-                    <TimePeriodSection
-                      heading={timeframeLabel[Timeframe.OneYear]}
-                      gameCollection={oneYearCollection}
-                      isLoading={isLoading}
-                    />
-                  ),
-                },
-              ]}
+              menu={{ attached: false, tabular: false, pointing: false }}
+              panes={tabPanes}
             />
           </div>
 
           <HighLowScore isLoading={isLoading} label={'Tactics'} highLow={playerStatsModel.tactics} />
           <PlayerStats isLoading={isLoading} label={'Rapid'} stats={playerStatsModel?.chess_rapid} />
-        </>
+        </React.Fragment>
       )}
     </div>
   );

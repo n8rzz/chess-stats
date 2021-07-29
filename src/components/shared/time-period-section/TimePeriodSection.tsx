@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import dynamic from 'next/dynamic';
-import { Dimmer, Grid, Loader, Segment } from 'semantic-ui-react';
+import { Dimmer, Grid, Loader, Segment, Tab } from 'semantic-ui-react';
 import styles from '../../../styles/App.module.css';
 import { GameCollection } from '../../../domain/game/models/Game.collection';
 import { CandlestickChart } from '../../ui/candlestick/CandlestickChart';
@@ -25,7 +25,7 @@ export const TimePeriodSection: React.FC<IProps> = (props) => {
   const gameResults = React.useMemo(() => props.gameCollection.gatherGameResults(), [props.gameCollection]);
 
   return (
-    <div className={styles.container}>
+    <Tab.Pane style={{ border: 0 }}>
       {props.isLoading && (
         <Segment placeholder={true}>
           <Dimmer active={true} inverted={true}>
@@ -34,7 +34,9 @@ export const TimePeriodSection: React.FC<IProps> = (props) => {
         </Segment>
       )}
 
-      <TimePeriodSummary gameCollection={props.gameCollection} isLoading={props.isLoading} />
+      <section className={styles.vr2}>
+        <TimePeriodSummary gameCollection={props.gameCollection} isLoading={props.isLoading} />
+      </section>
 
       <section className={clsx(styles.container, styles.vr2)}>
         <Grid columns={2}>
@@ -100,7 +102,7 @@ export const TimePeriodSection: React.FC<IProps> = (props) => {
       <section>
         <Openings collection={props.gameCollection} />
       </section>
-    </div>
+    </Tab.Pane>
   );
 };
 
