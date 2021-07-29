@@ -18,10 +18,7 @@ interface IProps {
 
 export const TimePeriodSummary: React.FC<IProps> = (props) => {
   return (
-    <Card.Group
-      // doubling={true}
-      itemsPerRow={5}
-    >
+    <Card.Group itemsPerRow={5}>
       <Card>
         <Card.Content>
           <Card.Header>{props.earliestRating}</Card.Header>
