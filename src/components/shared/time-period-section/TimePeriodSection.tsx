@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import dynamic from 'next/dynamic';
-import { Card, Dimmer, Grid, Loader, Segment, Tab } from 'semantic-ui-react';
+import { Card, Dimmer, Loader, Segment, Tab } from 'semantic-ui-react';
 import styles from '../../../styles/App.module.css';
 import { GameCollection } from '../../../domain/game/models/Game.collection';
 import { CandlestickChart } from '../../ui/candlestick/CandlestickChart';
@@ -35,11 +35,22 @@ export const TimePeriodSection: React.FC<IProps> = (props) => {
       )}
 
       <section className={styles.vr2}>
-        <TimePeriodSummary gameCollection={props.gameCollection} isLoading={props.isLoading} />
+        <TimePeriodSummary
+          earliestGameDate={props.gameCollection.findEarliestGameDate().toLocaleDateString()}
+          earliestRating={props.gameCollection.findEarliestRating()}
+          gameCount={props.gameCollection.length}
+          isLoading={props.isLoading}
+          isOpenGreaterThanClose={props.gameCollection.isOpenGreaterThanClose}
+          isOpenLessThanClose={props.gameCollection.isOpenLessThanClose}
+          latestGameDate={props.gameCollection.findLatestGameDate().toLocaleDateString()}
+          latestRating={props.gameCollection.findLatestRating()}
+          maxRating={props.gameCollection.findMaxRating()}
+          minRating={props.gameCollection.findMinRating()}
+        />
       </section>
 
       <section className={styles.vr2}>
-        <Card.Group itemsPerRow={2}>
+        <Card.Group itemsPerRow={2} stackable={true}>
           <Card>
             <Card.Content>
               <Card.Header as={'h3'}>Piece Color</Card.Header>
@@ -57,9 +68,6 @@ export const TimePeriodSection: React.FC<IProps> = (props) => {
                         options: {
                           chart: {
                             width: 200,
-                          },
-                          legend: {
-                            position: 'bottom',
                           },
                         },
                       },

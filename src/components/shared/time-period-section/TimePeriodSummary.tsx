@@ -1,50 +1,76 @@
 import React from 'react';
 import clsx from 'clsx';
+import { Card, Icon } from 'semantic-ui-react';
 import styles from '../../../styles/App.module.css';
-import { Card } from 'semantic-ui-react';
-import type { GameCollection } from '../../../domain/game/models/Game.collection';
 
 interface IProps {
-  gameCollection: GameCollection;
+  earliestGameDate: string;
+  earliestRating: number;
+  gameCount: number;
   isLoading: boolean;
+  isOpenGreaterThanClose: boolean;
+  isOpenLessThanClose: boolean;
+  latestGameDate: string;
+  latestRating: number;
+  maxRating: number;
+  minRating: number;
 }
 
 export const TimePeriodSummary: React.FC<IProps> = (props) => {
-  const cardItems = React.useMemo(() => {
-    return [
-      {
-        header: props.gameCollection.findEarliestRating(),
-        meta: `Open - ${props.gameCollection.findEarliestGameDate().toLocaleDateString()}`,
-      },
-      {
-        header: props.gameCollection.findMinRating(),
-        meta: 'Low',
-      },
-      {
-        header: props.gameCollection.length,
-        meta: 'Total Games',
-      },
-      {
-        header: props.gameCollection.findMaxRating(),
-        meta: 'High',
-      },
-      {
-        header: (
-          <span
-            className={clsx({
-              [styles.mixIsGreenText]: props.gameCollection.isOpenLessThanClose,
-              [styles.mixIsRedText]: props.gameCollection.isOpenGreaterThanClose,
-            })}
-          >
-            {props.gameCollection.findLatestRating()}
-          </span>
-        ),
-        meta: `Close - ${props.gameCollection.findLatestGameDate().toLocaleDateString()}`,
-      },
-    ];
-  }, [props.isLoading, props.gameCollection]);
-
-  return <Card.Group items={cardItems} itemsPerRow={5} />;
+  return (
+    <Card.Group
+      // doubling={true}
+      itemsPerRow={5}
+    >
+      <Card>
+        <Card.Content>
+          <Card.Header>{props.earliestRating}</Card.Header>
+          <Card.Meta>{'Open'}</Card.Meta>
+        </Card.Content>
+        <Card.Content extra={true}>
+          <Icon name={'hourglass start'} />
+          <span>{props.earliestGameDate}</span>
+        </Card.Content>
+      </Card>
+      <Card>
+        <Card.Content>
+          <Card.Header>{props.minRating}</Card.Header>
+          <Card.Meta>{'Low'}</Card.Meta>
+        </Card.Content>
+      </Card>
+      <Card>
+        <Card.Content>
+          <Card.Header>{props.gameCount}</Card.Header>
+          <Card.Meta>{'Total Games'}</Card.Meta>
+        </Card.Content>
+      </Card>
+      <Card>
+        <Card.Content>
+          <Card.Header>{props.maxRating}</Card.Header>
+          <Card.Meta>{'High'}</Card.Meta>
+        </Card.Content>
+      </Card>
+      <Card>
+        <Card.Content>
+          <Card.Header>
+            <span
+              className={clsx({
+                [styles.mixIsGreenText]: props.isOpenLessThanClose,
+                [styles.mixIsRedText]: props.isOpenGreaterThanClose,
+              })}
+            >
+              {props.latestRating}
+            </span>
+          </Card.Header>
+          <Card.Meta>{'Close'}</Card.Meta>
+        </Card.Content>
+        <Card.Content extra={true}>
+          <Icon name={'stopwatch'} />
+          <span>{props.latestGameDate}</span>
+        </Card.Content>
+      </Card>
+    </Card.Group>
+  );
 };
 
 TimePeriodSummary.displayName = 'TimePeriodSummary';
