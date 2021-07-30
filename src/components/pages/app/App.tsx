@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Dimmer, Loader, Segment, Tab, TabProps } from 'semantic-ui-react';
+import { Dimmer, Loader, Segment, Tab, TabProps, Image } from 'semantic-ui-react';
 import clsx from 'clsx';
 import styles from '../../../styles/App.module.css';
 import { getArchives, getHistorcialGamesFromArchiveList } from '../../../domain/game/games.service';
@@ -136,10 +136,12 @@ export const App: React.FC<IProps> = () => {
 
       {isEmpty && <EmptyView />}
       {isLoading && (
-        <Segment placeholder={true}>
+        <Segment style={{ border: 0, height: '80vh' }}>
           <Dimmer active={true} inverted={true}>
-            <Loader content={'Loading...'} indeterminate={true} />
+            <Loader size="large">{'Loading'}</Loader>
           </Dimmer>
+
+          <Image src="https://react.semantic-ui.com/images/wireframe/paragraph.png" />
         </Segment>
       )}
       {gameCollection.length > 0 && (

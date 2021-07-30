@@ -10,17 +10,20 @@ interface IProps {
 
 export const OpeningsTabPane: React.FC<IProps> = (props) => {
   const [moveNumber, setMoveNumber] = React.useState<number>(1);
+  const [selectedMoveList, setSelectedMoveList] = React.useState<string[]>([]);
 
   const chartData = React.useMemo(() => props.collection.buildBarchartDataForSideAtMoveNumber(props.side, moveNumber), [
     props.collection,
     props.side,
+    moveNumber,
   ]);
 
   const handleOpeningMoveChange = React.useCallback(
     (move: string, value: WinLossDraw) => {
-      console.log('+++ handleOpeningMoveChange', moveNumber, move, value);
+      console.log('+++ handleOpeningMoveChange', moveNumber, move, value, selectedMoveList);
 
       setMoveNumber(moveNumber + 1);
+      setSelectedMoveList([...selectedMoveList, move]);
     },
     [props.collection, moveNumber],
   );
@@ -30,7 +33,7 @@ export const OpeningsTabPane: React.FC<IProps> = (props) => {
   return (
     <div>
       <StackedBarChart
-        moveList={['e5:d4', 'c4:Nf6']}
+        moveList={selectedMoveList}
         moveNumber={moveNumber}
         onClickDataItem={handleOpeningMoveChange}
         side={props.side}

@@ -1,4 +1,4 @@
-import { GameResult, ChessRules, TimeClass, PgnTurn } from './games.constants';
+import { GameResult, ChessRules, TimeClass, PgnTurn, WinLossDraw } from './games.constants';
 import { GameModel } from './models/Game.model';
 
 export interface IGamePlayer {
@@ -88,4 +88,10 @@ export interface PgnItem {
   };
   turn: PgnTurn;
   variations: string[];
+}
+
+export interface IOpeningMoveMap {
+  [key: string]: {
+    [key in WinLossDraw]: number;
+  };
 }

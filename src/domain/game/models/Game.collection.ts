@@ -278,8 +278,8 @@ export class GameCollection {
   public gatherOpeningMovesForSide(side: PieceColor, moveNumber: number): { [key: string]: number } {
     const gamesForSide = this._gatherGamesForSide(side);
 
-    return gamesForSide.reduce((sum: any, game: GameModel) => {
-      const move = game.buildWhiteBlackMoveKeyForMoveNumber(1);
+    return gamesForSide.reduce((sum: any, game: GameModel): any => {
+      const move = game.buildWhiteBlackMoveKeyForMoveNumber(moveNumber);
       const result = game.getResult(this.username);
       const ratingEffect = gameResultToWinLossDraw[result];
 
