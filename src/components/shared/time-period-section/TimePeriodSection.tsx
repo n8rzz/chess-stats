@@ -4,9 +4,9 @@ import { Dimmer, Loader, Segment, Tab } from 'semantic-ui-react';
 import styles from '../../../styles/App.module.css';
 import { GameCollection } from '../../../domain/game/models/Game.collection';
 import { CandlestickChart } from '../../ui/candlestick/CandlestickChart';
-import { Openings } from '../../pages/app/openings/Openings';
 import { TimePeriodSummary } from './TimePeriodSummary';
 import { PeriodGameSummaryCharts } from '../period-game-summary-charts/PeriodGameSummaryCharts';
+import { Openings } from '../openings/Openings';
 
 interface IProps {
   gameCollection: GameCollection;
