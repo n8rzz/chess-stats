@@ -1,8 +1,8 @@
 import * as React from 'react';
 import dynamic from 'next/dynamic';
-import styles from '../../../styles/App.module.css';
-import { IDayOhlc, IDataLabel, IMovingAverageChartData } from '../../../domain/game/games.types';
 import clsx from 'clsx';
+import styles from '../../../styles/App.module.css';
+import { IDataLabel, IMovingAverageChartData, IOhlcChartData } from '../../../domain/game/games.types';
 import { GameResult } from '../../../domain/game/games.constants';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
@@ -10,19 +10,10 @@ const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 interface IProps {
   countByDate: IDataLabel<Record<GameResult, number[]>>;
   movingAverage: IMovingAverageChartData[];
-  ohlcData: IDayOhlc[];
+  ohlcData: IOhlcChartData[];
 }
 
 export const CandlestickChart: React.FC<IProps> = (props) => {
-  const chartData = React.useMemo(
-    () =>
-      props.ohlcData.map((item: IDayOhlc) => ({
-        x: item.date,
-        y: [item.open, item.high, item.low, item.close],
-      })),
-    [props.ohlcData],
-  );
-
   return (
     <div>
       <section className={clsx(styles.container, styles.vr2)}>
@@ -44,7 +35,7 @@ export const CandlestickChart: React.FC<IProps> = (props) => {
                 },
               ],
             }}
-            series={[{ data: chartData }]}
+            series={[{ data: props.ohlcData }]}
             type={'candlestick'}
             height={300}
           />

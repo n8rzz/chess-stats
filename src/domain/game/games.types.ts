@@ -48,6 +48,11 @@ export interface IDayOhlc {
   volume: number;
 }
 
+export interface IOhlcChartData {
+  x: string;
+  y: number[];
+}
+
 export interface IGamesBySide {
   black: number;
   white: number;

@@ -54,7 +54,7 @@ export const TimePeriodSection: React.FC<IProps> = (props) => {
       <section className={clsx(styles.container, styles.vr2)}>
         <CandlestickChart
           countByDate={props.gameCollection.countByDate()}
-          ohlcData={ohlcData}
+          ohlcData={props.gameCollection.buildOhlcChartData()}
           movingAverage={movingAverage}
         />
       </section>

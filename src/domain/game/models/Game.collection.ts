@@ -9,6 +9,7 @@ import {
   IGamesBySide,
   IGamesGroupedByDate,
   IMovingAverageChartData,
+  IOhlcChartData,
 } from '../games.types';
 import { GameModel } from './Game.model';
 import { setDateFromUtcSeconds } from '../../../util/date.utils';
@@ -67,6 +68,15 @@ export class GameCollection {
 
   public buildBarchartDataForSideAtMoveNumber(side: PieceColor, moveNumber: number) {
     return this.gatherOpeningMovesForSide(side, moveNumber);
+  }
+
+  public buildOhlcChartData(): IOhlcChartData[] {
+    const ohlcData = this.calculateOhlcForPeriod();
+
+    return ohlcData.map((item: IDayOhlc) => ({
+      x: item.date,
+      y: [item.open, item.high, item.low, item.close],
+    }));
   }
 
   public groupByPeriod(): IGamesGroupedByDate {
