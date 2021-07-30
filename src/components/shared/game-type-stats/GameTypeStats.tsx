@@ -1,6 +1,6 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
-import { Segment, Grid, Header, Statistic, Dimmer, Loader } from 'semantic-ui-react';
+import { Segment, Dimmer, Loader, Card } from 'semantic-ui-react';
 import { setDateFromUtcSeconds } from '../../../util/date.utils';
 import { IChessStats } from '../../../domain/player/player.types';
 
@@ -24,51 +24,36 @@ export const GameTypeStats: React.FC<IProps> = (props) => {
   }
 
   return (
-    <Segment raised={true} size={'big'}>
-      <Grid columns={3} textAlign={'center'} divided={true}>
-        <Grid.Row verticalAlign={'middle'}>
-          <Grid.Column>
-            <Chart
-              series={[props.stats.record.win, props.stats.record.loss, props.stats.record.draw]}
-              options={{
-                dataLabels: {
-                  enabled: false,
-                },
-                title: {
-                  align: 'left',
-                  text: `${props.label}`,
-                },
-                labels: ['win', 'loss', 'draw'],
-                legend: {
-                  formatter: (seriesName, opts) => `${seriesName} - ${opts.w.globals.series[opts.seriesIndex]}`,
-                  position: 'right',
-                },
-              }}
-              type={'pie'}
-              height={125}
-            />
-          </Grid.Column>
-
-          <Grid.Column>
-            <Statistic>
-              <Header as={'h3'}>{'Last'}</Header>
-
-              <Statistic.Value>{props.stats.last.rating}</Statistic.Value>
-              <Statistic.Label>{setDateFromUtcSeconds(props.stats.last.date).toLocaleString()}</Statistic.Label>
-            </Statistic>
-          </Grid.Column>
-
-          <Grid.Column>
-            <Statistic>
-              <Header as={'h3'}>{'Best'}</Header>
-
-              <Statistic.Value>{props.stats.best.rating}</Statistic.Value>
-              <Statistic.Label>{setDateFromUtcSeconds(props.stats.best.date).toLocaleString()}</Statistic.Label>
-            </Statistic>
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
-    </Segment>
+    <Card.Group itemsPerRow={2} stackable={true}>
+      <Card>
+        <Card.Content>
+          <Chart
+            series={[props.stats.record.win, props.stats.record.loss, props.stats.record.draw]}
+            options={{
+              dataLabels: {
+                enabled: false,
+              },
+              labels: ['win', 'loss', 'draw'],
+              legend: {
+                position: 'bottom',
+                horizontalAlign: 'center',
+              },
+            }}
+            type={'donut'}
+            height={225}
+          />
+        </Card.Content>
+      </Card>
+      <Card>
+        <Card.Content>
+          <Card.Meta>best</Card.Meta>
+          <Card.Description>
+            <h3>{props.stats.best.rating}</h3>
+          </Card.Description>
+        </Card.Content>
+        <Card.Content extra={true}>{setDateFromUtcSeconds(props.stats.best.date).toLocaleString()}</Card.Content>
+      </Card>
+    </Card.Group>
   );
 };
 

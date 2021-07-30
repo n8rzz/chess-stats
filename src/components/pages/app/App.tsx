@@ -145,6 +145,7 @@ export const App: React.FC<IProps> = () => {
       {gameCollection.length > 0 && (
         <React.Fragment>
           <div className={clsx(styles.container, styles.vr3)}>
+            <PlayerStats isLoading={isLoading} label={'Rapid'} stats={playerStatsModel?.chess_rapid} />
             <Tab
               activeIndex={activeTabIndex}
               onTabChange={onActiveTabChange}
@@ -154,7 +155,6 @@ export const App: React.FC<IProps> = () => {
           </div>
 
           <HighLowScore isLoading={isLoading} label={'Tactics'} highLow={playerStatsModel.tactics} />
-          <PlayerStats isLoading={isLoading} label={'Rapid'} stats={playerStatsModel?.chess_rapid} />
         </React.Fragment>
       )}
     </div>
