@@ -11,14 +11,6 @@ interface IProps {
 
 export const OpeningsTabPane: React.FC<IProps> = (props) => {
   const [state, dispatch] = React.useReducer(reducer, buildInitialState(props.collection, props.side));
-  // const [moveNumber, setMoveNumber] = React.useState<number>(1);
-  // const [selectedMoveList, setSelectedMoveList] = React.useState<string[]>([]);
-
-  // const chartData = React.useMemo(() => props.collection.buildBarchartDataForSideAtMoveNumber(props.side, moveNumber), [
-  //   props.collection,
-  //   props.side,
-  //   moveNumber,
-  // ]);
 
   const handleOpeningMoveChange = React.useCallback(
     (move: string, value: WinLossDraw) => {
@@ -32,6 +24,8 @@ export const OpeningsTabPane: React.FC<IProps> = (props) => {
     },
     [props.collection, state],
   );
+
+  console.log('===', state.collection);
 
   return (
     <div>

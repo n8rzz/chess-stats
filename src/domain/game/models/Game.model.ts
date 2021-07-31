@@ -1,5 +1,6 @@
 // @ts-ignore
 import * as parser from '@mliebelt/pgn-parser';
+import chunk from 'lodash.chunk';
 import { ChessRules, TimeClass, PieceColor, GameResult, pieceColorToPgnTurn } from '../games.constants';
 import { IGame, IGamePlayer, PgnItem } from '../games.types';
 
@@ -7,6 +8,8 @@ export class GameModel implements IGame {
   public readonly black: IGamePlayer = {} as IGamePlayer;
   public readonly end_time: number = -1;
   public readonly fen: string = '';
+  public moveList: string[] = [];
+  public moveTree: any = {};
   public readonly pgn: string = '';
   public pgn_json: PgnItem[] = [];
   public readonly rated: boolean = false;
@@ -16,6 +19,8 @@ export class GameModel implements IGame {
   public readonly url: string = '';
   public readonly white: IGamePlayer = {} as IGamePlayer;
 
+  private _username: string = 'n8rzz';
+
   get endDate(): Date {
     const end = new Date(0);
 
@@ -24,7 +29,7 @@ export class GameModel implements IGame {
     return end;
   }
 
-  constructor(json: IGame) {
+  constructor(json: IGame, username?: string) {
     this.black = json.black;
     this.end_time = json.end_time;
     this.fen = json.fen;
@@ -35,12 +40,11 @@ export class GameModel implements IGame {
     this.time_control = json.time_control;
     this.url = json.url;
     this.white = json.white;
+    this._username = username ?? this._username;
 
     this._parsePgn(json.pgn);
-  }
-
-  public findMovesForMoveNumber(moveNumber: number): PgnItem[] {
-    return this.pgn_json.filter((move: PgnItem) => move.moveNumber === moveNumber);
+    this._buildMoveList();
+    this._buildMoveTree();
   }
 
   public buildWhiteBlackMoveKeyForMoveNumber(moveNumber: number): string {
@@ -52,6 +56,10 @@ export class GameModel implements IGame {
     }
 
     return `${key}:${moves[1].notation.notation}`;
+  }
+
+  public findMovesForMoveNumber(moveNumber: number): PgnItem[] {
+    return this.pgn_json.filter((move: PgnItem) => move.moveNumber === moveNumber);
   }
 
   public getPlayerMovesForGame(side: PieceColor): string[] {
@@ -98,10 +106,44 @@ export class GameModel implements IGame {
     };
   }
 
+  private buildMoveKey(moveGroup: PgnItem[]): string {
+    let key = moveGroup[0].notation.notation;
+
+    if (moveGroup.length > 1) {
+      key = `${key}:${moveGroup[1].notation.notation}`;
+    }
+
+    return key;
+  }
+
+  private _buildMoveList(): void {
+    const chunkedMoves = chunk(this.pgn_json, 2);
+
+    this.moveList = chunkedMoves.map((moveGroup: PgnItem[]) => this.buildMoveKey(moveGroup));
+  }
+
+  private _buildMoveTree(): void {
+    const chunkedMoves = chunk(this.pgn_json, 2);
+    const result = this.getResult(this._username);
+
+    this.moveTree = chunkedMoves.reverse().reduce((acc: any, moveGroup: PgnItem[], index: number) => {
+      const key = this.buildMoveKey(moveGroup);
+
+      return {
+        [key]: {
+          ...acc,
+          results: {
+            [result]: 1,
+          },
+        },
+      };
+    }, {});
+  }
+
   private _parsePgn(rawPgn: string): void {
     const splitPgn = rawPgn.split('\n');
     const pgnWithResult = parser.parse(splitPgn[splitPgn.length - 2]);
 
-    this.pgn_json = pgnWithResult.slice(0, pgnWithResult.length);
+    this.pgn_json = pgnWithResult.slice(0, pgnWithResult.length - 1);
   }
 }

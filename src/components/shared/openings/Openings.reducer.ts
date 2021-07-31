@@ -52,8 +52,6 @@ const _onAddMove = (state: IState, action: IAction<OpeningsAction>): IState => {
 };
 
 export const reducer = (state: IState, action: IAction<OpeningsAction>): IState => {
-  console.log('=== ', action);
-
   switch (action.type) {
     case OpeningsAction.AddMove:
       return _onAddMove(state, action);
