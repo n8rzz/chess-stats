@@ -25,8 +25,6 @@ export const OpeningsTabPane: React.FC<IProps> = (props) => {
     [props.collection, state],
   );
 
-  console.log('===', state.collection);
-
   return (
     <div>
       <StackedBarChart

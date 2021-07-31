@@ -54,7 +54,7 @@ export class GameCollection {
 
   public addItems(items: IGame[]): void {
     items.forEach((gameJson: IGame) => {
-      const model = new GameModel(gameJson);
+      const model = new GameModel(gameJson, this.username);
 
       this.addItem(model);
     });

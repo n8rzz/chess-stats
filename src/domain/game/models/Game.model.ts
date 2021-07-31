@@ -19,7 +19,7 @@ export class GameModel implements IGame {
   public readonly url: string = '';
   public readonly white: IGamePlayer = {} as IGamePlayer;
 
-  private _username: string = 'n8rzz';
+  private _username: string = '';
 
   get endDate(): Date {
     const end = new Date(0);
@@ -29,7 +29,7 @@ export class GameModel implements IGame {
     return end;
   }
 
-  constructor(json: IGame, username?: string) {
+  constructor(json: IGame, username: string) {
     this.black = json.black;
     this.end_time = json.end_time;
     this.fen = json.fen;

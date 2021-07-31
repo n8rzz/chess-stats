@@ -3,22 +3,24 @@ import { IGame } from '../games.types';
 import { GameModel } from './Game.model';
 
 describe('GameModel', () => {
+  const usernameMock = 'n8rzz';
+
   describe('when called without valid args', () => {
     test('should throw', () => {
-      expect(() => new GameModel({} as IGame)).toThrow();
+      expect(() => new GameModel({} as IGame, usernameMock)).toThrow();
     });
   });
 
   describe('when called with valid args', () => {
     test('should not throw', () => {
-      expect(() => new GameModel(validGameResponse)).not.toThrow();
+      expect(() => new GameModel(validGameResponse, usernameMock)).not.toThrow();
     });
   });
 
   describe('#moveTree', () => {
     describe('should include a list of move pairs for a game', () => {
       test('should be set on instantiation', () => {
-        const model = new GameModel(validGameResponse);
+        const model = new GameModel(validGameResponse, usernameMock);
         const expectedResult = [
           'e4:e5',
           'Nf3:Nf6',
@@ -45,13 +47,13 @@ describe('GameModel', () => {
 
   describe('#moveTree', () => {
     test('should be set on instantiation', () => {
-      const model = new GameModel(validGameResponse);
+      const model = new GameModel(validGameResponse, usernameMock);
 
       expect(model.moveTree).not.toEqual({});
     });
 
     test('should be a deeply nested object with move pairs as keys', () => {
-      const model = new GameModel(validGameResponse);
+      const model = new GameModel(validGameResponse, usernameMock);
       const expectedResult = {
         'e4:e5': {
           results: {
@@ -142,7 +144,7 @@ describe('GameModel', () => {
   describe('.findMovesForMoveNumber()', () => {
     describe('when a move exists for both piece colors', () => {
       test('should return a list of both moves', () => {
-        const model = new GameModel(validGameResponse);
+        const model = new GameModel(validGameResponse, usernameMock);
         const result = model.findMovesForMoveNumber(1);
 
         expect(result.length).toEqual(2);
@@ -153,7 +155,7 @@ describe('GameModel', () => {
       describe('and the last moveNumber is requested', () => {
         test('should return a list of just the white move', () => {
           const lastMoveNumber = 25;
-          const model = new GameModel(gameResponseWithWhiteWinner);
+          const model = new GameModel(gameResponseWithWhiteWinner, usernameMock);
           const result = model.findMovesForMoveNumber(lastMoveNumber);
 
           expect(result.length).toEqual(1);
