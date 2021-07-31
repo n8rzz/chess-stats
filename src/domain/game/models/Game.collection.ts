@@ -66,7 +66,9 @@ export class GameCollection {
     this._orderItemsByEndDate();
   }
 
-  public buildBarchartDataForSideAtMoveNumber(side: PieceColor, moveNumber: number) {
+  public buildBarchartDataForSideAtMoveNumber(side: PieceColor, moveList: string[]) {
+    const moveNumber = moveList.length + 1;
+
     return this.gatherOpeningMovesForSide(side, moveNumber);
   }
 

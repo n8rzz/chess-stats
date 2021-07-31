@@ -22,9 +22,13 @@ export const OpeningsTabPane: React.FC<IProps> = (props) => {
 
   const handleOpeningMoveChange = React.useCallback(
     (move: string, value: WinLossDraw) => {
-      console.log('+++ handleOpeningMoveChange', move, value);
+      const payload = {
+        move: move,
+        side: props.side,
+        result: value,
+      };
 
-      dispatch({ type: OpeningsAction.AddMove, payload: { move, value } });
+      dispatch({ type: OpeningsAction.AddMove, payload });
     },
     [props.collection, state],
   );

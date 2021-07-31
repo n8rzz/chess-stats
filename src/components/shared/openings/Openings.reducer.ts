@@ -6,8 +6,12 @@ export enum OpeningsAction {
   Reset = 'RESET',
 }
 
-export interface IAction<T, P> {
-  payload?: P;
+export interface IAction<T> {
+  payload: {
+    move: string;
+    result: WinLossDraw;
+    side: PieceColor;
+  };
   type: T;
 }
 
@@ -16,43 +20,46 @@ export interface IState {
   collection: GameCollection;
   moveNumber: number;
   selectedMoveList: string[];
+  side: PieceColor;
 }
 
 const initialState: Omit<IState, 'collection'> = {
   chartData: {},
   moveNumber: 0,
   selectedMoveList: [],
+  side: PieceColor.White,
 };
 
 export const buildInitialState = (collection: GameCollection, side: PieceColor): IState => {
   return {
     ...initialState,
     collection: collection,
-    chartData: collection.buildBarchartDataForSideAtMoveNumber(side, 1),
+    chartData: collection.buildBarchartDataForSideAtMoveNumber(side, []),
+    side: side,
   };
 };
 
-const _onAddMove = (state: IState): IState => {
-  return state;
+const _onAddMove = (state: IState, action: IAction<OpeningsAction>): IState => {
+  const moveList = [...state.selectedMoveList, action.payload.move];
+  const chartData = state.collection.buildBarchartDataForSideAtMoveNumber(state.side, moveList);
+
+  return {
+    ...state,
+    chartData: chartData,
+    moveNumber: moveList.length,
+    selectedMoveList: moveList,
+  };
 };
 
-export const reducer = (state: IState, action: IAction<string, { move: string; value: WinLossDraw }>): IState => {
-  console.log('=== ', action, state);
+export const reducer = (state: IState, action: IAction<OpeningsAction>): IState => {
+  console.log('=== ', action);
 
   switch (action.type) {
     case OpeningsAction.AddMove:
-      return _onAddMove(state);
+      return _onAddMove(state, action);
     case OpeningsAction.Reset:
-      return _onAddMove(state);
+      return state;
     default:
       return state;
   }
 };
-
-// {
-//   "type": "ADD_MOVE",
-//   "payload": {
-//       "move": "e5",
-//       "value": "win"
-//   }
-// }
