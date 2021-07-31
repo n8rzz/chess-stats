@@ -16,6 +16,7 @@ import { setDateFromUtcSeconds } from '../../../util/date.utils';
 import { GameResult, gameResultToWinLossDraw, PieceColor } from '../games.constants';
 
 export class GameCollection {
+  public moveTree: any = {};
   public period: number = 0;
   public username: string = '';
 
@@ -50,6 +51,7 @@ export class GameCollection {
     }
 
     this.addItems(json);
+    this._buildMoveTree();
   }
 
   public addItems(items: IGame[]): void {
@@ -346,6 +348,40 @@ export class GameCollection {
 
   public toJson(): IGame[] {
     return this._items.map((model: GameModel): IGame => model.toJson());
+  }
+
+  private _merge(sumObj: any, sourceObj: any): any {
+    if (typeof sourceObj === 'undefined') {
+      return sumObj;
+    }
+
+    for (const key in sourceObj) {
+      try {
+        // Property in destination object set; update its value.
+        if (sourceObj[key].constructor == Object) {
+          sumObj[key] = this._merge(sumObj[key], sourceObj[key]);
+        } else {
+          if (typeof sumObj[key] !== 'undefined') {
+            sumObj[key] = sumObj[key] + 1;
+
+            continue;
+          }
+
+          sumObj[key] = sourceObj[key];
+        }
+      } catch (e) {
+        // Property in destination object not set; create it and set its value.
+        sumObj[key] = sourceObj[key];
+      }
+    }
+
+    return sumObj;
+  }
+
+  private _buildMoveTree(): void {
+    const moveTreesFromGames = this._items.map((game: GameModel) => game.moveTree);
+
+    this.moveTree = moveTreesFromGames.reduce((sum: any, moveTree: any[]) => this._merge(sum, moveTree), {});
   }
 
   private _countGameListByResult = (gameList: GameModel[], result: GameResult): number => {

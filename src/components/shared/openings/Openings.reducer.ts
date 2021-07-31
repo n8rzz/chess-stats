@@ -31,10 +31,12 @@ const initialState: Omit<IState, 'collection'> = {
 };
 
 export const buildInitialState = (collection: GameCollection, side: PieceColor): IState => {
+  const chartData = collection.buildBarchartDataForSideAtMoveNumber(side, []);
+
   return {
     ...initialState,
     collection: collection,
-    chartData: collection.buildBarchartDataForSideAtMoveNumber(side, []),
+    chartData: chartData,
     side: side,
   };
 };

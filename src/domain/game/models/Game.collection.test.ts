@@ -21,6 +21,15 @@ describe('GameCollection', () => {
     });
   });
 
+  describe('#moveTree', () => {
+    test('should be set on instantiation', () => {
+      const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 1);
+
+      // eslint-disable-next-line dot-notation
+      expect(collection.moveTree).not.toEqual({});
+    });
+  });
+
   describe('.groupByPeriod()', () => {
     describe('when #period is 1', () => {
       test('should call .groupByHour()', () => {
