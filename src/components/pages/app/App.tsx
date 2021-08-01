@@ -93,6 +93,7 @@ export const App: React.FC<IProps> = () => {
               heading={timeframeLabel[activeTimeframe]}
               gameCollection={collectionForTimeframe}
               isLoading={isLoading}
+              timeframe={activeTimeframe}
             />
           </div>
 

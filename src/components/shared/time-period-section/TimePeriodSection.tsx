@@ -7,11 +7,13 @@ import { CandlestickChart } from '../../ui/candlestick/CandlestickChart';
 import { TimePeriodSummary } from './TimePeriodSummary';
 import { PeriodGameSummaryCharts } from '../period-game-summary-charts/PeriodGameSummaryCharts';
 import { Openings } from '../openings/Openings';
+import { Timeframe } from '../../pages/app/app.constants';
 
 interface IProps {
   gameCollection: GameCollection;
   heading: string;
   isLoading: boolean;
+  timeframe: Timeframe;
 }
 
 export const TimePeriodSection: React.FC<IProps> = (props) => {
@@ -59,7 +61,7 @@ export const TimePeriodSection: React.FC<IProps> = (props) => {
         />
       </section>
       <section>
-        <Openings collection={props.gameCollection} />
+        <Openings collection={props.gameCollection} timeframe={props.timeframe} />
       </section>
     </Tab.Pane>
   );

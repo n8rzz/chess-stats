@@ -7,16 +7,36 @@ import { PieceColor, WinLossDraw } from '../../../domain/game/games.constants';
 import { reducer, buildInitialState, OpeningsActionName } from './Openings.reducer';
 import { StackedBarChart } from '../../ui/stacked-bar-chart/StackedBarChart';
 import { SelectedMoveList } from './selected-move-list/SelectedMoveList';
+import { Timeframe } from '../../pages/app/app.constants';
 
 interface IProps {
   collection: GameCollection;
+  timeframe: Timeframe;
 }
 
 export const Openings: React.FC<IProps> = (props) => {
-  const [state, dispatch] = React.useReducer(reducer, buildInitialState(props.collection, PieceColor.Black));
+  const [state, dispatch] = React.useReducer(
+    reducer,
+    buildInitialState(props.collection, PieceColor.Black, props.timeframe),
+  );
+
+  React.useEffect(() => {
+    const payload = {
+      collection: props.collection,
+      move: '',
+      side: state.side,
+      result: null,
+      timeframe: props.timeframe,
+    };
+
+    if (props.timeframe !== state.timeframe) {
+      dispatch({ type: OpeningsActionName.ChangeTimeframe, payload });
+    }
+  }, [props.timeframe]);
 
   const handleAddMove = React.useCallback((move: string, value: WinLossDraw) => {
     const payload = {
+      collection: null,
       move: move,
       side: state.side,
       result: value,
@@ -27,6 +47,7 @@ export const Openings: React.FC<IProps> = (props) => {
 
   const handleChangePieceColor = React.useCallback((side: PieceColor) => {
     const payload = {
+      collection: null,
       move: '',
       side: state.side,
       result: null,
@@ -37,6 +58,7 @@ export const Openings: React.FC<IProps> = (props) => {
 
   const handleClickMoveListItem = React.useCallback((move: string, index: number) => {
     const payload = {
+      collection: null,
       index: index,
       move: move,
       result: null,
