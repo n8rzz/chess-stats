@@ -68,10 +68,16 @@ export class GameCollection {
     this._orderItemsByEndDate();
   }
 
-  public buildBarchartDataForSideAtMoveNumber(side: PieceColor, moveList: string[]) {
-    const moveNumber = moveList.length + 1;
+  public buildBarchartDataForSideAtMoveNumber(side: PieceColor, moveList: string[]): any {
+    const moveTreeForSide = { ...this.moveTree[side] };
 
-    return this.gatherOpeningMovesForSide(side, moveNumber);
+    if (moveList.length === 0) {
+      return moveTreeForSide;
+    }
+
+    return moveList.reduce((sum: any, move: string) => {
+      return sum[move];
+    }, moveTreeForSide);
   }
 
   public buildOhlcChartData(): IOhlcChartData[] {
@@ -279,6 +285,9 @@ export class GameCollection {
     }, {});
   }
 
+  /**
+   * @deprecated
+   */
   public gatherOpeningMovesForSide(side: PieceColor, moveNumber: number): { [key: string]: number } {
     const gamesForSide = this._gatherGamesForSide(side);
 
@@ -379,9 +388,13 @@ export class GameCollection {
   }
 
   private _buildMoveTree(): void {
-    const moveTreesFromGames = this._items.map((game: GameModel) => game.moveTree);
+    const moveTreesForBlack = this._gatherGamesForSide(PieceColor.Black).map((game: GameModel) => game.moveTree);
+    const moveTreesForWhite = this._gatherGamesForSide(PieceColor.White).map((game: GameModel) => game.moveTree);
 
-    this.moveTree = moveTreesFromGames.reduce((sum: any, moveTree: any[]) => this._merge(sum, moveTree), {});
+    this.moveTree = {
+      [PieceColor.Black]: moveTreesForBlack.reduce((sum: any, moveTree: any[]) => this._merge(sum, moveTree), {}),
+      [PieceColor.White]: moveTreesForWhite.reduce((sum: any, moveTree: any[]) => this._merge(sum, moveTree), {}),
+    };
   }
 
   private _countGameListByResult = (gameList: GameModel[], result: GameResult): number => {
@@ -396,7 +409,6 @@ export class GameCollection {
 
     return sortedKeys.reduce((sum: IGameCountByDate[], gameDate: string) => {
       const gamesForDate = gamesByDate[gameDate];
-
       const entry: IGameCountByDate = {
         date: gameDate,
         count: {

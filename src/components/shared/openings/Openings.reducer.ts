@@ -31,7 +31,7 @@ const initialState: Omit<IState, 'collection'> = {
 };
 
 export const buildInitialState = (collection: GameCollection, side: PieceColor): IState => {
-  const chartData = collection.buildBarchartDataForSideAtMoveNumber(side, []);
+  const chartData = collection.moveTree[side];
 
   return {
     ...initialState,

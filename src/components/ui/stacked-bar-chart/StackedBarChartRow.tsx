@@ -11,6 +11,7 @@ export interface IStackedBarChartRowItem {
 interface IProps {
   data: IStackedBarChartRowItem[];
   leftAxisLabel: string;
+  move: string;
   onClickDataItem: (move: string, value: WinLossDraw) => void;
   rightAxisLabel: string;
 }
@@ -45,7 +46,7 @@ export const StackedBarChartRow: React.FC<IProps> = (props) => {
               })}
               style={{ width: `${valuePercentages[index]}%` }}
               key={`${props.leftAxisLabel}-${dataItem.label}`}
-              onClick={() => props.onClickDataItem(props.leftAxisLabel, dataItem.label)}
+              onClick={() => props.onClickDataItem(props.move, dataItem.label)}
             >
               {dataItem.value}
             </div>

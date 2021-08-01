@@ -1,7 +1,14 @@
 // @ts-ignore
 import * as parser from '@mliebelt/pgn-parser';
 import chunk from 'lodash.chunk';
-import { ChessRules, TimeClass, PieceColor, GameResult, pieceColorToPgnTurn } from '../games.constants';
+import {
+  ChessRules,
+  TimeClass,
+  PieceColor,
+  GameResult,
+  pieceColorToPgnTurn,
+  gameResultToWinLossDraw,
+} from '../games.constants';
 import { IGame, IGamePlayer, PgnItem } from '../games.types';
 
 export class GameModel implements IGame {
@@ -125,6 +132,7 @@ export class GameModel implements IGame {
   private _buildMoveTree(): void {
     const chunkedMoves = chunk(this.pgn_json, 2);
     const result = this.getResult(this._username);
+    const ratingEffect = gameResultToWinLossDraw[result];
 
     this.moveTree = chunkedMoves.reverse().reduce((acc: any, moveGroup: PgnItem[], index: number) => {
       const key = this.buildMoveKey(moveGroup);
@@ -133,7 +141,7 @@ export class GameModel implements IGame {
         [key]: {
           ...acc,
           results: {
-            [result]: 1,
+            [ratingEffect]: 1,
           },
         },
       };
