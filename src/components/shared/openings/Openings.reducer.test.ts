@@ -2,7 +2,11 @@ import { PieceColor } from '../../../domain/game/games.constants';
 import { GameCollection } from '../../../domain/game/models/Game.collection';
 import { gameListForSinglePeriod } from '../../../domain/game/__mocks__/game-day-archive.mocks';
 import { buildInitialState, reducer } from './Openings.reducer';
-import { addMoveActionMock, changePieceColorActionMock } from './__mocks__/openings.reducer.mocks';
+import {
+  addMoveActionMock,
+  changePieceColorActionMock,
+  updateMoveListActionMock,
+} from './__mocks__/openings.reducer.mocks';
 
 describe('openings reducer', () => {
   describe('.buildInitialState()', () => {
@@ -37,25 +41,36 @@ describe('openings reducer', () => {
   });
 
   describe('ChangePieceColor action', () => {
-    describe('from initialState', () => {
-      test('should reset #selectedMoveList', () => {
-        const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 7);
-        const initialState = buildInitialState(collection, PieceColor.White);
+    test('should reset #selectedMoveList', () => {
+      const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 7);
+      const initialState = buildInitialState(collection, PieceColor.White);
 
-        initialState.selectedMoveList = ['one', 'two', 'three'];
+      initialState.selectedMoveList = ['one', 'two', 'three'];
 
-        const result = reducer(initialState, changePieceColorActionMock);
+      const result = reducer(initialState, changePieceColorActionMock);
 
-        expect(result.selectedMoveList.length).toEqual(0);
-      });
+      expect(result.selectedMoveList.length).toEqual(0);
+    });
 
-      test('should reset #side', () => {
-        const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 7);
-        const initialState = buildInitialState(collection, PieceColor.White);
-        const result = reducer(initialState, changePieceColorActionMock);
+    test('should reset #side', () => {
+      const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 7);
+      const initialState = buildInitialState(collection, PieceColor.White);
+      const result = reducer(initialState, changePieceColorActionMock);
 
-        expect(result.side).toEqual(PieceColor.Black);
-      });
+      expect(result.side).toEqual(PieceColor.Black);
+    });
+  });
+
+  describe('UpdateMoveList action', () => {
+    test('should reset #selectedMoveList', () => {
+      const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 7);
+      const initialState = buildInitialState(collection, PieceColor.White);
+
+      initialState.selectedMoveList = ['e4:e5', 'c4:c5', 'f4:f5'];
+
+      const result = reducer(initialState, updateMoveListActionMock);
+
+      expect(result.selectedMoveList.length).toEqual(1);
     });
   });
 });

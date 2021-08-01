@@ -1,11 +1,12 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { Dimmer, Header, Loader, Segment } from 'semantic-ui-react';
+import { Dimmer, Loader, Segment } from 'semantic-ui-react';
 import styles from '../../../../styles/App.module.css';
-import { IChessStats } from '../../../../domain/player/player.types';
+import { IChessStats, IHighLow } from '../../../../domain/player/player.types';
 import { GameTypeStats } from '../../../shared/game-type-stats/GameTypeStats';
 
 interface IProps {
+  highLow: IHighLow;
   isLoading: boolean;
   label: string;
   stats: IChessStats;
@@ -28,9 +29,7 @@ export const PlayerStats: React.FC<IProps> = (props) => {
 
   return (
     <div className={clsx(styles.container, styles.vr3)}>
-      <Header as={'h2'}>{props.label}</Header>
-
-      <GameTypeStats isLoading={props.isLoading} label={'Rapid'} stats={props.stats} />
+      <GameTypeStats isLoading={props.isLoading} label={'Rapid'} highLow={props.highLow} stats={props.stats} />
     </div>
   );
 };

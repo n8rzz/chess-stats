@@ -1,4 +1,3 @@
-import { PieceColor } from '../games.constants';
 import { gameListForDate, gameListForSinglePeriod } from '../__mocks__/game-day-archive.mocks';
 import { GameCollection } from './Game.collection';
 
@@ -217,19 +216,6 @@ describe('GameCollection', () => {
       };
 
       expect(result).toEqual(expectedResult);
-    });
-  });
-
-  describe('.gatherOpeningMovesForSide()', () => {
-    describe('when #side is passed as `white`', () => {
-      test('returns dictionary of first moves for games #player was `white`', () => {
-        const collection = new GameCollection('n8rzz', gameListForDate, 1);
-        const result = collection.gatherOpeningMovesForSide(PieceColor.White, 1);
-        const keysFromResult = Object.keys(result);
-        const expectedKeysFromResult = ['e4:e5'];
-
-        expect(keysFromResult).toEqual(expectedKeysFromResult);
-      });
     });
   });
 });

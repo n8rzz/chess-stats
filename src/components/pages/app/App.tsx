@@ -8,7 +8,6 @@ import { getPlayerStats } from '../../../domain/player/player.service';
 import { IPlayerStats } from '../../../domain/player/player.types';
 import { TimePeriodSection } from '../../shared/time-period-section/TimePeriodSection';
 import { PlayerStats } from './player-stats/PlayerStats';
-import { HighLowScore } from '../../shared/high-low-score/HighLowScore';
 import { Timeframe, timeframeLabel } from './app.constants';
 import { AppHeader } from '../../shared/app-header/AppHeader';
 import { EmptyView } from './EmptyView';
@@ -136,9 +135,9 @@ export const App: React.FC<IProps> = () => {
 
       {isEmpty && <EmptyView />}
       {isLoading && (
-        <Segment style={{ border: 0, height: '80vh' }}>
+        <Segment style={{ border: 0, height: '250px', overflow: 'hidden' }}>
           <Dimmer active={true} inverted={true}>
-            <Loader size="large">{'Loading'}</Loader>
+            <Loader size="large">{'Loading game data and crunching numbers...'}</Loader>
           </Dimmer>
 
           <Image src="https://react.semantic-ui.com/images/wireframe/paragraph.png" />
@@ -147,7 +146,6 @@ export const App: React.FC<IProps> = () => {
       {gameCollection.length > 0 && (
         <React.Fragment>
           <div className={clsx(styles.container, styles.vr3)}>
-            <PlayerStats isLoading={isLoading} label={'Rapid'} stats={playerStatsModel?.chess_rapid} />
             <Tab
               activeIndex={activeTabIndex}
               onTabChange={onActiveTabChange}
@@ -156,7 +154,12 @@ export const App: React.FC<IProps> = () => {
             />
           </div>
 
-          <HighLowScore isLoading={isLoading} label={'Tactics'} highLow={playerStatsModel.tactics} />
+          <PlayerStats
+            isLoading={isLoading}
+            label={'Rapid'}
+            highLow={playerStatsModel.tactics}
+            stats={playerStatsModel?.chess_rapid}
+          />
         </React.Fragment>
       )}
     </div>

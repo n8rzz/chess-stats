@@ -13,7 +13,7 @@ import {
 } from '../games.types';
 import { GameModel } from './Game.model';
 import { setDateFromUtcSeconds } from '../../../util/date.utils';
-import { GameResult, gameResultToWinLossDraw, PieceColor } from '../games.constants';
+import { GameResult, PieceColor, WinLossDraw } from '../games.constants';
 
 export class GameCollection {
   public moveTree: any = {};
@@ -68,7 +68,7 @@ export class GameCollection {
     this._orderItemsByEndDate();
   }
 
-  public buildBarchartDataForSideAtMoveNumber(side: PieceColor, moveList: string[]): any {
+  public buildMoveTreeForSideMoveListAndResult(side: PieceColor, moveList: string[], result: WinLossDraw | null): any {
     const moveTreeForSide = { ...this.moveTree[side] };
 
     if (moveList.length === 0) {
@@ -77,6 +77,29 @@ export class GameCollection {
 
     return moveList.reduce((sum: any, move: string) => {
       return sum[move];
+
+      // FIXME: still working on this
+      // if (!result) {
+      //   return sum[move];
+      // }
+
+      // return Object.keys(sum).reduce((acc, key: string) => {
+      //   if (key === 'results') {
+      //     return acc;
+      //   }
+
+      //   const moveTree = sum[key];
+      //   const resultKeys = Object.keys(moveTree.results);
+
+      //   if (!resultKeys.includes(result)) {
+      //     return acc;
+      //   }
+
+      //   return {
+      //     ...acc,
+      //     ...moveTree,
+      //   };
+      // }, {});
     }, moveTreeForSide);
   }
 
@@ -285,37 +308,6 @@ export class GameCollection {
     }, {});
   }
 
-  /**
-   * @deprecated
-   */
-  public gatherOpeningMovesForSide(side: PieceColor, moveNumber: number): { [key: string]: number } {
-    const gamesForSide = this._gatherGamesForSide(side);
-
-    return gamesForSide.reduce((sum: any, game: GameModel): any => {
-      const move = game.buildWhiteBlackMoveKeyForMoveNumber(moveNumber);
-      const result = game.getResult(this.username);
-      const ratingEffect = gameResultToWinLossDraw[result];
-
-      if (typeof sum[move] === 'undefined') {
-        sum[move] = {
-          [ratingEffect]: 1,
-        };
-
-        return sum;
-      }
-
-      if (typeof sum[move][ratingEffect] === 'undefined') {
-        sum[move][ratingEffect] = 1;
-
-        return sum;
-      }
-
-      sum[move][ratingEffect]++;
-
-      return sum;
-    }, {});
-  }
-
   public groupByHour(): IGamesGroupedByDate {
     return this._items.reduce((sum: { [key: string]: GameModel[] }, game: GameModel) => {
       const gameEndDate = setDateFromUtcSeconds(game.end_time);
@@ -369,17 +361,18 @@ export class GameCollection {
         // Property in destination object set; update its value.
         if (sourceObj[key].constructor == Object) {
           sumObj[key] = this._merge(sumObj[key], sourceObj[key]);
-        } else {
-          if (typeof sumObj[key] !== 'undefined') {
-            sumObj[key] = sumObj[key] + 1;
 
-            continue;
-          }
-
-          sumObj[key] = sourceObj[key];
+          continue;
         }
+
+        if (typeof sumObj[key] !== 'undefined') {
+          sumObj[key] = sumObj[key] + 1;
+
+          continue;
+        }
+
+        sumObj[key] = sourceObj[key];
       } catch (e) {
-        // Property in destination object not set; create it and set its value.
         sumObj[key] = sourceObj[key];
       }
     }

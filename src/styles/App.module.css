@@ -2,7 +2,8 @@
   padding: 10px;
 }
 
-.hlist {
+.hlist,
+.hlistSpacious {
   align-items: center;
   display: flex;
   justify-content: flex-start;
@@ -11,6 +12,10 @@
 
 .hlist > * + * {
   margin-left: 10px;
+}
+
+.hlistSpacious > * + * {
+  margin-left: 30px;
 }
 
 .mixHlistSpaceBetween {
@@ -52,6 +57,18 @@
 }
 
 /* --- */
+.selectedMoveList {
+  font-size: 90%;
+  font-style: italic;
+  margin: 0 0 10px 15px;
+  min-height: 25px;
+}
+
+.selectedMoveListItem:hover {
+  cursor: pointer !important;
+}
+
+/* --- */
 .stackedBarChart {
 }
 
@@ -60,12 +77,6 @@
   font-weight: 600;
   margin-left: 15px;
   padding: 5px 0;
-}
-
-.stackedBarChartHdSubHd {
-  font-size: 90%;
-  font-style: italic;
-  margin: 0 0 10px 15px;
 }
 
 .stackedBarChartBd {

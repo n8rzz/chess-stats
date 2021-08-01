@@ -10,10 +10,15 @@ body {
   box-sizing: border-box;
 }
 
+ol,
 ul,
 li {
   margin: 0;
   padding: 0;
+}
+
+ol li {
+  list-style: decimal;
 }
 
 li {

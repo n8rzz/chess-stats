@@ -21,6 +21,9 @@ interface IProps {
 }
 
 export const StackedBarChart: React.FC<IProps> = (props) => {
+  const leftColumnTitle = React.useMemo(() => (props.side === PieceColor.Black ? 'Black' : 'White'), [props.side]);
+  const rightColumnTitle = React.useMemo(() => (props.side === PieceColor.Black ? 'White' : 'Black'), [props.side]);
+
   // FIXME: this should live in the collection
   const chartData = React.useMemo(() => {
     return Object.keys(props.winLossDrawBySideAndOpening).reduce((sum: any, key: string): IStackedBarChartData[] => {
@@ -55,7 +58,12 @@ export const StackedBarChart: React.FC<IProps> = (props) => {
 
   return (
     <div className={styles.stackedBarChart}>
-      {props.title && <div className={styles.stackedBarChartHd}>{props.title}</div>}
+      <div className={styles.stackedBarChartHd}>
+        <ul className={styles.stereo}>
+          <li>{leftColumnTitle}</li>
+          <li>{rightColumnTitle}</li>
+        </ul>
+      </div>
       <div className={styles.stackedBarChartBd}>
         {chartData.map((item) => {
           return (

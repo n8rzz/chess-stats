@@ -18,3 +18,13 @@ export const changePieceColorActionMock: IAction<OpeningsActionName> = {
     side: PieceColor.Black,
   },
 };
+
+export const updateMoveListActionMock: IAction<OpeningsActionName> = {
+  type: OpeningsActionName.UpdateMoveList,
+  payload: {
+    index: 1,
+    move: 'c4:c5',
+    result: null,
+    side: PieceColor.Black,
+  },
+};

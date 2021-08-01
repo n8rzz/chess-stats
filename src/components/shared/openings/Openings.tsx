@@ -6,6 +6,7 @@ import type { GameCollection } from '../../../domain/game/models/Game.collection
 import { PieceColor, WinLossDraw } from '../../../domain/game/games.constants';
 import { reducer, buildInitialState, OpeningsActionName } from './Openings.reducer';
 import { StackedBarChart } from '../../ui/stacked-bar-chart/StackedBarChart';
+import { SelectedMoveList } from './selected-move-list/SelectedMoveList';
 
 interface IProps {
   collection: GameCollection;
@@ -34,20 +35,43 @@ export const Openings: React.FC<IProps> = (props) => {
     dispatch({ type: OpeningsActionName.ChangePieceColor, payload });
   }, []);
 
+  const handleClickMoveListItem = React.useCallback((move: string, index: number) => {
+    const payload = {
+      index: index,
+      move: move,
+      result: null,
+      side: state.side,
+    };
+
+    dispatch({ type: OpeningsActionName.UpdateMoveList, payload });
+  }, []);
+
   return (
     <div className={clsx(styles.container, styles.vr3)}>
-      <div className={styles.vr2}>
+      <div className={styles.vr1}>
         <ul className={styles.stereo}>
           <li>
             <Header as={'h2'}>{'Openings'}</Header>
           </li>
           <li>
             <Button.Group>
-              <Button size={'tiny'} onClick={() => handleChangePieceColor(PieceColor.Black)}>
+              <Button
+                active={state.side === PieceColor.Black}
+                disabled={state.side === PieceColor.Black}
+                toggle={true}
+                size={'tiny'}
+                onClick={() => handleChangePieceColor(PieceColor.Black)}
+              >
                 Black
               </Button>
               <Button.Or />
-              <Button size={'tiny'} onClick={() => handleChangePieceColor(PieceColor.White)}>
+              <Button
+                active={state.side === PieceColor.White}
+                disabled={state.side === PieceColor.White}
+                toggle={true}
+                size={'tiny'}
+                onClick={() => handleChangePieceColor(PieceColor.White)}
+              >
                 White
               </Button>
             </Button.Group>
@@ -55,8 +79,8 @@ export const Openings: React.FC<IProps> = (props) => {
         </ul>
       </div>
 
-      <section>
-        <div className={styles.stackedBarChartHdSubHd}>{state.selectedMoveList.join('  ')}</div>
+      <section className={styles.vr2}>
+        <SelectedMoveList moveList={state.selectedMoveList} onClickMove={handleClickMoveListItem} />
       </section>
 
       <StackedBarChart
