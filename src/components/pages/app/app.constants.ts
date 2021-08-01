@@ -16,6 +16,15 @@ export const timeframeLabel: Record<Timeframe, string> = {
   [Timeframe.OneYear]: '1 Year',
 };
 
+export const timeframeToPeriod: Record<Timeframe, number> = {
+  [Timeframe.Today]: 1,
+  [Timeframe.SevenDays]: 7,
+  [Timeframe.ThirtyDays]: 30,
+  [Timeframe.NinetyDays]: 90,
+  [Timeframe.SixMonths]: 180,
+  [Timeframe.OneYear]: 360,
+};
+
 export const timeframeOptionList = Object.keys(timeframeLabel).map((timeframeKey) => ({
   key: Timeframe[timeframeKey as keyof typeof Timeframe],
   value: Timeframe[timeframeKey as keyof typeof Timeframe],

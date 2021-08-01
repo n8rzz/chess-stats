@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Dimmer, Loader, Segment, Tab, TabProps, Image } from 'semantic-ui-react';
+import { Dimmer, Loader, Segment, Image, Button } from 'semantic-ui-react';
 import clsx from 'clsx';
 import styles from '../../../styles/App.module.css';
 import { getArchives, getHistorcialGamesFromArchiveList } from '../../../domain/game/games.service';
@@ -8,7 +8,7 @@ import { getPlayerStats } from '../../../domain/player/player.service';
 import { IPlayerStats } from '../../../domain/player/player.types';
 import { TimePeriodSection } from '../../shared/time-period-section/TimePeriodSection';
 import { PlayerStats } from './player-stats/PlayerStats';
-import { Timeframe, timeframeLabel } from './app.constants';
+import { Timeframe, timeframeLabel, timeframeToPeriod } from './app.constants';
 import { AppHeader } from '../../shared/app-header/AppHeader';
 import { EmptyView } from './EmptyView';
 
@@ -17,29 +17,32 @@ interface IProps {}
 export const App: React.FC<IProps> = () => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [playerStatsModel, setPlayerStatsModel] = React.useState<IPlayerStats>(undefined as any);
+  const [activeTimeframe, setActiveTimeframe] = React.useState<Timeframe>(Timeframe.SevenDays);
   const [gameCollection, setGameCollection] = React.useState<GameCollection>(new GameCollection('', [], 0));
-  const [activeTabIndex, setActiveTabIndex] = React.useState<number>(1);
 
-  const onActiveTabChange = React.useCallback(
-    (event: React.SyntheticEvent<HTMLDivElement>, data: TabProps) => {
+  const collectionForTimeframe = React.useMemo(
+    () => gameCollection.createCollectionForPeriod(timeframeToPeriod[activeTimeframe]),
+    [gameCollection, activeTimeframe],
+  );
+
+  const onClickPeriodButton = React.useCallback(
+    (nextTimeframe: Timeframe) => {
       setIsLoading(true);
-      setActiveTabIndex(data.activeTabIndex);
+      setActiveTimeframe(nextTimeframe);
       setIsLoading(false);
     },
-    [isLoading, activeTabIndex],
+    [isLoading, activeTimeframe],
   );
 
   const onSubmit = async (provider: string, username: string, selectedTimeframe: Timeframe) => {
     setIsLoading(true);
-
-    const nextActiveTabIndex = Object.keys(timeframeLabel).indexOf(selectedTimeframe);
 
     try {
       const playerStats = await getPlayerStats(username);
       const gameArchiveList = await getArchives(username);
       const collection = await getHistorcialGamesFromArchiveList(gameArchiveList, username);
 
-      setActiveTabIndex(nextActiveTabIndex);
+      setActiveTimeframe(selectedTimeframe);
       setPlayerStatsModel(playerStats);
       setGameCollection(collection);
       setIsLoading(false);
@@ -50,84 +53,7 @@ export const App: React.FC<IProps> = () => {
     }
   };
 
-  const todayCollection = useMemo(() => gameCollection.createCollectionForPeriod(1), [gameCollection]);
-  const sevenDaysCollection = useMemo(() => gameCollection.createCollectionForPeriod(7), [gameCollection]);
-  const thirtyDaysCollection = useMemo(() => gameCollection.createCollectionForPeriod(30), [gameCollection]);
-  const ninetyDaysCollection = useMemo(() => gameCollection.createCollectionForPeriod(90), [gameCollection]);
-  const sixMonthsCollection = useMemo(() => gameCollection.createCollectionForPeriod(180), [gameCollection]);
-  const oneYearCollection = useMemo(() => gameCollection.createCollectionForPeriod(365), [gameCollection]);
   const isEmpty = useMemo(() => !isLoading && gameCollection.length === 0, [isLoading, gameCollection.length]);
-
-  const tabPanes = useMemo(() => {
-    return [
-      {
-        menuItem: timeframeLabel[Timeframe.Today],
-        // eslint-disable-next-line react/display-name
-        render: () => (
-          <TimePeriodSection
-            heading={timeframeLabel[Timeframe.Today]}
-            gameCollection={todayCollection}
-            isLoading={isLoading}
-          />
-        ),
-      },
-      {
-        menuItem: timeframeLabel[Timeframe.SevenDays],
-        // eslint-disable-next-line react/display-name
-        render: () => (
-          <TimePeriodSection
-            heading={timeframeLabel[Timeframe.SevenDays]}
-            gameCollection={sevenDaysCollection}
-            isLoading={isLoading}
-          />
-        ),
-      },
-      {
-        menuItem: timeframeLabel[Timeframe.ThirtyDays],
-        // eslint-disable-next-line react/display-name
-        render: () => (
-          <TimePeriodSection
-            heading={timeframeLabel[Timeframe.ThirtyDays]}
-            gameCollection={thirtyDaysCollection}
-            isLoading={isLoading}
-          />
-        ),
-      },
-      {
-        menuItem: timeframeLabel[Timeframe.NinetyDays],
-        // eslint-disable-next-line react/display-name
-        render: () => (
-          <TimePeriodSection
-            heading={timeframeLabel[Timeframe.NinetyDays]}
-            gameCollection={ninetyDaysCollection}
-            isLoading={isLoading}
-          />
-        ),
-      },
-      {
-        menuItem: timeframeLabel[Timeframe.SixMonths],
-        // eslint-disable-next-line react/display-name
-        render: () => (
-          <TimePeriodSection
-            heading={timeframeLabel[Timeframe.SixMonths]}
-            gameCollection={sixMonthsCollection}
-            isLoading={isLoading}
-          />
-        ),
-      },
-      {
-        menuItem: timeframeLabel[Timeframe.OneYear],
-        // eslint-disable-next-line react/display-name
-        render: () => (
-          <TimePeriodSection
-            heading={timeframeLabel[Timeframe.OneYear]}
-            gameCollection={oneYearCollection}
-            isLoading={isLoading}
-          />
-        ),
-      },
-    ];
-  }, [isLoading, gameCollection]);
 
   return (
     <div>
@@ -146,11 +72,27 @@ export const App: React.FC<IProps> = () => {
       {gameCollection.length > 0 && (
         <React.Fragment>
           <div className={clsx(styles.container, styles.vr3)}>
-            <Tab
-              activeIndex={activeTabIndex}
-              onTabChange={onActiveTabChange}
-              menu={{ attached: false, tabular: false, pointing: false }}
-              panes={tabPanes}
+            <div className={styles.vr2}>
+              <Button.Group widths={6}>
+                {Object.keys(timeframeLabel).map((key: string) => (
+                  <Button
+                    active={activeTimeframe === key}
+                    disabled={activeTimeframe === key}
+                    toggle={true}
+                    size={'tiny'}
+                    key={`${key}-btn`}
+                    onClick={() => onClickPeriodButton(key as Timeframe)}
+                  >
+                    {timeframeLabel[key as Timeframe]}
+                  </Button>
+                ))}
+              </Button.Group>
+            </div>
+
+            <TimePeriodSection
+              heading={timeframeLabel[activeTimeframe]}
+              gameCollection={collectionForTimeframe}
+              isLoading={isLoading}
             />
           </div>
 
