@@ -5,7 +5,7 @@ module.exports = {
   coverageDirectory: '<rootDir>/.coverage',
   coverageReporters: ['lcov', 'text', 'text-summary'],
   preset: 'ts-jest',
-  reporters: [['jest-simple-dot-reporter', { color: true }]],
+  // reporters: [['jest-simple-dot-reporter', { color: true }]],
   testEnvironment: 'jsdom',
   globals: {
     'ts-jest': {

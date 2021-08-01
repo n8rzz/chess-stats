@@ -21,6 +21,12 @@
   justify-content: space-evenly;
 }
 
+.stereo {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
 .vr1 {
   margin-bottom: 10px;
 }

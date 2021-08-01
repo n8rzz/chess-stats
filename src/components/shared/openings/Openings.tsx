@@ -1,34 +1,69 @@
 import React from 'react';
 import clsx from 'clsx';
-import { Header, Tab } from 'semantic-ui-react';
+import { Button, Header } from 'semantic-ui-react';
 import styles from '../../../styles/App.module.css';
 import type { GameCollection } from '../../../domain/game/models/Game.collection';
-import { OpeningsTabPane } from './OpeningsTabPane';
-import { PieceColor } from '../../../domain/game/games.constants';
+import { PieceColor, WinLossDraw } from '../../../domain/game/games.constants';
+import { reducer, buildInitialState, OpeningsActionName } from './Openings.reducer';
+import { StackedBarChart } from '../../ui/stacked-bar-chart/StackedBarChart';
 
 interface IProps {
   collection: GameCollection;
 }
 
 export const Openings: React.FC<IProps> = (props) => {
+  const [state, dispatch] = React.useReducer(reducer, buildInitialState(props.collection, PieceColor.Black));
+
+  const handleAddMove = React.useCallback((move: string, value: WinLossDraw) => {
+    const payload = {
+      move: move,
+      side: state.side,
+      result: value,
+    };
+
+    dispatch({ type: OpeningsActionName.AddMove, payload });
+  }, []);
+
+  const handleChangePieceColor = React.useCallback((side: PieceColor) => {
+    const payload = {
+      move: '',
+      side: state.side,
+      result: null,
+    };
+
+    dispatch({ type: OpeningsActionName.ChangePieceColor, payload });
+  }, []);
+
   return (
     <div className={clsx(styles.container, styles.vr3)}>
-      <Header as={'h2'}>{'Openings'}</Header>
+      <div className={styles.vr2}>
+        <ul className={styles.stereo}>
+          <li>
+            <Header as={'h2'}>{'Openings'}</Header>
+          </li>
+          <li>
+            <Button.Group>
+              <Button size={'tiny'} onClick={() => handleChangePieceColor(PieceColor.Black)}>
+                Black
+              </Button>
+              <Button.Or />
+              <Button size={'tiny'} onClick={() => handleChangePieceColor(PieceColor.White)}>
+                White
+              </Button>
+            </Button.Group>
+          </li>
+        </ul>
+      </div>
 
-      <Tab
-        menu={{ pointing: true, secondary: true }}
-        panes={[
-          {
-            menuItem: 'Black',
-            // eslint-disable-next-line react/display-name
-            render: () => <OpeningsTabPane collection={props.collection} side={PieceColor.Black} />,
-          },
-          {
-            menuItem: 'White',
-            // eslint-disable-next-line react/display-name
-            render: () => <OpeningsTabPane collection={props.collection} side={PieceColor.White} />,
-          },
-        ]}
+      <section>
+        <div className={styles.stackedBarChartHdSubHd}>{state.selectedMoveList.join('  ')}</div>
+      </section>
+
+      <StackedBarChart
+        onClickDataItem={handleAddMove}
+        side={state.side}
+        title={`Playing as ${state.side}`}
+        winLossDrawBySideAndOpening={state.chartData}
       />
     </div>
   );

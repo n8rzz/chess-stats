@@ -2,7 +2,7 @@ import { PieceColor } from '../../../domain/game/games.constants';
 import { GameCollection } from '../../../domain/game/models/Game.collection';
 import { gameListForSinglePeriod } from '../../../domain/game/__mocks__/game-day-archive.mocks';
 import { buildInitialState, reducer } from './Openings.reducer';
-import { addMoveActionMock } from './__mocks__/openings.reducer.mocks';
+import { addMoveActionMock, changePieceColorActionMock } from './__mocks__/openings.reducer.mocks';
 
 describe('openings reducer', () => {
   describe('.buildInitialState()', () => {
@@ -25,14 +25,6 @@ describe('openings reducer', () => {
         expect(result.selectedMoveList).toEqual([addMoveActionMock.payload?.move]);
       });
 
-      test('should increment #moveNumber', () => {
-        const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 7);
-        const initialState = buildInitialState(collection, PieceColor.White);
-        const result = reducer(initialState, addMoveActionMock);
-
-        expect(result.moveNumber).toEqual(result.selectedMoveList.length);
-      });
-
       test('should recalculate #chartData', () => {
         const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 7);
         const initialState = buildInitialState(collection, PieceColor.White);
@@ -40,6 +32,29 @@ describe('openings reducer', () => {
         const result = reducer(initialState, addMoveActionMock);
 
         expect(result.chartData).not.toEqual(originalChartData);
+      });
+    });
+  });
+
+  describe('ChangePieceColor action', () => {
+    describe('from initialState', () => {
+      test('should reset #selectedMoveList', () => {
+        const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 7);
+        const initialState = buildInitialState(collection, PieceColor.White);
+
+        initialState.selectedMoveList = ['one', 'two', 'three'];
+
+        const result = reducer(initialState, changePieceColorActionMock);
+
+        expect(result.selectedMoveList.length).toEqual(0);
+      });
+
+      test('should reset #side', () => {
+        const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 7);
+        const initialState = buildInitialState(collection, PieceColor.White);
+        const result = reducer(initialState, changePieceColorActionMock);
+
+        expect(result.side).toEqual(PieceColor.Black);
       });
     });
   });

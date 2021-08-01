@@ -14,8 +14,6 @@ export interface IStackedBarChartData {
 }
 
 interface IProps {
-  moveList: string[];
-  moveNumber: number;
   onClickDataItem: (move: string, value: WinLossDraw) => void;
   side: PieceColor;
   title: string;
@@ -49,7 +47,7 @@ export const StackedBarChart: React.FC<IProps> = (props) => {
         },
       ];
     }, []);
-  }, [props.moveNumber, props.winLossDrawBySideAndOpening]);
+  }, [props.winLossDrawBySideAndOpening]);
 
   const onClickDataItem = React.useCallback((move: string, value: WinLossDraw) => {
     props.onClickDataItem(move, value);
@@ -58,7 +56,6 @@ export const StackedBarChart: React.FC<IProps> = (props) => {
   return (
     <div className={styles.stackedBarChart}>
       {props.title && <div className={styles.stackedBarChartHd}>{props.title}</div>}
-      {props.moveList && <div className={styles.stackedBarChartHdSubHd}>{props.moveList.join('  ')}</div>}
       <div className={styles.stackedBarChartBd}>
         {chartData.map((item) => {
           return (
