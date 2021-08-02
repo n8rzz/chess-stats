@@ -8,6 +8,7 @@ import { TimePeriodSummary } from './TimePeriodSummary';
 import { PeriodGameSummaryCharts } from '../period-game-summary-charts/PeriodGameSummaryCharts';
 import { Openings } from '../openings/Openings';
 import { Timeframe } from '../../pages/app/app.constants';
+import { MovingAveragePeriod } from '../../../domain/game/games.constants';
 
 interface IProps {
   gameCollection: GameCollection;
@@ -17,10 +18,16 @@ interface IProps {
 }
 
 export const TimePeriodSection: React.FC<IProps> = (props) => {
+  const [movingAveragePeriod, setMovingAveragePeriod] = React.useState<MovingAveragePeriod>(
+    MovingAveragePeriod.FiveDays,
+  );
+
   const ohlcData = React.useMemo(() => props.gameCollection.calculateOhlcForPeriod(), [props.gameCollection.period]);
-  const movingAverage = React.useMemo(() => props.gameCollection.calculateMovingAverageWithOhlcAndPeriod(ohlcData, 5), [
-    props.gameCollection,
-  ]);
+  const movingAverage = React.useMemo(() => {
+    console.log('---', movingAveragePeriod);
+
+    return props.gameCollection.calculateMovingAverageWithOhlcAndPeriod(ohlcData, movingAveragePeriod);
+  }, [movingAveragePeriod, props.gameCollection]);
 
   return (
     <Tab.Pane style={{ border: 0 }}>
@@ -59,6 +66,8 @@ export const TimePeriodSection: React.FC<IProps> = (props) => {
           countByDate={props.gameCollection.countByDate()}
           ohlcData={props.gameCollection.buildOhlcChartData()}
           movingAverage={movingAverage}
+          movingAveragePeriod={movingAveragePeriod}
+          onChangeMovingAverage={setMovingAveragePeriod}
         />
       </section>
       <section>

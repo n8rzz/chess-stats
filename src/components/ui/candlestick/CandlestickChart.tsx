@@ -3,26 +3,41 @@ import dynamic from 'next/dynamic';
 import clsx from 'clsx';
 import styles from '../../../styles/App.module.css';
 import { IDataLabel, IMovingAverageChartData, IOhlcChartData } from '../../../domain/game/games.types';
-import { GameResult } from '../../../domain/game/games.constants';
+import { GameResult, MovingAveragePeriod } from '../../../domain/game/games.constants';
+import { Menu, Dropdown, DropdownProps } from 'semantic-ui-react';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 interface IProps {
   countByDate: IDataLabel<Record<GameResult, number[]>>;
   movingAverage: IMovingAverageChartData[];
+  movingAveragePeriod: MovingAveragePeriod;
   ohlcData: IOhlcChartData[];
+  onChangeMovingAverage: (nextPeriod: MovingAveragePeriod) => void;
 }
 
 export const CandlestickChart: React.FC<IProps> = (props) => {
+  const movingAverageChartData = React.useMemo(() => {
+    return props.movingAverage.map((item: IMovingAverageChartData) => ({
+      x: item.date,
+      y: item.value,
+    }));
+  }, [props.movingAverage, props.movingAveragePeriod]);
+
   return (
     <div>
       <section className={clsx(styles.container, styles.vr2)}>
         <div id={'rating-over-time-chart-candlestick'}>
+          <div className={styles.vr2}>
+            <h3>Rating</h3>
+          </div>
+
           <Chart
             options={{
-              title: {
-                text: 'Rating over time',
-                align: 'left',
+              chart: {
+                toolbar: {
+                  show: false,
+                },
               },
               xaxis: {
                 type: 'datetime',
@@ -47,6 +62,9 @@ export const CandlestickChart: React.FC<IProps> = (props) => {
                 id: 'win-loss-count-by-period-chart',
                 type: 'bar',
                 stacked: true,
+                toolbar: {
+                  show: false,
+                },
               },
               xaxis: {
                 categories: props.countByDate.labels,
@@ -96,11 +114,53 @@ export const CandlestickChart: React.FC<IProps> = (props) => {
       </section>
 
       <div id={'rating-average-chart'}>
+        <div className={styles.vr2}>
+          <ul className={styles.stereo}>
+            <li>
+              <h3>Average Rating</h3>
+            </li>
+            <li>
+              <Menu compact={true}>
+                <Dropdown
+                  compact={true}
+                  simple={true}
+                  item={true}
+                  defaultValue={props.movingAveragePeriod}
+                  onChange={(_, data: DropdownProps) => props.onChangeMovingAverage(data?.value as MovingAveragePeriod)}
+                  options={[
+                    {
+                      key: '5-days',
+                      text: '5 Days',
+                      value: MovingAveragePeriod.FiveDays,
+                    },
+                    {
+                      key: '10-days',
+                      text: '10 Days',
+                      value: MovingAveragePeriod.TenDays,
+                    },
+                    {
+                      key: '15-days',
+                      text: '15 Days',
+                      value: MovingAveragePeriod.FifteenDays,
+                    },
+                    {
+                      key: '30-days',
+                      text: '30 Days',
+                      value: MovingAveragePeriod.ThirtyDays,
+                    },
+                  ]}
+                />
+              </Menu>
+            </li>
+          </ul>
+        </div>
+
         <Chart
           options={{
-            title: {
-              text: 'Average Rating over time',
-              align: 'left',
+            chart: {
+              toolbar: {
+                show: false,
+              },
             },
             stroke: {
               width: 3,
@@ -117,10 +177,7 @@ export const CandlestickChart: React.FC<IProps> = (props) => {
           series={[
             {
               name: 'Average Rating',
-              data: props.movingAverage.map((item: IMovingAverageChartData) => ({
-                x: item.date,
-                y: item.value,
-              })),
+              data: movingAverageChartData,
             },
           ]}
           type={'line'}

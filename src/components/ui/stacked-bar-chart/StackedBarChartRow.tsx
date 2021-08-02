@@ -22,7 +22,13 @@ export const StackedBarChartRow: React.FC<IProps> = (props) => {
       return sum + dataItem.value;
     }, 0);
 
-    return props.data.reduce((sum: number[], dataItem: IStackedBarChartRowItem) => {
+    return props.data.reduce((sum: number[], dataItem: IStackedBarChartRowItem, index: number) => {
+      if (index === 2) {
+        const lastEntry = 100 - (sum[0] + sum[1]);
+
+        return [...sum, lastEntry];
+      }
+
       return [...sum, Math.floor((dataItem.value / valueSum) * 100)];
     }, []);
   }, [props.data]);

@@ -13,7 +13,7 @@ import {
 } from '../games.types';
 import { GameModel } from './Game.model';
 import { setDateFromUtcSeconds } from '../../../util/date.utils';
-import { GameResult, gameResultToWinLossDraw, PieceColor, WinLossDraw } from '../games.constants';
+import { GameResult, gameResultToWinLossDraw, MovingAveragePeriod, PieceColor, WinLossDraw } from '../games.constants';
 
 export class GameCollection {
   public moveTree: any = {};
@@ -137,14 +137,17 @@ export class GameCollection {
     return unsortedOhlcData.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   }
 
-  public calculateMovingAverageWithOhlcAndPeriod(ohlcData: IDayOhlc[], period: number): IMovingAverageChartData[] {
+  public calculateMovingAverageWithOhlcAndPeriod(
+    ohlcData: IDayOhlc[],
+    period: MovingAveragePeriod,
+  ): IMovingAverageChartData[] {
     const closeValues = ohlcData.map((entry) => entry.close);
     const smaResult = sma({
       period,
       values: closeValues,
     });
 
-    const movingAverageChartData = ohlcData.reduce((sum: IMovingAverageChartData[], entry: IDayOhlc, i: number) => {
+    return ohlcData.reduce((sum: IMovingAverageChartData[], entry: IDayOhlc, i: number) => {
       if (smaResult[i] == null) {
         return sum;
       }
@@ -153,12 +156,10 @@ export class GameCollection {
         ...sum,
         {
           date: entry.date,
-          value: smaResult[i],
+          value: Math.floor(smaResult[i]),
         },
       ];
     }, []);
-
-    return movingAverageChartData.reverse();
   }
 
   public countByDate(): { data: Record<GameResult, number[]>; labels: string[] } {

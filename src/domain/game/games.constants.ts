@@ -16,6 +16,13 @@ export enum GameResult {
   Win = 'win',
 }
 
+export enum MovingAveragePeriod {
+  FifteenDays = 15,
+  FiveDays = 5,
+  TenDays = 10,
+  ThirtyDays = 30,
+}
+
 export enum WinLossDraw {
   Draw = 'draw',
   Loss = 'loss',
