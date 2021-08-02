@@ -205,13 +205,26 @@ describe('GameCollection', () => {
     });
   });
 
-  describe('.gatherGameResults()', () => {
+  describe('.gatherDetailedGameResults()', () => {
     test('returns totals for each game result from collection', () => {
       const collection = new GameCollection('n8rzz', gameListForDate, 1);
-      const result = collection.gatherGameResults();
+      const result = collection.gatherDetailedGameResults();
       const expectedResult = {
         checkmated: 3,
         resigned: 1,
+        win: 5,
+      };
+
+      expect(result).toEqual(expectedResult);
+    });
+  });
+
+  describe('.gatherSimpleGameResults()', () => {
+    test('returns totals for each game result from collection', () => {
+      const collection = new GameCollection('n8rzz', gameListForDate, 1);
+      const result = collection.gatherSimpleGameResults();
+      const expectedResult = {
+        loss: 4,
         win: 5,
       };
 

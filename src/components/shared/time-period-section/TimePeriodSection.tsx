@@ -48,9 +48,10 @@ export const TimePeriodSection: React.FC<IProps> = (props) => {
       </section>
       <section className={styles.vr2}>
         <PeriodGameSummaryCharts
-          gameResults={props.gameCollection.gatherGameResults()}
+          detailedGameResults={props.gameCollection.gatherDetailedGameResults()}
           gamesBySide={props.gameCollection.countGamesBySide()}
           isLoading={props.isLoading}
+          simpleGameResults={props.gameCollection.gatherSimpleGameResults()}
         />
       </section>
       <section className={clsx(styles.container, styles.vr2)}>

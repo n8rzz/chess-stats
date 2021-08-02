@@ -1,19 +1,41 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
-import { Card } from 'semantic-ui-react';
+import { Card, Dropdown, DropdownProps, Menu } from 'semantic-ui-react';
+import styles from '../../../styles/App.module.css';
 import { IGamesBySide } from '../../../domain/game/games.types';
+import { GameResultFidelity } from './PeriodGameSummaryCharts.types';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 interface IProps {
-  gameResults: {
+  detailedGameResults: {
     [key: string]: number;
   };
   gamesBySide: IGamesBySide;
   isLoading: boolean;
+  simpleGameResults: {
+    [key: string]: number;
+  };
 }
 
 export const PeriodGameSummaryCharts: React.FC<IProps> = (props) => {
+  const [gameResultFidelity, setGameResultFidelity] = React.useState<GameResultFidelity>('simple');
+
+  const onChangeResultDetail = React.useCallback(
+    (event: React.SyntheticEvent, data: DropdownProps) => {
+      setGameResultFidelity(data.value as GameResultFidelity);
+    },
+    [gameResultFidelity],
+  );
+
+  const gameResultsChartData = React.useMemo(() => {
+    if (gameResultFidelity === 'detailed') {
+      return props.detailedGameResults;
+    }
+
+    return props.simpleGameResults;
+  }, [gameResultFidelity, props.detailedGameResults, props.simpleGameResults]);
+
   return (
     <Card.Group itemsPerRow={2} stackable={true}>
       <Card>
@@ -51,14 +73,43 @@ export const PeriodGameSummaryCharts: React.FC<IProps> = (props) => {
       </Card>
       <Card>
         <Card.Content>
-          <Card.Header as={'h3'}>Result</Card.Header>
+          <Card.Header>
+            <ul className={styles.stereo}>
+              <li>
+                <h3>Result</h3>
+              </li>
+              <li>
+                <Menu compact={true}>
+                  <Dropdown
+                    compact={true}
+                    simple={true}
+                    item={true}
+                    defaultValue={gameResultFidelity}
+                    onChange={onChangeResultDetail}
+                    options={[
+                      {
+                        key: 'simple',
+                        text: 'Simple',
+                        value: 'simple',
+                      },
+                      {
+                        key: 'detailed',
+                        text: 'Detailed',
+                        value: 'detailed',
+                      },
+                    ]}
+                  />
+                </Menu>
+              </li>
+            </ul>
+          </Card.Header>
           <Card.Description>
             {/*
-                  radar chart may be a better choice
-                  https://apexcharts.com/react-chart-demos/radar-charts/basic/
-                */}
+              radar chart may be a better choice
+              https://apexcharts.com/react-chart-demos/radar-charts/basic/
+            */}
             <Chart
-              series={Object.keys(props.gameResults).map((key: string) => props.gameResults[key])}
+              series={Object.keys(gameResultsChartData).map((key: string) => gameResultsChartData[key])}
               options={{
                 dataLabels: {
                   enabled: false,
@@ -76,7 +127,7 @@ export const PeriodGameSummaryCharts: React.FC<IProps> = (props) => {
                     },
                   },
                 ],
-                labels: Object.keys(props.gameResults),
+                labels: Object.keys(gameResultsChartData),
                 legend: {
                   formatter: (seriesName, opts) => `${seriesName} - ${opts.w.globals.series[opts.seriesIndex]}`,
                   horizontalAlign: 'right',

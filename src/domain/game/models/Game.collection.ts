@@ -13,7 +13,7 @@ import {
 } from '../games.types';
 import { GameModel } from './Game.model';
 import { setDateFromUtcSeconds } from '../../../util/date.utils';
-import { GameResult, PieceColor, WinLossDraw } from '../games.constants';
+import { GameResult, gameResultToWinLossDraw, PieceColor, WinLossDraw } from '../games.constants';
 
 export class GameCollection {
   public moveTree: any = {};
@@ -294,7 +294,11 @@ export class GameCollection {
     return gamePlayer.rating;
   }
 
-  public gatherGameResults(): { [key: string]: number } {
+  /**
+   * Collects results directly from API, which may result in several different
+   * types of result, even though the effect is the same
+   */
+  public gatherDetailedGameResults(): { [key: string]: number } {
     return this._items.reduce((sum: { [key: string]: number }, item: GameModel) => {
       const result = item.getResult(this.username);
 
@@ -303,6 +307,24 @@ export class GameCollection {
       }
 
       sum[result] = sum[result] + 1;
+
+      return sum;
+    }, {});
+  }
+
+  /**
+   * Collects results in a simplified `win/draw/loss` format
+   */
+  public gatherSimpleGameResults(): { [key: string]: number } {
+    return this._items.reduce((sum: { [key: string]: number }, item: GameModel) => {
+      const result = item.getResult(this.username);
+      const ratingEffect = gameResultToWinLossDraw[result];
+
+      if (typeof sum[ratingEffect] === 'undefined') {
+        sum[ratingEffect] = 0;
+      }
+
+      sum[ratingEffect] = sum[ratingEffect] + 1;
 
       return sum;
     }, {});
