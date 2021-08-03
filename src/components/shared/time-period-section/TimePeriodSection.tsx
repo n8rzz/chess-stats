@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { Dimmer, Loader, Segment, Tab } from 'semantic-ui-react';
 import styles from '../../../styles/App.module.css';
 import { GameCollection } from '../../../domain/game/models/Game.collection';
-import { CandlestickChart } from '../../ui/candlestick/CandlestickChart';
+import { ValueOverTimeCharts } from '../../ui/value-over-time-charts/ValueOverTimeCharts';
 import { TimePeriodSummary } from './TimePeriodSummary';
 import { PeriodGameSummaryCharts } from '../period-game-summary-charts/PeriodGameSummaryCharts';
 import { Openings } from '../openings/Openings';
@@ -24,8 +24,6 @@ export const TimePeriodSection: React.FC<IProps> = (props) => {
 
   const ohlcData = React.useMemo(() => props.gameCollection.calculateOhlcForPeriod(), [props.gameCollection.period]);
   const movingAverage = React.useMemo(() => {
-    console.log('---', movingAveragePeriod);
-
     return props.gameCollection.calculateMovingAverageWithOhlcAndPeriod(ohlcData, movingAveragePeriod);
   }, [movingAveragePeriod, props.gameCollection]);
 
@@ -62,12 +60,13 @@ export const TimePeriodSection: React.FC<IProps> = (props) => {
         />
       </section>
       <section className={clsx(styles.container, styles.vr2)}>
-        <CandlestickChart
+        <ValueOverTimeCharts
           countByDate={props.gameCollection.countByDate()}
-          ohlcData={props.gameCollection.buildOhlcChartData()}
           movingAverage={movingAverage}
           movingAveragePeriod={movingAveragePeriod}
+          ohlcData={props.gameCollection.buildOhlcChartData()}
           onChangeMovingAverage={setMovingAveragePeriod}
+          timeframe={props.timeframe}
         />
       </section>
       <section>

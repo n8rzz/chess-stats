@@ -5,6 +5,7 @@ import styles from '../../../styles/App.module.css';
 import { IDataLabel, IMovingAverageChartData, IOhlcChartData } from '../../../domain/game/games.types';
 import { GameResult, MovingAveragePeriod } from '../../../domain/game/games.constants';
 import { Menu, Dropdown, DropdownProps } from 'semantic-ui-react';
+import { Timeframe } from '../../pages/app/app.constants';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
@@ -14,9 +15,35 @@ interface IProps {
   movingAveragePeriod: MovingAveragePeriod;
   ohlcData: IOhlcChartData[];
   onChangeMovingAverage: (nextPeriod: MovingAveragePeriod) => void;
+  timeframe: Timeframe;
 }
 
-export const CandlestickChart: React.FC<IProps> = (props) => {
+export const ValueOverTimeCharts: React.FC<IProps> = (props) => {
+  const averageTimeframeOptionList = React.useMemo(() => {
+    return [
+      {
+        key: '5-days',
+        text: '5 Days',
+        value: MovingAveragePeriod.FiveDays,
+      },
+      {
+        key: '10-days',
+        text: '10 Days',
+        value: MovingAveragePeriod.TenDays,
+      },
+      {
+        key: '15-days',
+        text: '15 Days',
+        value: MovingAveragePeriod.FifteenDays,
+      },
+      {
+        key: '30-days',
+        text: '30 Days',
+        value: MovingAveragePeriod.ThirtyDays,
+      },
+    ];
+  }, [props.timeframe]);
+
   const movingAverageChartData = React.useMemo(() => {
     return props.movingAverage.map((item: IMovingAverageChartData) => ({
       x: item.date,
@@ -127,28 +154,7 @@ export const CandlestickChart: React.FC<IProps> = (props) => {
                   item={true}
                   defaultValue={props.movingAveragePeriod}
                   onChange={(_, data: DropdownProps) => props.onChangeMovingAverage(data?.value as MovingAveragePeriod)}
-                  options={[
-                    {
-                      key: '5-days',
-                      text: '5 Days',
-                      value: MovingAveragePeriod.FiveDays,
-                    },
-                    {
-                      key: '10-days',
-                      text: '10 Days',
-                      value: MovingAveragePeriod.TenDays,
-                    },
-                    {
-                      key: '15-days',
-                      text: '15 Days',
-                      value: MovingAveragePeriod.FifteenDays,
-                    },
-                    {
-                      key: '30-days',
-                      text: '30 Days',
-                      value: MovingAveragePeriod.ThirtyDays,
-                    },
-                  ]}
+                  options={averageTimeframeOptionList}
                 />
               </Menu>
             </li>
@@ -188,5 +194,5 @@ export const CandlestickChart: React.FC<IProps> = (props) => {
   );
 };
 
-CandlestickChart.displayName = 'CandlestickChart';
-CandlestickChart.defaultProps = {};
+ValueOverTimeCharts.displayName = 'CandlestickChart';
+ValueOverTimeCharts.defaultProps = {};
