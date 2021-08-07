@@ -78,20 +78,7 @@ describe('GameCollection', () => {
       const result = collection.countByDate();
       const expectedResult = {
         data: {
-          abandoned: [0, 0],
-          agreed: [0, 0],
-          bughousepartnerlose: [0, 0],
           checkmated: [1, 0],
-          fiftymove: [0, 0],
-          insufficient: [0, 0],
-          kingofthehill: [0, 0],
-          lose: [0, 0],
-          repetition: [0, 0],
-          resigned: [0, 0],
-          stalemate: [0, 0],
-          threecheck: [0, 0],
-          timeout: [0, 0],
-          timevsinsufficient: [0, 0],
           win: [1, 1],
         },
         labels: ['12:00:00 AM', '1:00:00 AM'],

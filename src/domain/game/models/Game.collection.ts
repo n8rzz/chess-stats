@@ -1,4 +1,4 @@
-import { orderBy } from 'lodash';
+import { compact, orderBy } from 'lodash';
 import format from 'date-fns/format';
 import subDays from 'date-fns/subDays';
 import { sma } from 'technicalindicators';
@@ -172,26 +172,39 @@ export class GameCollection {
       return l.date;
     });
     const resultCounts = gameCountsByDate.map((d) => d.count);
+    const rawCountsByDate = {
+      [GameResult.Abandoned]: resultCounts.map((c) => c.abandoned),
+      [GameResult.Agreed]: resultCounts.map((c) => c.agreed),
+      [GameResult.BughousePartnerLose]: resultCounts.map((c) => c.bughousepartnerlose),
+      [GameResult.Checkmated]: resultCounts.map((c) => c.checkmated),
+      [GameResult.FiftyMove]: resultCounts.map((c) => c.fiftymove),
+      [GameResult.Insufficient]: resultCounts.map((c) => c.insufficient),
+      [GameResult.KingOfTheHill]: resultCounts.map((c) => c.kingofthehill),
+      [GameResult.Lose]: resultCounts.map((c) => c.lose),
+      [GameResult.Repetition]: resultCounts.map((c) => c.repetition),
+      [GameResult.Resigned]: resultCounts.map((c) => c.resigned),
+      [GameResult.Stalemate]: resultCounts.map((c) => c.stalemate),
+      [GameResult.ThreeCheck]: resultCounts.map((c) => c.threecheck),
+      [GameResult.Timeout]: resultCounts.map((c) => c.timeout),
+      [GameResult.TimeVsInsufficient]: resultCounts.map((c) => c.timevsinsufficient),
+      [GameResult.Win]: resultCounts.map((c) => c.win),
+    };
 
     return {
       labels,
-      data: {
-        [GameResult.Abandoned]: resultCounts.map((c) => c.abandoned),
-        [GameResult.Agreed]: resultCounts.map((c) => c.agreed),
-        [GameResult.BughousePartnerLose]: resultCounts.map((c) => c.bughousepartnerlose),
-        [GameResult.Checkmated]: resultCounts.map((c) => c.checkmated),
-        [GameResult.FiftyMove]: resultCounts.map((c) => c.fiftymove),
-        [GameResult.Insufficient]: resultCounts.map((c) => c.insufficient),
-        [GameResult.KingOfTheHill]: resultCounts.map((c) => c.kingofthehill),
-        [GameResult.Lose]: resultCounts.map((c) => c.lose),
-        [GameResult.Repetition]: resultCounts.map((c) => c.repetition),
-        [GameResult.Resigned]: resultCounts.map((c) => c.resigned),
-        [GameResult.Stalemate]: resultCounts.map((c) => c.stalemate),
-        [GameResult.ThreeCheck]: resultCounts.map((c) => c.threecheck),
-        [GameResult.Timeout]: resultCounts.map((c) => c.timeout),
-        [GameResult.TimeVsInsufficient]: resultCounts.map((c) => c.timevsinsufficient),
-        [GameResult.Win]: resultCounts.map((c) => c.win),
-      },
+      data: Object.keys(rawCountsByDate).reduce((sum: any, key: string) => {
+        const data = rawCountsByDate[key as GameResult];
+        const compactedData = compact(data);
+
+        if (compactedData.length === 0) {
+          return sum;
+        }
+
+        return {
+          ...sum,
+          [key]: data,
+        };
+      }, {}),
     };
   }
 

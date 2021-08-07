@@ -1,6 +1,5 @@
 import * as React from 'react';
 import dynamic from 'next/dynamic';
-import clsx from 'clsx';
 import styles from '../../../styles/App.module.css';
 import { IDataLabel, IMovingAverageChartData, IOhlcChartData } from '../../../domain/game/games.types';
 import { GameResult, MovingAveragePeriod } from '../../../domain/game/games.constants';
@@ -53,36 +52,43 @@ export const ValueOverTimeCharts: React.FC<IProps> = (props) => {
 
   return (
     <div>
-      <section className={clsx(styles.container, styles.vr2)}>
+      <section className={styles.vr2}>
         <div id={'rating-over-time-chart-candlestick'}>
           <div className={styles.vr2}>
-            <h3>Rating</h3>
-          </div>
+            <div className={styles.vr1}>
+              <h3>Rating</h3>
+            </div>
 
-          <Chart
-            options={{
-              chart: {
-                toolbar: {
-                  show: false,
-                },
-              },
-              xaxis: {
-                type: 'datetime',
-              },
-              yaxis: [
-                {
-                  tooltip: {
-                    enabled: true,
+            <Chart
+              options={{
+                chart: {
+                  toolbar: {
+                    show: false,
                   },
                 },
-              ],
-            }}
-            series={[{ data: props.ohlcData }]}
-            type={'candlestick'}
-            height={300}
-          />
+                xaxis: {
+                  type: 'datetime',
+                },
+                yaxis: [
+                  {
+                    tooltip: {
+                      enabled: true,
+                    },
+                  },
+                ],
+              }}
+              series={[{ data: props.ohlcData }]}
+              type={'candlestick'}
+              height={300}
+            />
+          </div>
         </div>
-        <div>
+
+        <div className={styles.vr2}>
+          <div className={styles.vr1}>
+            <h3>Result</h3>
+          </div>
+
           <Chart
             options={{
               chart: {
@@ -95,6 +101,7 @@ export const ValueOverTimeCharts: React.FC<IProps> = (props) => {
               },
               xaxis: {
                 categories: props.countByDate.labels,
+                type: 'datetime',
               },
               plotOptions: {
                 bar: {
@@ -108,32 +115,18 @@ export const ValueOverTimeCharts: React.FC<IProps> = (props) => {
                 enabled: false,
               },
             }}
-            series={[
-              {
-                name: 'agreed',
-                data: props.countByDate.data.agreed,
+            series={Object.keys(props.countByDate.data).reduce(
+              (sum: { data: number[]; name: string }[], key: string) => {
+                return [
+                  ...sum,
+                  {
+                    name: key,
+                    data: props.countByDate.data[key as GameResult],
+                  },
+                ];
               },
-              {
-                name: 'checkmated',
-                data: props.countByDate.data.checkmated,
-              },
-              {
-                name: 'resigned',
-                data: props.countByDate.data.resigned,
-              },
-              {
-                name: 'stalemate',
-                data: props.countByDate.data.stalemate,
-              },
-              {
-                name: 'timeout',
-                data: props.countByDate.data.timeout,
-              },
-              {
-                name: 'win',
-                data: props.countByDate.data.win,
-              },
-            ]}
+              [],
+            )}
             type={'bar'}
             height={300}
           />
