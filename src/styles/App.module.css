@@ -140,3 +140,27 @@
 .mixStackedBarChartBdRowDataItemLoss {
   background-color: #ffb5aa;
 }
+
+/* -- */
+.heatmap {
+  align-items: flex-end;
+  border: 1px solid red;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  margin: 25px;
+}
+
+.heatmapColumnCell {
+  fill: #efefef;
+  shape-rendering: geometricPrecision;
+  outline: 1px solid #dddddd;
+  outline-offset: -1px;
+  transition: all 400ms ease-in-out;
+}
+
+.heatmapColumnCell:hover {
+  fill: dodgerblue;
+  cursor: pointer;
+  outline: 1px solid deepskyblue;
+}
