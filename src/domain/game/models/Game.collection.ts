@@ -166,7 +166,25 @@ export class GameCollection {
     }, []);
   }
 
-  public countByDate(): ICountByDate {
+  /**
+   * Used to drive the [future] heatmap
+   */
+  public countGamesByDate(): { [key: string]: number } {
+    const gamesByPeriod = this.groupByPeriod();
+
+    return Object.keys(gamesByPeriod).reduce((sum: { [key: string]: number }, key: string) => {
+      if (typeof gamesByPeriod[key] === 'undefined') {
+        sum[key] = 0;
+      }
+
+      return {
+        ...sum,
+        [key]: gamesByPeriod[key].length,
+      };
+    }, {});
+  }
+
+  public countResultsByDate(): ICountByDate {
     const gameCountsByDate = this._countGameResultsByPeriod();
     const labels = gameCountsByDate.map((l) => {
       if (this.period === 1) {

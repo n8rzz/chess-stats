@@ -30,6 +30,9 @@ export interface IGameArchiveResponse {
   games: IGame[];
 }
 
+/**
+ * Where `key` is a date
+ */
 export interface IGamesByPeriodInterval {
   [key: string]: GameModel[];
 }

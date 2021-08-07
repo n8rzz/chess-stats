@@ -72,10 +72,22 @@ describe('GameCollection', () => {
     });
   });
 
-  describe('.countByDate()', () => {
+  describe('.countGamesByDate()', () => {
+    test('should return a dictionary of dates and numbers', () => {
+      const collection = new GameCollection('n8rzz', gameListForDate, 2);
+      const result = collection.countGamesByDate();
+      const expectedResult = {
+        '4/17/2021': 9,
+      };
+
+      expect(result).toEqual(expectedResult);
+    });
+  });
+
+  describe('.countResultsByDate()', () => {
     test('should return IDataLabels', () => {
       const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 1);
-      const result = collection.countByDate();
+      const result = collection.countResultsByDate();
       const expectedResult = {
         data: {
           checkmated: [1, 0],

@@ -71,7 +71,7 @@ export const TimePeriodSection: React.FC<IProps> = (props) => {
           timeframe={props.timeframe}
         />
         <WinLossCountChart
-          countByDate={props.gameCollection.countByDate()}
+          countByDate={props.gameCollection.countResultsByDate()}
           onChangeMovingAverage={setMovingAveragePeriod}
           title={'Detailed Results'}
         />
