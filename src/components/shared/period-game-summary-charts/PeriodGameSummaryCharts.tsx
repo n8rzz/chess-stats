@@ -2,15 +2,13 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 import { Card, Dropdown, DropdownProps, Menu } from 'semantic-ui-react';
 import styles from '../../../styles/App.module.css';
-import { IGamesBySide } from '../../../domain/game/games.types';
+import { GameResultCountMap, IGamesBySide } from '../../../domain/game/games.types';
 import { GameResultFidelity } from './PeriodGameSummaryCharts.types';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 interface IProps {
-  detailedGameResults: {
-    [key: string]: number;
-  };
+  detailedGameResults: GameResultCountMap;
   gamesBySide: IGamesBySide;
   isLoading: boolean;
   simpleGameResults: {

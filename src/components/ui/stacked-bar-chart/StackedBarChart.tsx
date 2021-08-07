@@ -2,16 +2,7 @@ import React from 'react';
 import styles from '../../../styles/App.module.css';
 import { PieceColor, WinLossDraw } from '../../../domain/game/games.constants';
 import { StackedBarChartRow } from './StackedBarChartRow';
-
-export interface IStackedBarChartData {
-  data: {
-    label: WinLossDraw;
-    value: number;
-  }[];
-  key: string;
-  leftAxisLabel: string;
-  rightAxisLabel: string;
-}
+import { IStackedBarChartData } from './StackedBarChart.types';
 
 interface IProps {
   onClickDataItem: (move: string, value: WinLossDraw) => void;

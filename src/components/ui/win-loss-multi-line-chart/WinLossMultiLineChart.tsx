@@ -1,12 +1,13 @@
 import * as React from 'react';
 import dynamic from 'next/dynamic';
 import styles from '../../../styles/App.module.css';
+import { IWinLossDrawByPeriod } from '../../../domain/game/games.types';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 interface IProps {
   title: string;
-  winLossByPeriod: { [key: string]: { draw: number; loss: number; win: number } };
+  winLossByPeriod: IWinLossDrawByPeriod;
 }
 
 export const WinLossMultiLineChart: React.FC<IProps> = (props) => {

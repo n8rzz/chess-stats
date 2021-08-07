@@ -3,13 +3,17 @@ import format from 'date-fns/format';
 import subDays from 'date-fns/subDays';
 import { sma } from 'technicalindicators';
 import {
+  GameResultCountMap,
+  ICountByDate,
   IDayOhlc,
   IGame,
   IGameCountByDate,
   IGamesBySide,
-  IGamesGroupedByDate,
+  IGamesByPeriodInterval,
   IMovingAverageChartData,
   IOhlcChartData,
+  IWinLossDrawByPeriod,
+  SimpleGameResultCountMap,
 } from '../games.types';
 import { GameModel } from './Game.model';
 import { setDateFromUtcSeconds } from '../../../util/date.utils';
@@ -112,7 +116,7 @@ export class GameCollection {
     }));
   }
 
-  public groupByPeriod(): IGamesGroupedByDate {
+  public groupByPeriod(): IGamesByPeriodInterval {
     return this.period === 1 ? this.groupByHour() : this.groupByDay();
   }
 
@@ -124,11 +128,11 @@ export class GameCollection {
       return [
         ...sum,
         {
+          close: period.findClosingRating(),
           date: dateKey,
-          open: period.findOpeningRating(),
           high: period.findMaxRating(),
           low: period.findMinRating(),
-          close: period.findClosingRating(),
+          open: period.findOpeningRating(),
           volume: period.length,
         },
       ];
@@ -162,7 +166,7 @@ export class GameCollection {
     }, []);
   }
 
-  public countByDate(): { data: Record<GameResult, number[]>; labels: string[] } {
+  public countByDate(): ICountByDate {
     const gameCountsByDate = this._countGameResultsByPeriod();
     const labels = gameCountsByDate.map((l) => {
       if (this.period === 1) {
@@ -250,9 +254,7 @@ export class GameCollection {
     );
   }
 
-  public countWinLossByPeriod(): {
-    [key: string]: { [WinLossDraw.Draw]: number; [WinLossDraw.Loss]: number; [WinLossDraw.Win]: number };
-  } {
+  public countWinLossByPeriod(): IWinLossDrawByPeriod {
     const itemsForPeriod = this.groupByPeriod();
 
     return Object.keys(itemsForPeriod).reduce((sum: any, key: string) => {
@@ -346,8 +348,8 @@ export class GameCollection {
    * Collects results directly from API, which may result in several different
    * types of result, even though the effect is the same
    */
-  public gatherDetailedGameResults(): { [key: string]: number } {
-    return this._items.reduce((sum: { [key: string]: number }, item: GameModel) => {
+  public gatherDetailedGameResults(): GameResultCountMap {
+    return this._items.reduce((sum: GameResultCountMap, item: GameModel) => {
       const result = item.getResult(this.username);
 
       if (typeof sum[result] === 'undefined') {
@@ -357,14 +359,14 @@ export class GameCollection {
       sum[result] = sum[result] + 1;
 
       return sum;
-    }, {});
+    }, {} as GameResultCountMap);
   }
 
   /**
    * Collects results in a simplified `win/draw/loss` format
    */
-  public gatherSimpleGameResults(): { [key: string]: number } {
-    return this._items.reduce((sum: { [key: string]: number }, item: GameModel) => {
+  public gatherSimpleGameResults(): SimpleGameResultCountMap {
+    return this._items.reduce((sum: SimpleGameResultCountMap, item: GameModel) => {
       const result = item.getResult(this.username);
       const ratingEffect = gameResultToWinLossDraw[result];
 
@@ -375,11 +377,11 @@ export class GameCollection {
       sum[ratingEffect] = sum[ratingEffect] + 1;
 
       return sum;
-    }, {});
+    }, {} as SimpleGameResultCountMap);
   }
 
-  public groupByHour(): IGamesGroupedByDate {
-    return this._items.reduce((sum: { [key: string]: GameModel[] }, game: GameModel) => {
+  public groupByHour(): IGamesByPeriodInterval {
+    return this._items.reduce((sum: IGamesByPeriodInterval, game: GameModel) => {
       const gameEndDate = setDateFromUtcSeconds(game.end_time);
       const hours = gameEndDate.getHours();
       const endDateWithHours = new Date(gameEndDate.toLocaleDateString());
@@ -400,8 +402,8 @@ export class GameCollection {
     }, {});
   }
 
-  public groupByDay(): IGamesGroupedByDate {
-    return this._items.reduce((sum: { [key: string]: GameModel[] }, game: GameModel) => {
+  public groupByDay(): IGamesByPeriodInterval {
+    return this._items.reduce((sum: IGamesByPeriodInterval, game: GameModel) => {
       const gameEndDate = setDateFromUtcSeconds(game.end_time);
       const dateKey = gameEndDate.toLocaleDateString();
 
@@ -421,6 +423,8 @@ export class GameCollection {
     return this._items.map((model: GameModel): IGame => model.toJson());
   }
 
+  // TODO: define type
+  // `sumObj` is a recursive type { [key: string]: { recursive } }
   private _merge(sumObj: any, sourceObj: any): any {
     if (typeof sourceObj === 'undefined') {
       return sumObj;

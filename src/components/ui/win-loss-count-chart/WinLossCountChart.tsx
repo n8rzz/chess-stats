@@ -1,13 +1,13 @@
 import * as React from 'react';
 import dynamic from 'next/dynamic';
 import styles from '../../../styles/App.module.css';
-import { IDataLabel } from '../../../domain/game/games.types';
+import { ICountByDate } from '../../../domain/game/games.types';
 import { GameResult, MovingAveragePeriod } from '../../../domain/game/games.constants';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 interface IProps {
-  countByDate: IDataLabel<Record<GameResult, number[]>>;
+  countByDate: ICountByDate;
   onChangeMovingAverage: (nextPeriod: MovingAveragePeriod) => void;
   title: string;
 }

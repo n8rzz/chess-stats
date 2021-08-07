@@ -30,7 +30,7 @@ export interface IGameArchiveResponse {
   games: IGame[];
 }
 
-export interface IGamesGroupedByDate {
+export interface IGamesByPeriodInterval {
   [key: string]: GameModel[];
 }
 
@@ -95,3 +95,20 @@ export interface IOpeningMoveMap {
     [key in WinLossDraw]: number;
   };
 }
+
+export interface ICountByDate {
+  data: Record<GameResult, number[]>;
+  labels: string[];
+}
+
+export interface IWinLossDrawByPeriod {
+  [key: string]: {
+    [WinLossDraw.Draw]: number;
+    [WinLossDraw.Loss]: number;
+    [WinLossDraw.Win]: number;
+  };
+}
+
+export type GameResultCountMap = Record<Partial<GameResult>, number>;
+
+export type SimpleGameResultCountMap = Record<Partial<WinLossDraw>, number>;
