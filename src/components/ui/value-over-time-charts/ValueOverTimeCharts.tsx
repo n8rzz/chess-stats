@@ -15,6 +15,7 @@ interface IProps {
   ohlcData: IOhlcChartData[];
   onChangeMovingAverage: (nextPeriod: MovingAveragePeriod) => void;
   timeframe: Timeframe;
+  winLossByPeriod: { [key: string]: { draw: number; loss: number; win: number } };
 }
 
 export const ValueOverTimeCharts: React.FC<IProps> = (props) => {
@@ -50,6 +51,8 @@ export const ValueOverTimeCharts: React.FC<IProps> = (props) => {
     }));
   }, [props.movingAverage, props.movingAveragePeriod]);
 
+  console.log('===', props);
+
   return (
     <div>
       <section className={styles.vr2}>
@@ -84,7 +87,7 @@ export const ValueOverTimeCharts: React.FC<IProps> = (props) => {
           </div>
         </div>
 
-        <div className={styles.vr2}>
+        <div id={'win-loss-count-by-period-chart'} className={styles.vr2}>
           <div className={styles.vr1}>
             <h3>Result</h3>
           </div>
@@ -131,58 +134,115 @@ export const ValueOverTimeCharts: React.FC<IProps> = (props) => {
             height={300}
           />
         </div>
-      </section>
 
-      <div id={'rating-average-chart'}>
-        <div className={styles.vr2}>
-          <ul className={styles.stereo}>
-            <li>
-              <h3>Average Rating</h3>
-            </li>
-            <li>
-              <Menu compact={true}>
-                <Dropdown
-                  compact={true}
-                  simple={true}
-                  item={true}
-                  defaultValue={props.movingAveragePeriod}
-                  onChange={(_, data: DropdownProps) => props.onChangeMovingAverage(data?.value as MovingAveragePeriod)}
-                  options={averageTimeframeOptionList}
-                />
-              </Menu>
-            </li>
-          </ul>
+        <div id={'win-loss-multi-line-chart'}>
+          <div className={styles.vr2}>
+            <h3>Win/Loss</h3>
+          </div>
+
+          <Chart
+            options={{
+              chart: {
+                toolbar: {
+                  show: false,
+                },
+              },
+              stroke: {
+                width: 3,
+              },
+              xaxis: {
+                type: 'datetime',
+              },
+              yaxis: {
+                tooltip: {
+                  enabled: true,
+                },
+              },
+            }}
+            series={[
+              {
+                name: 'Win',
+                data: Object.keys(props.winLossByPeriod).reduce((sum: { x: string; y: number }[], key: string) => {
+                  return [
+                    ...sum,
+                    {
+                      x: key,
+                      y: props.winLossByPeriod[key].win,
+                    },
+                  ];
+                }, []),
+              },
+              {
+                name: 'Loss',
+                data: Object.keys(props.winLossByPeriod).reduce((sum: { x: string; y: number }[], key: string) => {
+                  return [
+                    ...sum,
+                    {
+                      x: key,
+                      y: props.winLossByPeriod[key].loss * -1,
+                    },
+                  ];
+                }, []),
+              },
+            ]}
+            type={'line'}
+            height={300}
+          />
         </div>
 
-        <Chart
-          options={{
-            chart: {
-              toolbar: {
-                show: false,
+        <div id={'rating-average-chart'}>
+          <div className={styles.vr2}>
+            <ul className={styles.stereo}>
+              <li>
+                <h3>Average Rating</h3>
+              </li>
+              <li>
+                <Menu compact={true}>
+                  <Dropdown
+                    compact={true}
+                    simple={true}
+                    item={true}
+                    defaultValue={props.movingAveragePeriod}
+                    onChange={(_, data: DropdownProps) =>
+                      props.onChangeMovingAverage(data?.value as MovingAveragePeriod)
+                    }
+                    options={averageTimeframeOptionList}
+                  />
+                </Menu>
+              </li>
+            </ul>
+          </div>
+
+          <Chart
+            options={{
+              chart: {
+                toolbar: {
+                  show: false,
+                },
               },
-            },
-            stroke: {
-              width: 3,
-            },
-            xaxis: {
-              type: 'datetime',
-            },
-            yaxis: {
-              tooltip: {
-                enabled: true,
+              stroke: {
+                width: 3,
               },
-            },
-          }}
-          series={[
-            {
-              name: 'Average Rating',
-              data: movingAverageChartData,
-            },
-          ]}
-          type={'line'}
-          height={300}
-        />
-      </div>
+              xaxis: {
+                type: 'datetime',
+              },
+              yaxis: {
+                tooltip: {
+                  enabled: true,
+                },
+              },
+            }}
+            series={[
+              {
+                name: 'Average Rating',
+                data: movingAverageChartData,
+              },
+            ]}
+            type={'line'}
+            height={300}
+          />
+        </div>
+      </section>
     </div>
   );
 };

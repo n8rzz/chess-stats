@@ -250,6 +250,40 @@ export class GameCollection {
     );
   }
 
+  public countWinLossByPeriod(): {
+    [key: string]: { [WinLossDraw.Draw]: number; [WinLossDraw.Loss]: number; [WinLossDraw.Win]: number };
+  } {
+    const itemsForPeriod = this.groupByPeriod();
+
+    return Object.keys(itemsForPeriod).reduce((sum: any, key: string) => {
+      const gamesForSinglePeriod = itemsForPeriod[key];
+      const winLossAndDrawCounts = gamesForSinglePeriod.reduce(
+        (sum: any, game: GameModel) => {
+          const result = game.getResult(this.username);
+          const ratingEffect = gameResultToWinLossDraw[result];
+
+          if (typeof sum[ratingEffect] === 'undefined') {
+            return {
+              ...sum,
+              [ratingEffect]: 1,
+            };
+          }
+
+          return {
+            ...sum,
+            [ratingEffect]: sum[ratingEffect] + 1,
+          };
+        },
+        { [WinLossDraw.Draw]: 0, [WinLossDraw.Loss]: 0, [WinLossDraw.Win]: 0 },
+      );
+
+      return {
+        ...sum,
+        [key]: winLossAndDrawCounts,
+      };
+    }, {});
+  }
+
   public findMaxRating(): number {
     return this._items.reduce((sum: number, game: GameModel) => {
       const gamePlayer = game.getSideForUsername(this.username);

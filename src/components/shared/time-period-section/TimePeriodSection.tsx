@@ -67,6 +67,7 @@ export const TimePeriodSection: React.FC<IProps> = (props) => {
           ohlcData={props.gameCollection.buildOhlcChartData()}
           onChangeMovingAverage={setMovingAveragePeriod}
           timeframe={props.timeframe}
+          winLossByPeriod={props.gameCollection.countWinLossByPeriod()}
         />
       </section>
       <section>
