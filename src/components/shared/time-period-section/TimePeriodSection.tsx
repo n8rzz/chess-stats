@@ -1,14 +1,16 @@
 import React from 'react';
-import clsx from 'clsx';
 import { Dimmer, Loader, Segment, Tab } from 'semantic-ui-react';
 import styles from '../../../styles/App.module.css';
 import { GameCollection } from '../../../domain/game/models/Game.collection';
-import { ValueOverTimeCharts } from '../../ui/value-over-time-charts/ValueOverTimeCharts';
 import { TimePeriodSummary } from './TimePeriodSummary';
 import { PeriodGameSummaryCharts } from '../period-game-summary-charts/PeriodGameSummaryCharts';
 import { Openings } from '../openings/Openings';
 import { Timeframe } from '../../pages/app/app.constants';
 import { MovingAveragePeriod } from '../../../domain/game/games.constants';
+import { CandlestickChart } from '../../ui/candlestick-chart/CandlestickChart';
+import { AverageRatingChart } from '../../ui/average-rating-chart/AverageRatingChart';
+import { WinLossCountChart } from '../../ui/win-loss-count-chart/WinLossCountChart';
+import { WinLossMultiLineChart } from '../../ui/win-loss-multi-line-chart/WinLossMultiLineChart';
 
 interface IProps {
   gameCollection: GameCollection;
@@ -59,14 +61,22 @@ export const TimePeriodSection: React.FC<IProps> = (props) => {
           simpleGameResults={props.gameCollection.gatherSimpleGameResults()}
         />
       </section>
-      <section className={clsx(styles.container, styles.vr2)}>
-        <ValueOverTimeCharts
-          countByDate={props.gameCollection.countByDate()}
+      <section className={styles.vr2}>
+        <CandlestickChart ohlcData={props.gameCollection.buildOhlcChartData()} title={'Rating'} />
+        <AverageRatingChart
           movingAverage={movingAverage}
           movingAveragePeriod={movingAveragePeriod}
-          ohlcData={props.gameCollection.buildOhlcChartData()}
           onChangeMovingAverage={setMovingAveragePeriod}
+          title={'Average Rating'}
           timeframe={props.timeframe}
+        />
+        <WinLossCountChart
+          countByDate={props.gameCollection.countByDate()}
+          onChangeMovingAverage={setMovingAveragePeriod}
+          title={'Detailed Results'}
+        />
+        <WinLossMultiLineChart
+          title={'Wins and Losses'}
           winLossByPeriod={props.gameCollection.countWinLossByPeriod()}
         />
       </section>
