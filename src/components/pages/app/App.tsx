@@ -11,6 +11,7 @@ import { PlayerStats } from './player-stats/PlayerStats';
 import { Timeframe, timeframeLabel, timeframeToPeriod } from './app.constants';
 import { AppHeader } from '../../shared/app-header/AppHeader';
 import { EmptyView } from './EmptyView';
+import { Heatmap } from '../../ui/heatmap/Heatmap';
 
 interface IProps {}
 
@@ -72,6 +73,10 @@ export const App: React.FC<IProps> = () => {
       {gameCollection.length > 0 && (
         <React.Fragment>
           <div className={clsx(styles.container, styles.vr3)}>
+            <div className={styles.vr3}>
+              <Heatmap />
+            </div>
+
             <div className={styles.vr2}>
               <Button.Group widths={6}>
                 {Object.keys(timeframeLabel).map((key: string) => (

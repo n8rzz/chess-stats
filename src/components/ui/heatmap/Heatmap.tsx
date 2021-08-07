@@ -3,8 +3,9 @@ import dayjs from 'dayjs';
 import styles from '../../../styles/App.module.css';
 import { weeksOfMonth } from './Heatmap.utils';
 import { HeatmapColumnLabels } from './HeatmapColumnLabels';
-import { HeatmapCellLabels } from './HeatmapCellLabels';
+import { HeatmapRowLabels } from './HeatmapRowLabels';
 import { HeatmapColumn } from './HeatmapColumn';
+import { CELL_WIDTH, LEFT_LABEL_MARGIN } from './Heatmap.constants';
 
 interface IProps {}
 
@@ -19,7 +20,7 @@ export const Heatmap: React.FC<IProps> = (props) => {
     return dayjs(endDate).format('d');
   }, []);
 
-  const monthLabelIndexList = React.useMemo(() => {
+  const weekCountForMonthList = React.useMemo(() => {
     return [
       ...Array(12)
         .fill(null)
@@ -30,22 +31,26 @@ export const Heatmap: React.FC<IProps> = (props) => {
         }),
     ];
   }, []);
+  const countOfCalendarWeeks = React.useMemo(
+    () => weekCountForMonthList.reduce((sum: number, weekCountForMonth: number) => sum + weekCountForMonth, 0),
+    [],
+  );
 
   return (
     <div>
       Heatmap
       <div className={styles.heatmap}>
-        <svg width={'900'} height={'150'} preserveAspectRatio="xMaxYMin meet">
-          <HeatmapColumnLabels monthLabelIndexList={monthLabelIndexList} />
+        <svg width={'800'} height={'150'} preserveAspectRatio="xMaxYMin meet">
+          <HeatmapColumnLabels weekCountForMonthList={weekCountForMonthList} />
 
           <g transform={'translate(0, 15)'}>
-            <HeatmapCellLabels />
+            <HeatmapRowLabels />
 
             {[
-              ...Array(52)
+              ...Array(countOfCalendarWeeks)
                 .fill(null)
                 .map((_: null, index: number) => {
-                  const x = 16 * index + 50;
+                  const x = CELL_WIDTH * index + LEFT_LABEL_MARGIN;
 
                   return (
                     <HeatmapColumn

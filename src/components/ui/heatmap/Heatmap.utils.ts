@@ -6,5 +6,6 @@ export const weeksOfMonth = (year: number, monthIndex: number): number => {
   const adjustedDate = d.getDate() + d.getDay();
   const weekCount = Math.ceil(adjustedDate / 7);
 
-  return weekCount > 5 ? 5 : weekCount;
+  // return weekCount > 5 ? 5 : weekCount;
+  return weekCount;
 };

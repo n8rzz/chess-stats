@@ -30,6 +30,7 @@
     "axios": "0.21.1",
     "clsx": "1.1.1",
     "date-fns": "2.21.1",
+    "dayjs": "1.10.6",
     "lodash.chunk": "4.2.0",
     "lodash.mergewith": "4.6.2",
     "next": "10.1.3",

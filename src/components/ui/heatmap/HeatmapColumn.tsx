@@ -1,4 +1,5 @@
 import React from 'react';
+import { CELL_WIDTH } from './Heatmap.constants';
 import { HeatmapColumnCell } from './HeatmapColumnCell';
 
 interface IProps {
@@ -27,10 +28,10 @@ export const HeatmapColumn: React.FC<IProps> = (props) => {
         ...Array(daysInWeek)
           .fill(null)
           .map((_: null, index: number) => {
-            let y = 16 * index;
+            let y = CELL_WIDTH * index;
 
             if (props.index === 0) {
-              y = props.firstDayOfYearIndex * 16 + 16 * index;
+              y = props.firstDayOfYearIndex * CELL_WIDTH + CELL_WIDTH * index;
             }
 
             return <HeatmapColumnCell y={y} key={`heatmapColumnCell-${props.x}-${y}`} />;
