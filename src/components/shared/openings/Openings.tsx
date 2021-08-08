@@ -4,10 +4,11 @@ import { Button, Header } from 'semantic-ui-react';
 import styles from '../../../styles/App.module.css';
 import type { GameCollection } from '../../../domain/game/models/Game.collection';
 import { PieceColor, WinLossDraw } from '../../../domain/game/games.constants';
-import { reducer, buildInitialState, OpeningsActionName } from './Openings.reducer';
+import { reducer, buildInitialState } from './Openings.reducer';
 import { StackedBarChart } from '../../ui/stacked-bar-chart/StackedBarChart';
 import { SelectedMoveList } from './selected-move-list/SelectedMoveList';
 import { Timeframe } from '../../pages/app/app.constants';
+import { OpeningsActionName } from './Openings.constants';
 
 interface IProps {
   collection: GameCollection;
@@ -23,10 +24,6 @@ export const Openings: React.FC<IProps> = (props) => {
   React.useEffect(() => {
     const payload = {
       collection: props.collection,
-      move: '',
-      side: state.side,
-      result: null,
-      timeframe: props.timeframe,
     };
 
     if (props.timeframe !== state.timeframe) {
@@ -36,9 +33,7 @@ export const Openings: React.FC<IProps> = (props) => {
 
   const handleAddMove = React.useCallback((move: string, value: WinLossDraw) => {
     const payload = {
-      collection: null,
       move: move,
-      side: state.side,
       result: value,
     };
 
@@ -47,9 +42,6 @@ export const Openings: React.FC<IProps> = (props) => {
 
   const handleChangePieceColor = React.useCallback((side: PieceColor) => {
     const payload = {
-      collection: null,
-      move: '',
-      side: state.side,
       result: null,
     };
 
@@ -58,11 +50,8 @@ export const Openings: React.FC<IProps> = (props) => {
 
   const handleClickMoveListItem = React.useCallback((move: string, index: number) => {
     const payload = {
-      collection: null,
       index: index,
-      move: move,
       result: null,
-      side: state.side,
     };
 
     dispatch({ type: OpeningsActionName.UpdateMoveList, payload });

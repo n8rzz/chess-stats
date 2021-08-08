@@ -1,33 +1,15 @@
-import { PieceColor, WinLossDraw } from '../../../domain/game/games.constants';
+import { PieceColor } from '../../../domain/game/games.constants';
 import type { GameCollection } from '../../../domain/game/models/Game.collection';
 import { Timeframe } from '../../pages/app/app.constants';
-
-export enum OpeningsActionName {
-  AddMove = 'ADD_MOVE',
-  ChangePieceColor = 'CHANGE_PIECE_COLOR',
-  ChangeTimeframe = 'CHANGE_TIMEFRAME',
-  UpdateMoveList = 'UPDATE_MOVE_LIST',
-}
-
-export interface IAction<T> {
-  payload: {
-    collection: GameCollection | null;
-    index?: number;
-    move: string;
-    result: WinLossDraw | null;
-    side: PieceColor;
-    timeframe?: Timeframe;
-  };
-  type: T;
-}
-
-export interface IOpeningsState {
-  chartData: { [key: string]: number };
-  collection: GameCollection;
-  selectedMoveList: string[];
-  side: PieceColor;
-  timeframe: Timeframe;
-}
+import { OpeningsActionName } from './Openings.constants';
+import {
+  IOpeningsState,
+  OpeningActions,
+  IAddMoveAction,
+  IChangePieceColorAction,
+  IChangeTimeframeAction,
+  IUpdateMoveListAction,
+} from './Openings.types';
 
 const initialState: Omit<IOpeningsState, 'collection'> = {
   chartData: {},
@@ -52,7 +34,7 @@ export const buildInitialState = (
   };
 };
 
-const _addMove = (state: IOpeningsState, action: IAction<OpeningsActionName>): IOpeningsState => {
+const _addMove = (state: IOpeningsState, action: IAddMoveAction): IOpeningsState => {
   const moveList = [...state.selectedMoveList, action.payload.move];
   const chartData = state.collection.buildMoveTreeForSideMoveListAndResult(state.side, moveList, action.payload.result);
 
@@ -63,22 +45,7 @@ const _addMove = (state: IOpeningsState, action: IAction<OpeningsActionName>): I
   };
 };
 
-const _changeTimeframe = (state: IOpeningsState, action: IAction<OpeningsActionName>): IOpeningsState => {
-  const chartData = (action.payload.collection as GameCollection).buildMoveTreeForSideMoveListAndResult(
-    state.side,
-    [],
-    null,
-  );
-
-  return {
-    ...state,
-    chartData: chartData,
-    collection: action.payload.collection as GameCollection,
-    selectedMoveList: [],
-  };
-};
-
-const _changePieceColor = (state: IOpeningsState, action: IAction<OpeningsActionName>): IOpeningsState => {
+const _changePieceColor = (state: IOpeningsState, action: IChangePieceColorAction): IOpeningsState => {
   const nextSide = state.side === PieceColor.Black ? PieceColor.White : PieceColor.Black;
   const chartData = state.collection.buildMoveTreeForSideMoveListAndResult(nextSide, [], action.payload.result);
 
@@ -90,7 +57,21 @@ const _changePieceColor = (state: IOpeningsState, action: IAction<OpeningsAction
   };
 };
 
-const _updateMoveList = (state: IOpeningsState, action: IAction<OpeningsActionName>): IOpeningsState => {
+const _changeTimeframe = (state: IOpeningsState, action: IChangeTimeframeAction): IOpeningsState => {
+  const chartData = action.payload.collection.buildMoveTreeForSideMoveListAndResult(state.side, [], null);
+
+  return {
+    ...state,
+    chartData: chartData,
+    collection: action.payload.collection,
+    selectedMoveList: [],
+  };
+};
+
+/**
+ * TODO: rename to something more accurate
+ */
+const _updateMoveList = (state: IOpeningsState, action: IUpdateMoveListAction): IOpeningsState => {
   const nextMoveList = state.selectedMoveList.slice(0, action.payload.index);
   const chartData = state.collection.buildMoveTreeForSideMoveListAndResult(
     state.side,
@@ -105,7 +86,7 @@ const _updateMoveList = (state: IOpeningsState, action: IAction<OpeningsActionNa
   };
 };
 
-export const reducer = (state: IOpeningsState, action: IAction<OpeningsActionName>): IOpeningsState => {
+export const reducer = (state: IOpeningsState, action: OpeningActions): IOpeningsState => {
   switch (action.type) {
     case OpeningsActionName.AddMove:
       return _addMove(state, action);
