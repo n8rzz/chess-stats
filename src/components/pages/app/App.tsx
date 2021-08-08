@@ -11,6 +11,7 @@ import { PlayerStats } from './player-stats/PlayerStats';
 import { Timeframe, timeframeLabel, timeframeToPeriod } from './app.constants';
 import { AppHeader } from '../../shared/app-header/AppHeader';
 import { EmptyView } from './EmptyView';
+import { DailyPlayHeatmap } from '../../ui/daily-play-heatmap/DailyPlayHeatmap';
 
 interface IProps {}
 
@@ -20,6 +21,10 @@ export const App: React.FC<IProps> = () => {
   const [activeTimeframe, setActiveTimeframe] = React.useState<Timeframe>(Timeframe.SevenDays);
   const [gameCollection, setGameCollection] = React.useState<GameCollection>(new GameCollection('', [], 0));
 
+  const heatmapCollection = React.useMemo(
+    () => gameCollection.createCollectionForPeriod(timeframeToPeriod[Timeframe.OneYear]),
+    [gameCollection],
+  );
   const collectionForTimeframe = React.useMemo(
     () => gameCollection.createCollectionForPeriod(timeframeToPeriod[activeTimeframe]),
     [gameCollection, activeTimeframe],
@@ -72,6 +77,10 @@ export const App: React.FC<IProps> = () => {
       {gameCollection.length > 0 && (
         <React.Fragment>
           <div className={clsx(styles.container, styles.vr3)}>
+            <div className={styles.vr2}>
+              <DailyPlayHeatmap collection={heatmapCollection} />
+            </div>
+
             <div className={styles.vr2}>
               <Button.Group widths={6}>
                 {Object.keys(timeframeLabel).map((key: string) => (

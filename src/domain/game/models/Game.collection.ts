@@ -167,7 +167,7 @@ export class GameCollection {
   }
 
   /**
-   * Used to drive the [future] heatmap
+   * Used to drive the heatmap
    */
   public countGamesByDate(): { [key: string]: number } {
     const gamesByPeriod = this.groupByPeriod();
