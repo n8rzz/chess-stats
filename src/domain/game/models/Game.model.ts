@@ -93,6 +93,10 @@ export class GameModel implements IGame {
     return side.result;
   }
 
+  public getSideForOpponent(username: string): IGamePlayer {
+    return this.black.username === username ? this.white : this.black;
+  }
+
   public getSideForUsername(username: string): IGamePlayer {
     return this.black.username === username ? this.black : this.white;
   }

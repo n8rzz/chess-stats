@@ -115,3 +115,10 @@ export interface IWinLossDrawByPeriod {
 export type GameResultCountMap = Record<Partial<GameResult>, number>;
 
 export type SimpleGameResultCountMap = Record<Partial<WinLossDraw>, number>;
+
+export interface IOpponentRatingScatterChartData {
+  maxRating: number;
+  minRating: number;
+  opponent: [Date, number][];
+  user: [Date, number][];
+}

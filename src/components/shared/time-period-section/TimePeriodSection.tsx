@@ -11,6 +11,7 @@ import { CandlestickChart } from '../../ui/candlestick-chart/CandlestickChart';
 import { AverageRatingChart } from '../../ui/average-rating-chart/AverageRatingChart';
 import { WinLossCountChart } from '../../ui/win-loss-count-chart/WinLossCountChart';
 import { WinLossMultiLineChart } from '../../ui/win-loss-multi-line-chart/WinLossMultiLineChart';
+import { OpponentRatingsScatterChart } from '../../ui/opponent-ratings-scatter-chart/OpponentRatingsScatterChart';
 
 interface IProps {
   gameCollection: GameCollection;
@@ -78,6 +79,9 @@ export const TimePeriodSection: React.FC<IProps> = (props) => {
         <WinLossMultiLineChart
           title={'Wins and Losses'}
           winLossByPeriod={props.gameCollection.countWinLossByPeriod()}
+        />
+        <OpponentRatingsScatterChart
+          opponentAndUserRatingsByDate={props.gameCollection.gatherOpponentAndUserRatingsByDate()}
         />
       </section>
       <section>

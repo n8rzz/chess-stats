@@ -230,4 +230,31 @@ describe('GameCollection', () => {
       expect(result).toEqual(expectedResult);
     });
   });
+
+  describe('.gatherOpponentAndUserRatingsByDate()', () => {
+    test('returns correct #maxRating from both series', () => {
+      const collection = new GameCollection('n8rzz', gameListForDate, 1);
+      const result = collection.gatherOpponentAndUserRatingsByDate();
+      const expectedResult = 715;
+
+      expect(result.maxRating).toEqual(expectedResult);
+    });
+
+    test('returns correct #minRating from both series', () => {
+      const collection = new GameCollection('n8rzz', gameListForDate, 1);
+      const result = collection.gatherOpponentAndUserRatingsByDate();
+      const expectedResult = 604;
+
+      expect(result.minRating).toEqual(expectedResult);
+    });
+
+    test('returns equal length arrays for #opponent and #user', () => {
+      const collection = new GameCollection('n8rzz', gameListForDate, 1);
+      const result = collection.gatherOpponentAndUserRatingsByDate();
+      const expectedResult = 9;
+
+      expect(result.opponent.length).toEqual(expectedResult);
+      expect(result.user.length).toEqual(expectedResult);
+    });
+  });
 });

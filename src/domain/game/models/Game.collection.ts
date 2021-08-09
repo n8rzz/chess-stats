@@ -1,4 +1,4 @@
-import { compact, orderBy } from 'lodash';
+import { compact, max, min, orderBy } from 'lodash';
 import format from 'date-fns/format';
 import subDays from 'date-fns/subDays';
 import { sma } from 'technicalindicators';
@@ -14,6 +14,7 @@ import {
   IOhlcChartData,
   IWinLossDrawByPeriod,
   SimpleGameResultCountMap,
+  IOpponentRatingScatterChartData,
 } from '../games.types';
 import { GameModel } from './Game.model';
 import { setDateFromUtcSeconds } from '../../../util/date.utils';
@@ -396,6 +397,30 @@ export class GameCollection {
 
       return sum;
     }, {} as SimpleGameResultCountMap);
+  }
+
+  public gatherOpponentAndUserRatingsByDate(): IOpponentRatingScatterChartData {
+    return this._items.reduce(
+      (sum: IOpponentRatingScatterChartData, game: GameModel) => {
+        const { rating: opponentRating } = game.getSideForOpponent(this.username);
+        const { rating: userRating } = game.getSideForUsername(this.username);
+
+        sum.opponent.push([game.endDate, opponentRating]);
+        sum.user.push([game.endDate, userRating]);
+        sum.maxRating = max([sum.maxRating, opponentRating, userRating]) as number;
+        sum.minRating = min([sum.minRating, opponentRating, userRating]) as number;
+
+        return sum;
+      },
+      {
+        // out of range default is not a valid rating
+        maxRating: -1,
+        // out of range default is not a valid rating
+        minRating: 5000,
+        opponent: [],
+        user: [],
+      },
+    );
   }
 
   public groupByHour(): IGamesByPeriodInterval {
