@@ -1,0 +1,5 @@
+{
+  "releaseDraft": true,
+  "testScript": "test:ci",
+  "yarn": true
+}
