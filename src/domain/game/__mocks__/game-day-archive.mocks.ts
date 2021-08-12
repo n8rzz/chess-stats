@@ -4,6 +4,10 @@ import { IGame } from '../games.types';
 
 export const gameListForSinglePeriod: IGame[] = [
   {
+    accuracies: {
+      black: 50.2,
+      white: 97.1,
+    },
     black: {
       rating: 619,
       result: GameResult.Win,
@@ -28,6 +32,10 @@ export const gameListForSinglePeriod: IGame[] = [
     },
   },
   {
+    accuracies: {
+      black: 30,
+      white: 10.7,
+    },
     black: {
       rating: 654,
       result: GameResult.Win,
@@ -52,6 +60,10 @@ export const gameListForSinglePeriod: IGame[] = [
     },
   },
   {
+    accuracies: {
+      black: 5,
+      white: 74,
+    },
     black: {
       rating: 605,
       result: GameResult.Checkmated,
@@ -79,6 +91,10 @@ export const gameListForSinglePeriod: IGame[] = [
 
 export const gameListForDate: IGame[] = [
   {
+    accuracies: {
+      black: 50.2,
+      white: 97.1,
+    },
     black: {
       rating: 619,
       result: GameResult.Win,
@@ -103,6 +119,10 @@ export const gameListForDate: IGame[] = [
     },
   },
   {
+    accuracies: {
+      black: 20,
+      white: 30,
+    },
     black: {
       rating: 654,
       result: GameResult.Win,
@@ -127,6 +147,10 @@ export const gameListForDate: IGame[] = [
     },
   },
   {
+    accuracies: {
+      black: 32,
+      white: 44,
+    },
     black: {
       rating: 605,
       result: GameResult.Checkmated,
@@ -151,6 +175,10 @@ export const gameListForDate: IGame[] = [
     },
   },
   {
+    accuracies: {
+      black: 86,
+      white: 32,
+    },
     black: {
       rating: 653,
       result: GameResult.Checkmated,
@@ -175,6 +203,10 @@ export const gameListForDate: IGame[] = [
     },
   },
   {
+    accuracies: {
+      black: 50.2,
+      white: 97.1,
+    },
     black: {
       rating: 660,
       result: GameResult.Win,
@@ -199,6 +231,10 @@ export const gameListForDate: IGame[] = [
     },
   },
   {
+    accuracies: {
+      black: 50.2,
+      white: 97.1,
+    },
     black: {
       rating: 689,
       result: GameResult.Win,
@@ -223,6 +259,10 @@ export const gameListForDate: IGame[] = [
     },
   },
   {
+    accuracies: {
+      black: 50.2,
+      white: 97.1,
+    },
     black: {
       rating: 661,
       result: GameResult.Win,
@@ -247,6 +287,10 @@ export const gameListForDate: IGame[] = [
     },
   },
   {
+    accuracies: {
+      black: 50.2,
+      white: 97.1,
+    },
     black: {
       rating: 604,
       result: GameResult.Resigned,
@@ -271,6 +315,10 @@ export const gameListForDate: IGame[] = [
     },
   },
   {
+    accuracies: {
+      black: 50.2,
+      white: 97.1,
+    },
     black: {
       rating: 715,
       result: GameResult.Win,

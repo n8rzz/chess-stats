@@ -1,14 +1,19 @@
 import { GameResult, ChessRules, TimeClass, PgnTurn, WinLossDraw } from './games.constants';
 import { GameModel } from './models/Game.model';
 
+export interface IGameAccuracies {
+  black: number;
+  white: number;
+}
+
 export interface IGamePlayer {
   '@id': string;
   rating: number;
   result: GameResult;
   username: string;
 }
-
 export interface IGame {
+  accuracies: IGameAccuracies;
   black: IGamePlayer;
   end_time: number;
   fen: string;

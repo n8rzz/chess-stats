@@ -9,9 +9,10 @@ import {
   pieceColorToPgnTurn,
   gameResultToWinLossDraw,
 } from '../games.constants';
-import { IGame, IGamePlayer, PgnItem } from '../games.types';
+import { IGame, IGameAccuracies, IGamePlayer, PgnItem } from '../games.types';
 
 export class GameModel implements IGame {
+  public readonly accuracies: IGameAccuracies = { black: -1, white: -1 };
   public readonly black: IGamePlayer = {} as IGamePlayer;
   public readonly end_time: number = -1;
   public readonly fen: string = '';
@@ -37,6 +38,8 @@ export class GameModel implements IGame {
   }
 
   constructor(json: IGame, username: string) {
+    this.accuracies.black = json.accuracies.black;
+    this.accuracies.white = json.accuracies.white;
     this.black = json.black;
     this.end_time = json.end_time;
     this.fen = json.fen;
@@ -103,6 +106,7 @@ export class GameModel implements IGame {
 
   public toJson(): IGame {
     return {
+      accuracies: this.accuracies,
       black: this.black,
       end_time: this.end_time,
       fen: this.fen,

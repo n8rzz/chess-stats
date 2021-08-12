@@ -2,6 +2,10 @@ import { TimeClass, ChessRules, GameResult, PgnTurn } from '../games.constants';
 import { IGame, PgnItem } from '../games.types';
 
 export const validGameResponse: IGame = {
+  accuracies: {
+    black: 50.2,
+    white: 97.1,
+  },
   url: 'https://www.chess.com/game/live/12366380735',
   pgn:
     // eslint-disable-next-line max-len
@@ -175,6 +179,10 @@ export const validPgnJson: PgnItem[] = [
 ];
 
 export const gameResponseWithWhiteWinner = {
+  accuracies: {
+    black: 50.2,
+    white: 97.1,
+  },
   black: {
     rating: 605,
     result: GameResult.Checkmated,
