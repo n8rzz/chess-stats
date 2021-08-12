@@ -17,30 +17,41 @@ describe('GameModel', () => {
     });
   });
 
-  describe('#moveTree', () => {
-    describe('should include a list of move pairs for a game', () => {
-      test('should be set on instantiation', () => {
-        const model = new GameModel(validGameResponse, usernameMock);
-        const expectedResult = [
-          'e4:e5',
-          'Nf3:Nf6',
-          'd3:Nc6',
-          'Nc3:Bc5',
-          'Qd2:O-O',
-          'd4:exd4',
-          'Nxd4:Bxd4',
-          'Nb5:Re8',
-          'Qf4:Nxe4',
-          'Nxc7:Nxf2+',
-          'Kd2:Nxh1',
-          'Bc4:Re6',
-          'Bxe6:dxe6',
-          'Nxa8:Bxb2+',
-          'Ke1:Bc3+',
-          'Kf1:Qd1#',
-        ];
+  describe('#accuracy', () => {
+    describe('when accuracy is not included in api response', () => {
+      test('should not throw', () => {
+        const validGameResponseWithoutAccuracies: IGame = {
+          ...validGameResponse,
+          accuracies: undefined as any,
+        };
 
-        expect(model.moveList).toEqual(expectedResult);
+        expect(() => new GameModel(validGameResponseWithoutAccuracies, usernameMock)).not.toThrow();
+      });
+
+      test('should return -1', () => {
+        const validGameResponseWithoutAccuracies: IGame = {
+          ...validGameResponse,
+          accuracies: undefined as any,
+        };
+        const model = new GameModel(validGameResponseWithoutAccuracies, usernameMock);
+
+        expect(model.accuracy).toEqual(-1);
+      });
+    });
+
+    describe('when player is white', () => {
+      test('should return the corrct value', () => {
+        const model = new GameModel(validGameResponse, usernameMock);
+
+        expect(model.accuracy).toEqual(validGameResponse.accuracies.black);
+      });
+    });
+
+    describe('when player is black', () => {
+      test('should return the corrct value', () => {
+        const model = new GameModel(validGameResponse, 'fafamnl');
+
+        expect(model.accuracy).toEqual(validGameResponse.accuracies.white);
       });
     });
   });
@@ -50,6 +61,30 @@ describe('GameModel', () => {
       const model = new GameModel(validGameResponse, usernameMock);
 
       expect(model.moveTree).not.toEqual({});
+    });
+
+    test('should include a list of move pairs for a game', () => {
+      const model = new GameModel(validGameResponse, usernameMock);
+      const expectedResult = [
+        'e4:e5',
+        'Nf3:Nf6',
+        'd3:Nc6',
+        'Nc3:Bc5',
+        'Qd2:O-O',
+        'd4:exd4',
+        'Nxd4:Bxd4',
+        'Nb5:Re8',
+        'Qf4:Nxe4',
+        'Nxc7:Nxf2+',
+        'Kd2:Nxh1',
+        'Bc4:Re6',
+        'Bxe6:dxe6',
+        'Nxa8:Bxb2+',
+        'Ke1:Bc3+',
+        'Kf1:Qd1#',
+      ];
+
+      expect(model.moveList).toEqual(expectedResult);
     });
 
     test('should be a deeply nested object with move pairs as keys', () => {

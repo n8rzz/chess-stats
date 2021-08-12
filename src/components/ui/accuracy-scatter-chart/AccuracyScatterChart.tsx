@@ -1,16 +1,16 @@
 import * as React from 'react';
 import dynamic from 'next/dynamic';
 import styles from '../../../styles/App.module.css';
-import { IOpponentRatingScatterChartData } from '../../../domain/game/games.types';
+import { IOpponentAccuracyScatterChartData } from '../../../domain/game/games.types';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 interface IProps {
-  opponentAndUserRatingsByDate: IOpponentRatingScatterChartData;
+  opponentAndUserAccuracyByDate: IOpponentAccuracyScatterChartData;
   title: string;
 }
 
-export const OpponentRatingsScatterChart: React.FC<IProps> = (props) => {
+export const OpponentAccuracyScatterChart: React.FC<IProps> = (props) => {
   return (
     <div id={'opponent-rating-scatter-chart'}>
       <div className={styles.vr2}>
@@ -44,18 +44,18 @@ export const OpponentRatingsScatterChart: React.FC<IProps> = (props) => {
               type: 'datetime',
             },
             yaxis: {
-              max: props.opponentAndUserRatingsByDate.maxRating + 20,
-              min: props.opponentAndUserRatingsByDate.minRating - 20,
+              max: 100,
+              min: 0,
             },
           }}
           series={[
             {
               name: 'Opponent',
-              data: props.opponentAndUserRatingsByDate.opponent,
+              data: props.opponentAndUserAccuracyByDate.opponent,
             },
             {
               name: 'User',
-              data: props.opponentAndUserRatingsByDate.user,
+              data: props.opponentAndUserAccuracyByDate.user,
             },
           ]}
           type={'scatter'}
@@ -66,5 +66,5 @@ export const OpponentRatingsScatterChart: React.FC<IProps> = (props) => {
   );
 };
 
-OpponentRatingsScatterChart.displayName = 'OpponentRatingsScatterChart';
-OpponentRatingsScatterChart.defaultProps = {};
+OpponentAccuracyScatterChart.displayName = 'OpponentAccuracyScatterChart';
+OpponentAccuracyScatterChart.defaultProps = {};

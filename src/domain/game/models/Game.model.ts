@@ -29,6 +29,28 @@ export class GameModel implements IGame {
 
   private _username: string = '';
 
+  /**
+   * Since this appears to be a new addition to the chess.com api, this
+   * will return api value or a default
+   *
+   * @returns {number}  #accuracy value for player or `-1`
+   */
+  get accuracy(): number {
+    if (this.black.username === this._username) {
+      return this.accuracies.black;
+    }
+
+    return this.accuracies.white;
+  }
+
+  get opponentAccuracy(): number {
+    if (this.black.username === this._username) {
+      return this.accuracies.white;
+    }
+
+    return this.accuracies.black;
+  }
+
   get endDate(): Date {
     const end = new Date(0);
 
@@ -38,8 +60,6 @@ export class GameModel implements IGame {
   }
 
   constructor(json: IGame, username: string) {
-    this.accuracies.black = json.accuracies.black;
-    this.accuracies.white = json.accuracies.white;
     this.black = json.black;
     this.end_time = json.end_time;
     this.fen = json.fen;
@@ -52,6 +72,7 @@ export class GameModel implements IGame {
     this.white = json.white;
     this._username = username ?? this._username;
 
+    this._setAccuracies(json.accuracies);
     this._parsePgn(json.pgn);
     this._buildMoveList();
     this._buildMoveTree();
@@ -161,5 +182,14 @@ export class GameModel implements IGame {
     const pgnWithResult = parser.parse(splitPgn[splitPgn.length - 2]);
 
     this.pgn_json = pgnWithResult.slice(0, pgnWithResult.length - 1);
+  }
+
+  private _setAccuracies(accuracies: IGameAccuracies): void {
+    if (!accuracies) {
+      return;
+    }
+
+    this.accuracies.black = accuracies.black;
+    this.accuracies.white = accuracies.white;
   }
 }

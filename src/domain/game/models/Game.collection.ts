@@ -15,6 +15,7 @@ import {
   IWinLossDrawByPeriod,
   SimpleGameResultCountMap,
   IOpponentRatingScatterChartData,
+  IOpponentAccuracyScatterChartData,
 } from '../games.types';
 import { GameModel } from './Game.model';
 import { setDateFromUtcSeconds } from '../../../util/date.utils';
@@ -397,6 +398,25 @@ export class GameCollection {
 
       return sum;
     }, {} as SimpleGameResultCountMap);
+  }
+
+  public gatherOpponentAndUserAccuracyByDate(): IOpponentAccuracyScatterChartData {
+    return this._items.reduce(
+      (sum: IOpponentAccuracyScatterChartData, game: GameModel) => {
+        if (game.accuracy === -1) {
+          return sum;
+        }
+
+        sum.opponent.push([game.endDate, game.opponentAccuracy]);
+        sum.user.push([game.endDate, game.accuracy]);
+
+        return sum;
+      },
+      {
+        opponent: [],
+        user: [],
+      },
+    );
   }
 
   public gatherOpponentAndUserRatingsByDate(): IOpponentRatingScatterChartData {

@@ -127,3 +127,8 @@ export interface IOpponentRatingScatterChartData {
   opponent: [Date, number][];
   user: [Date, number][];
 }
+
+export interface IOpponentAccuracyScatterChartData {
+  opponent: [Date, number][];
+  user: [Date, number][];
+}

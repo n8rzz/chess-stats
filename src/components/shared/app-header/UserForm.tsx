@@ -8,12 +8,19 @@ interface IProps {
 }
 
 export const UserForm: React.FC<IProps> = (props) => {
-  const [username, setUsername] = React.useState<string>('n8rzz');
+  const [username, setUsername] = React.useState<string>('');
+  const [isUsernameValid, setIsUsernameValid] = React.useState<boolean>(true);
   const [selectedTimeframe, setSelectedTimeframe] = React.useState<Timeframe>(Timeframe.SevenDays);
   const [provider] = React.useState<string>('chess.com');
 
   const onClickSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (!username) {
+      setIsUsernameValid(false);
+
+      return;
+    }
 
     props.onSubmit(provider, username, selectedTimeframe);
   };
@@ -25,10 +32,14 @@ export const UserForm: React.FC<IProps> = (props) => {
           <li>
             <Input
               type={'text'}
-              placeholder={'username'}
+              placeholder={'Username'}
               name={'username'}
               defaultValue={username}
-              onChange={(event) => setUsername(event.currentTarget.value)}
+              error={!isUsernameValid}
+              onChange={(event) => {
+                setIsUsernameValid(true);
+                setUsername(event.currentTarget.value);
+              }}
             />
           </li>
           <li>
@@ -54,7 +65,9 @@ export const UserForm: React.FC<IProps> = (props) => {
             />
           </li> */}
           <li>
-            <Button type={'submit'}>{'Submit'}</Button>
+            <Button type={'submit'} disabled={!isUsernameValid}>
+              {'Submit'}
+            </Button>
           </li>
         </ul>
       </form>
