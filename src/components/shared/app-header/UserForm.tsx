@@ -27,7 +27,7 @@ export const UserForm: React.FC<IProps> = (props) => {
 
   return (
     <section className={styles.container}>
-      <form autoComplete={'off'} onSubmit={onClickSubmit}>
+      <form autoComplete={'on'} onSubmit={onClickSubmit}>
         <ul className={styles.hlist}>
           <li>
             <Input

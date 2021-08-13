@@ -46,6 +46,12 @@ export const OpponentAccuracyScatterChart: React.FC<IProps> = (props) => {
             yaxis: {
               max: 100,
               min: 0,
+              forceNiceScale: true,
+              labels: {
+                formatter: function formatter(val) {
+                  return val.toFixed(0);
+                },
+              },
             },
           }}
           series={[

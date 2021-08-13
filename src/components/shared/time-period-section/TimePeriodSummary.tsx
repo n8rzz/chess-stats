@@ -17,6 +17,11 @@ interface IProps {
 }
 
 export const TimePeriodSummary: React.FC<IProps> = (props) => {
+  const ratingDifference = React.useMemo(() => props.latestRating - props.earliestRating, [
+    props.latestRating,
+    props.earliestRating,
+  ]);
+
   return (
     <Card.Group itemsPerRow={5}>
       <Card>
@@ -50,14 +55,30 @@ export const TimePeriodSummary: React.FC<IProps> = (props) => {
       <Card>
         <Card.Content>
           <Card.Header>
-            <span
-              className={clsx({
-                [styles.mixIsGreenText]: props.isOpenLessThanClose,
-                [styles.mixIsRedText]: props.isOpenGreaterThanClose,
-              })}
-            >
-              {props.latestRating}
-            </span>
+            <ul className={styles.stereo}>
+              <li>
+                <span
+                  className={clsx({
+                    [styles.mixIsGreenText]: props.isOpenLessThanClose,
+                    [styles.mixIsRedText]: props.isOpenGreaterThanClose,
+                  })}
+                >
+                  {props.latestRating}
+                </span>
+              </li>
+              <li>
+                <span
+                  className={clsx({
+                    [styles.mixIsGreenText]: ratingDifference > 0,
+                    [styles.mixIsRedText]: ratingDifference < 0,
+                  })}
+                >
+                  {ratingDifference > 0 && <Icon name={'angle up'} />}
+                  {ratingDifference < 0 && <Icon name={'angle down'} />}
+                  {ratingDifference}
+                </span>
+              </li>
+            </ul>
           </Card.Header>
           <Card.Meta>{'Close'}</Card.Meta>
         </Card.Content>
