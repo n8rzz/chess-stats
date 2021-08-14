@@ -11,17 +11,19 @@ import { PlayerStats } from './player-stats/PlayerStats';
 import { Timeframe, timeframeLabel, timeframeToPeriod } from './app.constants';
 import { AppHeader } from '../../shared/app-header/AppHeader';
 import { EmptyView } from './EmptyView';
+import { TimeClass } from '../../../domain/game/games.constants';
 
 interface IProps {}
 
 export const App: React.FC<IProps> = () => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [playerStatsModel, setPlayerStatsModel] = React.useState<IPlayerStats>(undefined as any);
+  const [activeTimeClass, setActiveTimeClass] = React.useState<TimeClass>(TimeClass.Rapid);
   const [activeTimeframe, setActiveTimeframe] = React.useState<Timeframe>(Timeframe.SevenDays);
   const [gameCollection, setGameCollection] = React.useState<GameCollection>(new GameCollection('', [], 0));
 
-  const collectionForTimeframe = React.useMemo(
-    () => gameCollection.createCollectionForPeriod(timeframeToPeriod[activeTimeframe]),
+  const collectionForTimeframeAndTimeClass = React.useMemo(
+    () => gameCollection.createCollectionForPeriodAndTimeClass(timeframeToPeriod[activeTimeframe], activeTimeClass),
     [gameCollection, activeTimeframe],
   );
 
@@ -34,7 +36,12 @@ export const App: React.FC<IProps> = () => {
     [isLoading, activeTimeframe],
   );
 
-  const onSubmit = async (provider: string, username: string, selectedTimeframe: Timeframe) => {
+  const onSubmit = async (
+    provider: string,
+    username: string,
+    selectedTimeframe: Timeframe,
+    selectedTimeClass: TimeClass,
+  ) => {
     setIsLoading(true);
 
     try {
@@ -42,6 +49,7 @@ export const App: React.FC<IProps> = () => {
       const gameArchiveList = await getArchives(username);
       const collection = await getHistorcialGamesFromArchiveList(gameArchiveList, username);
 
+      setActiveTimeClass(selectedTimeClass);
       setActiveTimeframe(selectedTimeframe);
       setPlayerStatsModel(playerStats);
       setGameCollection(collection);
@@ -91,7 +99,7 @@ export const App: React.FC<IProps> = () => {
 
             <TimePeriodSection
               heading={timeframeLabel[activeTimeframe]}
-              gameCollection={collectionForTimeframe}
+              gameCollection={collectionForTimeframeAndTimeClass}
               isLoading={isLoading}
               timeframe={activeTimeframe}
             />

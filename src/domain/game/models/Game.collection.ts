@@ -19,7 +19,14 @@ import {
 } from '../games.types';
 import { GameModel } from './Game.model';
 import { setDateFromUtcSeconds } from '../../../util/date.utils';
-import { GameResult, gameResultToWinLossDraw, MovingAveragePeriod, PieceColor, WinLossDraw } from '../games.constants';
+import {
+  GameResult,
+  gameResultToWinLossDraw,
+  MovingAveragePeriod,
+  PieceColor,
+  TimeClass,
+  WinLossDraw,
+} from '../games.constants';
 
 export class GameCollection {
   public moveTree: any = {};
@@ -232,12 +239,20 @@ export class GameCollection {
     };
   }
 
-  public createCollectionForPeriod(period: number): GameCollection {
+  public createCollectionForPeriodAndTimeClass(period: number, timeClass: TimeClass): GameCollection {
     const today = new Date();
     const periodStartDate = subDays(today, period);
-    const itemsWithinPeriod = this._items.filter(
-      (item: GameModel) => item.endDate.getTime() > periodStartDate.getTime(),
-    );
+    const itemsWithinPeriod: GameModel[] = this._items.reduce((sum: GameModel[], item: GameModel): GameModel[] => {
+      if (item.endDate.getTime() <= periodStartDate.getTime()) {
+        return sum;
+      }
+
+      if (item.time_class !== timeClass) {
+        return sum;
+      }
+
+      return [...sum, item];
+    }, []);
 
     return new GameCollection(this.username, itemsWithinPeriod, period);
   }
