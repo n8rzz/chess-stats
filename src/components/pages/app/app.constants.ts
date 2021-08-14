@@ -1,3 +1,5 @@
+import { TimeClass, timeClassLabel } from '../../../domain/game/games.constants';
+
 export enum Timeframe {
   NinetyDays = 'NinetyDays',
   OneYear = 'OneYear',
@@ -29,4 +31,10 @@ export const timeframeOptionList = Object.keys(timeframeLabel).map((timeframeKey
   key: Timeframe[timeframeKey as keyof typeof Timeframe],
   value: Timeframe[timeframeKey as keyof typeof Timeframe],
   text: timeframeLabel[Timeframe[timeframeKey as keyof typeof Timeframe]],
+}));
+
+export const timeClassOptionList = Object.keys(TimeClass).map((timeClassKey) => ({
+  key: TimeClass[timeClassKey as keyof typeof TimeClass],
+  value: TimeClass[timeClassKey as keyof typeof TimeClass],
+  text: timeClassLabel[TimeClass[timeClassKey as keyof typeof TimeClass]],
 }));

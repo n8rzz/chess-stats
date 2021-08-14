@@ -49,8 +49,15 @@ export const gameResultToWinLossDraw: Record<GameResult, WinLossDraw> = {
 
 export enum TimeClass {
   Blitz = 'blitz',
+  Daily = 'daily',
   Rapid = 'rapid',
 }
+
+export const timeClassLabel: Record<TimeClass, string> = {
+  [TimeClass.Blitz]: 'Blitz',
+  [TimeClass.Daily]: 'Daily',
+  [TimeClass.Rapid]: 'Rapid',
+};
 
 export enum ChessRules {
   Chess = 'chess',

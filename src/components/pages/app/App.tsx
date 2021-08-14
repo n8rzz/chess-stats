@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Dimmer, Loader, Segment, Image, Button } from 'semantic-ui-react';
+import { Dimmer, Loader, Segment, Image, Button, Select, Grid, GridColumn } from 'semantic-ui-react';
 import clsx from 'clsx';
 import styles from '../../../styles/App.module.css';
 import { getArchives, getHistorcialGamesFromArchiveList } from '../../../domain/game/games.service';
@@ -8,21 +8,23 @@ import { getPlayerStats } from '../../../domain/player/player.service';
 import { IPlayerStats } from '../../../domain/player/player.types';
 import { TimePeriodSection } from '../../shared/time-period-section/TimePeriodSection';
 import { PlayerStats } from './player-stats/PlayerStats';
-import { Timeframe, timeframeLabel, timeframeToPeriod } from './app.constants';
+import { timeClassOptionList, Timeframe, timeframeLabel, timeframeToPeriod } from './app.constants';
 import { AppHeader } from '../../shared/app-header/AppHeader';
 import { EmptyView } from './EmptyView';
+import { TimeClass } from '../../../domain/game/games.constants';
 
 interface IProps {}
 
 export const App: React.FC<IProps> = () => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [playerStatsModel, setPlayerStatsModel] = React.useState<IPlayerStats>(undefined as any);
+  const [activeTimeClass, setActiveTimeClass] = React.useState<TimeClass>(TimeClass.Rapid);
   const [activeTimeframe, setActiveTimeframe] = React.useState<Timeframe>(Timeframe.SevenDays);
   const [gameCollection, setGameCollection] = React.useState<GameCollection>(new GameCollection('', [], 0));
 
-  const collectionForTimeframe = React.useMemo(
-    () => gameCollection.createCollectionForPeriod(timeframeToPeriod[activeTimeframe]),
-    [gameCollection, activeTimeframe],
+  const collectionForTimeframeAndTimeClass = React.useMemo(
+    () => gameCollection.createCollectionForPeriodAndTimeClass(timeframeToPeriod[activeTimeframe], activeTimeClass),
+    [gameCollection, activeTimeClass, activeTimeframe],
   );
 
   const onClickPeriodButton = React.useCallback(
@@ -34,7 +36,12 @@ export const App: React.FC<IProps> = () => {
     [isLoading, activeTimeframe],
   );
 
-  const onSubmit = async (provider: string, username: string, selectedTimeframe: Timeframe) => {
+  const onSubmit = async (
+    provider: string,
+    username: string,
+    selectedTimeframe: Timeframe,
+    selectedTimeClass: TimeClass,
+  ) => {
     setIsLoading(true);
 
     try {
@@ -42,6 +49,7 @@ export const App: React.FC<IProps> = () => {
       const gameArchiveList = await getArchives(username);
       const collection = await getHistorcialGamesFromArchiveList(gameArchiveList, username);
 
+      setActiveTimeClass(selectedTimeClass);
       setActiveTimeframe(selectedTimeframe);
       setPlayerStatsModel(playerStats);
       setGameCollection(collection);
@@ -73,26 +81,42 @@ export const App: React.FC<IProps> = () => {
         <React.Fragment>
           <div className={clsx(styles.container, styles.vr3)}>
             <div className={styles.vr2}>
-              <Button.Group widths={6}>
-                {Object.keys(timeframeLabel).map((key: string) => (
-                  <Button
-                    active={activeTimeframe === key}
-                    disabled={activeTimeframe === key}
-                    toggle={true}
-                    size={'tiny'}
-                    key={`${key}-btn`}
-                    onClick={() => onClickPeriodButton(key as Timeframe)}
-                  >
-                    {timeframeLabel[key as Timeframe]}
-                  </Button>
-                ))}
-              </Button.Group>
+              <Grid>
+                <Grid.Row>
+                  <GridColumn width={4}>
+                    <Select
+                      name={'timeClass'}
+                      options={timeClassOptionList}
+                      defaultValue={activeTimeClass}
+                      onChange={(_, data) => setActiveTimeClass(data.value as TimeClass)}
+                      fluid={true}
+                    />
+                  </GridColumn>
+                  <GridColumn width={8}>
+                    {/* <Button.Group widths={6}> */}
+                    <Button.Group>
+                      {Object.keys(timeframeLabel).map((key: string) => (
+                        <Button
+                          active={activeTimeframe === key}
+                          disabled={activeTimeframe === key}
+                          toggle={true}
+                          size={'tiny'}
+                          key={`${key}-btn`}
+                          onClick={() => onClickPeriodButton(key as Timeframe)}
+                        >
+                          {timeframeLabel[key as Timeframe]}
+                        </Button>
+                      ))}
+                    </Button.Group>
+                  </GridColumn>
+                </Grid.Row>
+              </Grid>
             </div>
 
             <TimePeriodSection
-              heading={timeframeLabel[activeTimeframe]}
-              gameCollection={collectionForTimeframe}
+              gameCollection={collectionForTimeframeAndTimeClass}
               isLoading={isLoading}
+              timeClass={activeTimeClass}
               timeframe={activeTimeframe}
             />
           </div>
