@@ -1,12 +1,12 @@
 import React from 'react';
-import { Dimmer, Loader, Segment, Tab } from 'semantic-ui-react';
+import { Dimmer, Loader, Segment } from 'semantic-ui-react';
 import styles from '../../../styles/App.module.css';
 import { GameCollection } from '../../../domain/game/models/Game.collection';
 import { TimePeriodSummary } from './TimePeriodSummary';
 import { PeriodGameSummaryCharts } from '../period-game-summary-charts/PeriodGameSummaryCharts';
 import { Openings } from '../openings/Openings';
 import { Timeframe } from '../../pages/app/app.constants';
-import { MovingAveragePeriod } from '../../../domain/game/games.constants';
+import { MovingAveragePeriod, TimeClass } from '../../../domain/game/games.constants';
 import { CandlestickChart } from '../../ui/candlestick-chart/CandlestickChart';
 import { AverageRatingChart } from '../../ui/average-rating-chart/AverageRatingChart';
 import { WinLossCountChart } from '../../ui/win-loss-count-chart/WinLossCountChart';
@@ -16,8 +16,8 @@ import { OpponentAccuracyScatterChart } from '../../ui/accuracy-scatter-chart/Ac
 
 interface IProps {
   gameCollection: GameCollection;
-  heading: string;
   isLoading: boolean;
+  timeClass: TimeClass;
   timeframe: Timeframe;
 }
 
@@ -26,13 +26,17 @@ export const TimePeriodSection: React.FC<IProps> = (props) => {
     MovingAveragePeriod.FiveDays,
   );
 
-  const ohlcData = React.useMemo(() => props.gameCollection.calculateOhlcForPeriod(), [props.gameCollection.period]);
+  const ohlcData = React.useMemo(() => props.gameCollection.calculateOhlcForPeriod(), [
+    props.gameCollection.period,
+    props.timeClass,
+    props.timeframe,
+  ]);
   const movingAverage = React.useMemo(() => {
     return props.gameCollection.calculateMovingAverageWithOhlcAndPeriod(ohlcData, movingAveragePeriod);
-  }, [movingAveragePeriod, props.gameCollection]);
+  }, [movingAveragePeriod, props.gameCollection, props.timeClass, props.timeframe]);
 
   return (
-    <Tab.Pane style={{ border: 0 }}>
+    <div>
       {props.isLoading && (
         <Segment placeholder={true}>
           <Dimmer active={true} inverted={true}>
@@ -43,13 +47,13 @@ export const TimePeriodSection: React.FC<IProps> = (props) => {
 
       <section className={styles.vr2}>
         <TimePeriodSummary
-          earliestGameDate={props.gameCollection.findEarliestGameDate().toLocaleDateString()}
+          earliestGameDate={props.gameCollection.findEarliestGameDate()?.toLocaleDateString()}
           earliestRating={props.gameCollection.findEarliestRating()}
           gameCount={props.gameCollection.length}
           isLoading={props.isLoading}
           isOpenGreaterThanClose={props.gameCollection.isOpenGreaterThanClose}
           isOpenLessThanClose={props.gameCollection.isOpenLessThanClose}
-          latestGameDate={props.gameCollection.findLatestGameDate().toLocaleDateString()}
+          latestGameDate={props.gameCollection.findLatestGameDate()?.toLocaleDateString()}
           latestRating={props.gameCollection.findLatestRating()}
           maxRating={props.gameCollection.findMaxRating()}
           minRating={props.gameCollection.findMinRating()}
@@ -93,7 +97,7 @@ export const TimePeriodSection: React.FC<IProps> = (props) => {
       <section>
         <Openings collection={props.gameCollection} timeframe={props.timeframe} />
       </section>
-    </Tab.Pane>
+    </div>
   );
 };
 

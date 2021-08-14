@@ -1,4 +1,9 @@
-import { gameListForDate, gameListForSinglePeriod } from '../__mocks__/game-day-archive.mocks';
+import { TimeClass } from '../games.constants';
+import {
+  gameListForDate,
+  gameListForSinglePeriod,
+  gameListWithMixedTimeClass,
+} from '../__mocks__/game-day-archive.mocks';
 import { GameCollection } from './Game.collection';
 
 describe('GameCollection', () => {
@@ -69,6 +74,41 @@ describe('GameCollection', () => {
       ];
 
       expect(result).toEqual(expectedResult);
+    });
+  });
+
+  describe('.createCollectionForPeriodAndTimeClass()', () => {
+    describe('when games with TimeClass are present', () => {
+      test('returns a new collection instance', () => {
+        const collection = new GameCollection('n8rzz', gameListWithMixedTimeClass, 2);
+        const result = collection.createCollectionForPeriodAndTimeClass(7, TimeClass.Rapid);
+
+        expect(result instanceof GameCollection).toEqual(true);
+      });
+
+      test('returns only games with passed `TimeClass`', () => {
+        const collection = new GameCollection('n8rzz', gameListWithMixedTimeClass, 2);
+        const result = collection.createCollectionForPeriodAndTimeClass(7, TimeClass.Daily);
+        // eslint-disable-next-line dot-notation
+        const itemsWithExpectedTimeClass = result['_items'].filter((item) => item.time_class === TimeClass.Daily);
+
+        expect(result.length).toEqual(itemsWithExpectedTimeClass.length);
+      });
+    });
+
+    describe('when games with TimeClass are not present', () => {
+      test('does not throw', () => {
+        const collection = new GameCollection('n8rzz', gameListWithMixedTimeClass, 2);
+
+        expect(() => collection.createCollectionForPeriodAndTimeClass(7, TimeClass.Blitz)).not.toThrow();
+      });
+
+      test('returns an empty collection', () => {
+        const collection = new GameCollection('n8rzz', gameListWithMixedTimeClass, 2);
+        const result = collection.createCollectionForPeriodAndTimeClass(7, TimeClass.Blitz);
+
+        expect(result.length).toEqual(0);
+      });
     });
   });
 

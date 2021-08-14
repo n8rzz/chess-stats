@@ -343,3 +343,10 @@ export const gameListForDate: IGame[] = [
     },
   },
 ];
+
+export const gameWithDailyTimeClass = {
+  ...gameListForDate[0],
+  time_class: TimeClass.Daily,
+};
+
+export const gameListWithMixedTimeClass = [...gameListForDate, gameWithDailyTimeClass];
