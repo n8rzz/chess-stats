@@ -1,8 +1,8 @@
 import React from 'react';
 import { Menu, Container, Button, Input, Select } from 'semantic-ui-react';
 import styles from '../../../styles/App.module.css';
-import { TimeClass } from '../../../domain/game/games.constants';
-import { timeClassOptionList, Timeframe, timeframeOptionList } from '../../pages/app/app.constants';
+import { TimeClass } from '../../../../domain/game/games.constants';
+import { timeClassOptionList, Timeframe, timeframeOptionList } from '../app.constants';
 
 interface IProps {
   onClickSearch: (

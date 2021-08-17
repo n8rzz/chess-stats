@@ -2,12 +2,12 @@ import React from 'react';
 import clsx from 'clsx';
 import { Button, Header } from 'semantic-ui-react';
 import styles from '../../../styles/App.module.css';
-import type { GameCollection } from '../../../domain/game/models/Game.collection';
-import { PieceColor, WinLossDraw } from '../../../domain/game/games.constants';
+import type { GameCollection } from '../../../../domain/game/models/Game.collection';
+import { PieceColor, WinLossDraw } from '../../../../domain/game/games.constants';
 import { reducer, buildInitialState } from './Openings.reducer';
-import { StackedBarChart } from '../../ui/stacked-bar-chart/StackedBarChart';
+import { StackedBarChart } from '../../../ui/stacked-bar-chart/StackedBarChart';
 import { SelectedMoveList } from './selected-move-list/SelectedMoveList';
-import { Timeframe } from '../../pages/app/app.constants';
+import { Timeframe } from '../app.constants';
 import { OpeningsActionName } from './Openings.constants';
 
 interface IProps {

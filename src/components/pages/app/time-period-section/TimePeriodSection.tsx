@@ -1,18 +1,18 @@
 import React from 'react';
 import { Dimmer, Loader, Segment } from 'semantic-ui-react';
 import styles from '../../../styles/App.module.css';
-import { GameCollection } from '../../../domain/game/models/Game.collection';
+import { GameCollection } from '../../../../domain/game/models/Game.collection';
 import { TimePeriodSummary } from './TimePeriodSummary';
 import { PeriodGameSummaryCharts } from '../period-game-summary-charts/PeriodGameSummaryCharts';
 import { Openings } from '../openings/Openings';
-import { Timeframe } from '../../pages/app/app.constants';
-import { MovingAveragePeriod, TimeClass } from '../../../domain/game/games.constants';
-import { CandlestickChart } from '../../ui/candlestick-chart/CandlestickChart';
-import { AverageRatingChart } from '../../ui/average-rating-chart/AverageRatingChart';
-import { WinLossCountChart } from '../../ui/win-loss-count-chart/WinLossCountChart';
-import { WinLossMultiLineChart } from '../../ui/win-loss-multi-line-chart/WinLossMultiLineChart';
-import { OpponentRatingsScatterChart } from '../../ui/opponent-ratings-scatter-chart/OpponentRatingsScatterChart';
-import { OpponentAccuracyScatterChart } from '../../ui/accuracy-scatter-chart/AccuracyScatterChart';
+import { Timeframe } from '../app.constants';
+import { MovingAveragePeriod, TimeClass } from '../../../../domain/game/games.constants';
+import { CandlestickChart } from '../../../ui/candlestick-chart/CandlestickChart';
+import { AverageRatingChart } from '../../../ui/average-rating-chart/AverageRatingChart';
+import { WinLossCountChart } from '../../../ui/win-loss-count-chart/WinLossCountChart';
+import { WinLossMultiLineChart } from '../../../ui/win-loss-multi-line-chart/WinLossMultiLineChart';
+import { OpponentRatingsScatterChart } from '../../../ui/opponent-ratings-scatter-chart/OpponentRatingsScatterChart';
+import { OpponentAccuracyScatterChart } from '../../../ui/accuracy-scatter-chart/AccuracyScatterChart';
 
 interface IProps {
   gameCollection: GameCollection;

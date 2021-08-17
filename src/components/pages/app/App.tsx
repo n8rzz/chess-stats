@@ -6,10 +6,10 @@ import { getArchives, getHistorcialGamesFromArchiveList } from '../../../domain/
 import { GameCollection } from '../../../domain/game/models/Game.collection';
 import { getPlayerStats } from '../../../domain/player/player.service';
 import { IPlayerStats } from '../../../domain/player/player.types';
-import { TimePeriodSection } from '../../shared/time-period-section/TimePeriodSection';
+import { TimePeriodSection } from './time-period-section/TimePeriodSection';
 import { PlayerStats } from './player-stats/PlayerStats';
 import { timeClassOptionList, Timeframe, timeframeLabel, timeframeToPeriod } from './app.constants';
-import { AppHeader } from '../../shared/app-header/AppHeader';
+import { AppHeader } from './app-header/AppHeader';
 import { EmptyView } from './EmptyView';
 import { TimeClass } from '../../../domain/game/games.constants';
 
@@ -93,7 +93,6 @@ export const App: React.FC<IProps> = () => {
                     />
                   </GridColumn>
                   <GridColumn width={8}>
-                    {/* <Button.Group widths={6}> */}
                     <Button.Group>
                       {Object.keys(timeframeLabel).map((key: string) => (
                         <Button

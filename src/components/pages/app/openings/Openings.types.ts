@@ -1,6 +1,6 @@
-import { WinLossDraw, PieceColor } from '../../../domain/game/games.constants';
-import { GameCollection } from '../../../domain/game/models/Game.collection';
-import { Timeframe } from '../../pages/app/app.constants';
+import { WinLossDraw, PieceColor } from '../../../../domain/game/games.constants';
+import { GameCollection } from '../../../../domain/game/models/Game.collection';
+import { Timeframe } from '../app.constants';
 import { OpeningsActionName } from './Openings.constants';
 
 export interface IAction<T> {

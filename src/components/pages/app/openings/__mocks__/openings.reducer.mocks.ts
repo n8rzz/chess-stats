@@ -1,6 +1,6 @@
-import { WinLossDraw } from '../../../../domain/game/games.constants';
-import { GameCollection } from '../../../../domain/game/models/Game.collection';
-import { gameListForSinglePeriod } from '../../../../domain/game/__mocks__/game-day-archive.mocks';
+import { WinLossDraw } from '../../../../../domain/game/games.constants';
+import { GameCollection } from '../../../../../domain/game/models/Game.collection';
+import { gameListForSinglePeriod } from '../../../../../domain/game/__mocks__/game-day-archive.mocks';
 import { OpeningsActionName } from '../Openings.constants';
 import {
   IAddMoveAction,
