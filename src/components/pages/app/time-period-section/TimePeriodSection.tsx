@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dimmer, Loader, Segment } from 'semantic-ui-react';
-import styles from '../../../styles/App.module.css';
+import styles from '../../../../styles/App.module.css';
 import { GameCollection } from '../../../../domain/game/models/Game.collection';
 import { TimePeriodSummary } from './TimePeriodSummary';
 import { PeriodGameSummaryCharts } from '../period-game-summary-charts/PeriodGameSummaryCharts';

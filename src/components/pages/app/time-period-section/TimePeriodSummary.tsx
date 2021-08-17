@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import { Card, Icon } from 'semantic-ui-react';
-import styles from '../../../styles/App.module.css';
+import styles from '../../../../styles/App.module.css';
 
 interface IProps {
   earliestGameDate: string;

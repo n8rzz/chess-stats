@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import { Button, Header } from 'semantic-ui-react';
-import styles from '../../../styles/App.module.css';
+import styles from '../../../../styles/App.module.css';
 import type { GameCollection } from '../../../../domain/game/models/Game.collection';
 import { PieceColor, WinLossDraw } from '../../../../domain/game/games.constants';
 import { reducer, buildInitialState } from './Openings.reducer';
