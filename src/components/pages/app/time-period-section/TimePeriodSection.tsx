@@ -9,10 +9,9 @@ import { Timeframe } from '../app.constants';
 import { MovingAveragePeriod, TimeClass } from '../../../../domain/game/games.constants';
 import { CandlestickChart } from '../../../ui/candlestick-chart/CandlestickChart';
 import { AverageRatingChart } from '../../../ui/average-rating-chart/AverageRatingChart';
-import { WinLossCountChart } from '../../../ui/win-loss-count-chart/WinLossCountChart';
-import { WinLossMultiLineChart } from '../../../ui/win-loss-multi-line-chart/WinLossMultiLineChart';
 import { OpponentRatingsScatterChart } from '../../../ui/opponent-ratings-scatter-chart/OpponentRatingsScatterChart';
 import { OpponentAccuracyScatterChart } from '../../../ui/accuracy-scatter-chart/AccuracyScatterChart';
+import { GameResultsOverTime } from '../game-results-over-time/GameResultsOverTime';
 
 interface IProps {
   gameCollection: GameCollection;
@@ -76,14 +75,9 @@ export const TimePeriodSection: React.FC<IProps> = (props) => {
           title={'Average Rating'}
           timeframe={props.timeframe}
         />
-        <WinLossCountChart
-          countByDate={props.gameCollection.countResultsByDate()}
-          onChangeMovingAverage={setMovingAveragePeriod}
-          title={'Detailed Results'}
-        />
-        <WinLossMultiLineChart
-          title={'Wins and Losses'}
-          winLossByPeriod={props.gameCollection.countWinLossByPeriod()}
+        <GameResultsOverTime
+          countResultsByDate={props.gameCollection.countResultsByDate()}
+          countWinLossByPeriod={props.gameCollection.countWinLossByPeriod()}
         />
         <OpponentAccuracyScatterChart
           title={'Accuracy'}
@@ -94,9 +88,7 @@ export const TimePeriodSection: React.FC<IProps> = (props) => {
           opponentAndUserRatingsByDate={props.gameCollection.gatherOpponentAndUserRatingsByDate()}
         />
       </section>
-      <section>
-        <Openings collection={props.gameCollection} timeframe={props.timeframe} />
-      </section>
+      <Openings collection={props.gameCollection} timeframe={props.timeframe} />
     </div>
   );
 };

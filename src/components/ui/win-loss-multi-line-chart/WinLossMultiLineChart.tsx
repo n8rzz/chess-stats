@@ -1,22 +1,16 @@
 import * as React from 'react';
 import dynamic from 'next/dynamic';
-import styles from '../../../styles/App.module.css';
 import { IWinLossDrawByPeriod } from '../../../domain/game/games.types';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 interface IProps {
-  title: string;
   winLossByPeriod: IWinLossDrawByPeriod;
 }
 
 export const WinLossMultiLineChart: React.FC<IProps> = (props) => {
   return (
     <div id={'win-loss-multi-line-chart'}>
-      <div className={styles.vr2}>
-        <h3>{props.title}</h3>
-      </div>
-
       <Chart
         options={{
           chart: {

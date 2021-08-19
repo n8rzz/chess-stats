@@ -2,23 +2,17 @@ import * as React from 'react';
 import dynamic from 'next/dynamic';
 import styles from '../../../styles/App.module.css';
 import { ICountByDate } from '../../../domain/game/games.types';
-import { GameResult, MovingAveragePeriod } from '../../../domain/game/games.constants';
+import { GameResult } from '../../../domain/game/games.constants';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 interface IProps {
   countByDate: ICountByDate;
-  onChangeMovingAverage: (nextPeriod: MovingAveragePeriod) => void;
-  title: string;
 }
 
-export const WinLossCountChart: React.FC<IProps> = (props) => {
+export const DetailedGameResultsChart: React.FC<IProps> = (props) => {
   return (
     <div id={'win-loss-count-by-period-chart'} className={styles.vr2}>
-      <div className={styles.vr1}>
-        <h3>{props.title}</h3>
-      </div>
-
       <Chart
         options={{
           chart: {
@@ -61,5 +55,5 @@ export const WinLossCountChart: React.FC<IProps> = (props) => {
   );
 };
 
-WinLossCountChart.displayName = 'CandlestickChart';
-WinLossCountChart.defaultProps = {};
+DetailedGameResultsChart.displayName = 'CandlestickChart';
+DetailedGameResultsChart.defaultProps = {};
