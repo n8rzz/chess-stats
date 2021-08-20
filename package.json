@@ -17,7 +17,7 @@
     "lint": "eslint \"*/**/*.{ts,tsx}\"",
     "prestart": "yarn build",
     "release": "np",
-    "start": "next start",
+    "start": "next start -p $PORT",
     "test:ci": "jest --runInBand",
     "test:coverage": "jest --coverage --maxWorkers=50%",
     "test:watch": "jest --watch --maxWorkers=25%",
