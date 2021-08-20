@@ -1,9 +1,8 @@
-name: nextjs-cloud-run
+name: cloud-run
 
 on:
   push:
     branches:
-      - feature/docker
       - main
 
 env:
