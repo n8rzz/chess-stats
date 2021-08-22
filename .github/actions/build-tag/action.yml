@@ -1,0 +1,17 @@
+name: 'Build Tag'
+
+description: 'Generates a string from commit branch name and commit sha to be used with Docker image tags'
+outputs:
+  image-tag:
+    description: "Unique id used for Docker image tags"
+    value: ${{ steps.image-tag-return.outputs.image-tag }}
+
+runs:
+  using: "composite"
+  steps:
+    - id: image-tag-return
+      run: |
+        echo -e "${GITHUB_REF##*/}--${GITHUB_SHA:0:7}" | \
+          sed 'y/ABCDEFGHIJKLMNOPQRSTUVWXYZ_.\//abcdefghijklmnopqrstuvwxyz---/' > .IMAGE_TAG
+        echo "##[set-output name=image-tag;]$(cat .IMAGE_TAG)"
+      shell: bash

@@ -1,9 +1,10 @@
-name: cloud-run
+name: build-and-deploy
 
 on:
   push:
     branches:
       - main
+      - develop
 
 env:
   CLOUD_RUN_PROJECT_ID: ${{ secrets.CLOUD_RUN_PROJECT_NAME }}
@@ -12,36 +13,54 @@ env:
 
 jobs:
   build-and-deploy:
-    name: Setup, Build, and Deploy
+    name: Build and Deploy
     runs-on: ubuntu-latest
+    outputs:
+      image-tag: ${{ steps.image-tag.outputs.image-tag }}
+
     steps:
 
     - name: Checkout
       uses: actions/checkout@v2
 
-    # This step is where our service account will be authenticated
     - uses: google-github-actions/setup-gcloud@v0.2.0
       with:
         project_id: ${{ secrets.CLOUD_RUN_PROJECT_NAME }}
         service_account_key: ${{ secrets.CLOUD_RUN_SERVICE_ACCOUNT }}
         service_account_email: ${{ secrets.CLOUD_RUN_SERVICE_ACCOUNT_EMAIL }}
 
+    - id: image-tag
+      uses: n8rzz/chess-stats/.github/actions/build-tag@develop
+
     - name: Enable the necessary APIs and enable docker auth
       run: |-
         gcloud services enable containerregistry.googleapis.com
         gcloud services enable run.googleapis.com
         gcloud --quiet auth configure-docker
-    - name: Build and tag image
+
+    - uses: satackey/action-docker-layer-caching@v0.0.11
+      continue-on-error: true
+
+    - name: Build and Tag
+      env:
+        IMAGE_TAG: ${{ steps.image-tag.outputs.image-tag }}
       run: |-
-        docker build . --tag "gcr.io/$CLOUD_RUN_PROJECT_ID/$REPO_NAME:$GITHUB_SHA"
-    - name: Push image to GCR
+        echo -e Building image with tag: "gcr.io/$CLOUD_RUN_PROJECT_ID/$REPO_NAME:$IMAGE_TAG"
+        docker build . --tag "gcr.io/$CLOUD_RUN_PROJECT_ID/$REPO_NAME:$IMAGE_TAG" --tag "gcr.io/$CLOUD_RUN_PROJECT_ID/$REPO_NAME:latest"
+
+    - name: Push image to registry
       run: |-
-        docker push gcr.io/$CLOUD_RUN_PROJECT_ID/$REPO_NAME:$GITHUB_SHA
+        docker push gcr.io/$CLOUD_RUN_PROJECT_ID/$REPO_NAME:${{ steps.image-tag.outputs.image-tag }}
+
     - name: Deploy
+      env:
+        IMAGE_TAG: ${{ steps.image-tag.outputs.image-tag }}
       run: |-
         gcloud components install beta --quiet
-        gcloud beta run deploy $REPO_NAME --image gcr.io/$CLOUD_RUN_PROJECT_ID/$REPO_NAME:$GITHUB_SHA \
+        gcloud beta run deploy $REPO_NAME \
+          --image gcr.io/$CLOUD_RUN_PROJECT_ID/$REPO_NAME:$IMAGE_TAG \
           --project $CLOUD_RUN_PROJECT_ID \
+          --revision-suffix $IMAGE_TAG \
           --platform managed \
           --region $CLOUD_RUN_REGION \
           --allow-unauthenticated \

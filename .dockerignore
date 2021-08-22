@@ -1,4 +1,10 @@
-Dockerfile
+.coverage
 .dockerignore
+.github
+.next
+.vscode
+Dockerfile
 node_modules
+np-config.json
 npm-debug.log
+Readme.md
