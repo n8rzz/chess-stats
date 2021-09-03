@@ -1,0 +1,56 @@
+name: 'Deploy Image'
+description: 'Deploying image to CloudRun'
+
+inputs:
+  project:
+    description: 'name of Project for CloudRun deployment'
+    required: true
+  image-tag:
+    description: 'tag of image in CloudRun'
+    required: true
+  promote:
+    description: 'if true, add one step to promote image traffic'
+    required: false
+  deploy-tag:
+    description: 'tag added to artifacts in gcp'
+    required: false
+
+outputs:
+  image-tag:
+    description: "Image Deployed"
+    value: ${{ steps.image-tag-return.outputs.image-tag }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Deploy
+      env:
+        PROJECT_ID: ${{ inputs.project }}
+        IMAGE_TAG: ${{ inputs.image-tag }}
+        PROMOTE: ${{ inputs.promote }}
+        DEPLOY_TAG: ${{ inputs.deploy-tag }}
+      run: |
+        TIMESTAMP=`date +%Y-%m-%d_%H:%M:%S`
+        echo Now deploying $IMAGE_TAG to $PROJECT_ID with $DEPLOY_TAG
+        gcloud components install beta && gcloud beta run deploy chess-stats-dev \
+          --project $PROJECT_ID \
+          --image "gcr.io/$PROJECT_ID:$IMAGE_TAG" \
+          --revision-suffix $IMAGE_TAG \
+          --platform managed \
+          --region 'us-central1' \
+          --quiet \
+          --tag $DEPLOY_TAG \
+          --set-env-vars COMMIT="$GITHUB_SHA",NEXT_PUBLIC_IMAGE_TAG="$IMAGE_TAG",PROJECT_ID="$PROJECT_ID",TIMESTAMP="UTC-$TIMESTAMP"
+        if [[ $PROMOTE == true ]]; then
+          gcloud run services update-traffic chess-stats-dev \
+            --project $PROJECT_ID \
+            --to-revisions=chess-stats-$IMAGE_TAG=100 \
+            --platform managed \
+            --region 'us-central1'
+        fi
+      shell: bash
+
+    - id: image-tag-returns
+      run: |
+        echo "::set-output name=image-tag::${{ inputs.image-tag }}"
+      shell: bash
