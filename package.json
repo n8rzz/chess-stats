@@ -25,6 +25,8 @@
     "ts": "tsc"
   },
   "dependencies": {
+    "@microsoft/applicationinsights-react-js": "3.1.5",
+    "@microsoft/applicationinsights-web": "2.6.5",
     "@mliebelt/pgn-parser": "1.2.6",
     "apexcharts": "3.26.0",
     "axios": "0.21.1",
