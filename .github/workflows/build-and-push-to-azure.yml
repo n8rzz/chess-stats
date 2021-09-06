@@ -28,5 +28,5 @@ jobs:
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
     - run: |
-        docker build -t chessstats.azurecr.io/chess-stats-dev/${{ steps.image-tag.outputs.image-tag }} --build-arg APP_INSIGHTS_KEY=$APP_INSIGHTS_INSURMENTATION_KEY .
-        docker push chessstats.azurecr.io/chess-stats-dev/${{ steps.image-tag.outputs.image-tag }}
+        docker build -t chessstats.azurecr.io/chess-stats-dev/${GITHUB_REF##*/}/${{ steps.image-tag.outputs.image-tag }} --build-arg APP_INSIGHTS_KEY=$APP_INSIGHTS_INSURMENTATION_KEY .
+        docker push chessstats.azurecr.io/chess-stats-dev/${GITHUB_REF##*/}/${{ steps.image-tag.outputs.image-tag }}
