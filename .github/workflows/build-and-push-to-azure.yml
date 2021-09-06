@@ -3,6 +3,8 @@ name: Build & Deploy to Azure
 on:
   push:
     branches:
+      - main
+      - develop
       - devops/azure
 
 jobs:
@@ -15,12 +17,15 @@ jobs:
     - id: image-tag
       uses: n8rzz/chess-stats/.github/actions/build-tag@develop
 
+    ## dev or branch build
     - name: 'Login via Azure CLI'
+      if: ${{ contains(github.ref, 'develop') || contains(github.ref, 'devops/azure')}}
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS_DEV }}
 
     - uses: azure/docker-login@v1
+      if: ${{ contains(github.ref, 'develop') || contains(github.ref, 'devops/azure')}}
       env:
         APP_INSIGHTS_INSURMENTATION_KEY: ${{ secrets.NEXT_PUBLIC_APPINSIGHTS_INSTRUMENTATION_KEY_DEV }}
       with:
@@ -30,3 +35,22 @@ jobs:
     - run: |
         docker build -t chessstats.azurecr.io/chess-stats-dev/${GITHUB_REF##*/}/${{ steps.image-tag.outputs.image-tag }} --build-arg APP_INSIGHTS_KEY=$APP_INSIGHTS_INSURMENTATION_KEY .
         docker push chessstats.azurecr.io/chess-stats-dev/${GITHUB_REF##*/}/${{ steps.image-tag.outputs.image-tag }}
+
+    ## production
+    - name: 'Login via Azure CLI'
+      if: contains(github.ref, 'main')
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS_PROD }}
+
+    - uses: azure/docker-login@v1
+      if: contains(github.ref, 'main')
+      env:
+        APP_INSIGHTS_INSURMENTATION_KEY: ${{ secrets.NEXT_PUBLIC_APPINSIGHTS_INSTRUMENTATION_KEY_PROD }}
+      with:
+        login-server: chessstats.azurecr.io
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+    - run: |
+        docker build -t chessstats.azurecr.io/chess-stats-prod/${GITHUB_REF##*/}/${{ steps.image-tag.outputs.image-tag }} --build-arg APP_INSIGHTS_KEY=$APP_INSIGHTS_INSURMENTATION_KEY .
+        docker push chessstats.azurecr.io/chess-stats-prod/${GITHUB_REF##*/}/${{ steps.image-tag.outputs.image-tag }}
