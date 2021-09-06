@@ -1,0 +1,37 @@
+
+name: Build & Push to Prod - Azure`
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push-to-azure:
+    runs-on: ubuntu-latest
+    steps:
+    - name: 'Checkout GitHub Action'
+      uses: actions/checkout@master
+
+    - id: image-tag
+      uses: n8rzz/chess-stats/.github/actions/build-tag@develop
+
+    - name: 'Login via Azure CLI'
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS_PROD }}
+
+    - uses: azure/docker-login@v1
+      env:
+        APP_INSIGHTS_INSURMENTATION_KEY: ${{ secrets.NEXT_PUBLIC_APPINSIGHTS_INSTRUMENTATION_KEY_PROD }}
+      with:
+        login-server: chessstats.azurecr.io
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+    - run: |
+        docker build \
+          -t chessstats.azurecr.io/chess-stats-prod/${GITHUB_REF##*/}/${{ steps.image-tag.outputs.image-tag }} \
+          -t chessstats.azurecr.io/chess-stats-prod/main:latest \
+          --build-arg APP_INSIGHTS_KEY=$APP_INSIGHTS_INSURMENTATION_KEY \
+          .
+        docker push chessstats.azurecr.io/chess-stats-prod/${GITHUB_REF##*/}/${{ steps.image-tag.outputs.image-tag }}
+        docker push chessstats.azurecr.io/chess-stats-prod/main:latest
