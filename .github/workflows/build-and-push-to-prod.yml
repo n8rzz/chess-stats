@@ -1,5 +1,5 @@
 
-name: Build & Push to Prod - Azure`
+name: Build & Push to Prod - Azure
 on:
   push:
     branches:
@@ -13,7 +13,7 @@ jobs:
       uses: actions/checkout@master
 
     - id: image-tag
-      uses: n8rzz/chess-stats/.github/actions/build-tag@develop
+      uses: n8rzz/chess-stats/.github/actions/build-tag@main
 
     - name: 'Login via Azure CLI'
       uses: azure/login@v1
