@@ -4,8 +4,8 @@ import { useRouter } from 'next/router';
 import { ApplicationInsights } from '@microsoft/applicationinsights-web';
 import { ReactPlugin, AppInsightsContext } from '@microsoft/applicationinsights-react-js';
 
-let reactPlugin: ReactPlugin = null as any;
-let appInsights: ApplicationInsights = null as any;
+export let reactPlugin: ReactPlugin = null as any;
+export let appInsights: ApplicationInsights = null as any;
 
 const initialise = (instrumentationKey: string): void => {
   if (!instrumentationKey) {
@@ -36,8 +36,8 @@ const handleRouteChange = (url: string): void => {
 interface IProps {}
 
 export const AppInsightsContextProvider: React.FC<IProps> = (props) => {
-  const [isInitialised, setInitialised] = useState(false);
   const router = useRouter();
+  const [isInitialised, setInitialised] = useState(false);
 
   useEffect(() => {
     const instrumentationKey = process.env.NEXT_PUBLIC_APPINSIGHTS_INSTRUMENTATION_KEY;

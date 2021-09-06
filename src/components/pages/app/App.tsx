@@ -12,6 +12,7 @@ import { timeClassOptionList, Timeframe, timeframeLabel, timeframeToPeriod } fro
 import { AppHeader } from './app-header/AppHeader';
 import { EmptyView } from './EmptyView';
 import { TimeClass } from '../../../domain/game/games.constants';
+import { appInsights, reactPlugin } from '../../context/AppInsightsContextProvider';
 
 interface IProps {}
 
@@ -30,6 +31,7 @@ export const App: React.FC<IProps> = () => {
   const onClickPeriodButton = React.useCallback(
     (nextTimeframe: Timeframe) => {
       setIsLoading(true);
+      reactPlugin?.trackEvent({ name: 'ChangeTimePeriod' }, { timeframe: nextTimeframe });
       setActiveTimeframe(nextTimeframe);
       setIsLoading(false);
     },
@@ -45,9 +47,32 @@ export const App: React.FC<IProps> = () => {
     setIsLoading(true);
 
     try {
+      appInsights?.setAuthenticatedUserContext(username, provider, true);
+      appInsights?.startTrackEvent('DataLoad');
+
       const playerStats = await getPlayerStats(username);
       const gameArchiveList = await getArchives(username);
       const collection = await getHistorcialGamesFromArchiveList(gameArchiveList, username);
+
+      appInsights?.stopTrackEvent(
+        'DataLoad',
+        {
+          timeClass: selectedTimeClass,
+          timeframe: selectedTimeframe,
+        },
+        {
+          monthCount: gameArchiveList.length,
+        },
+      );
+      reactPlugin?.trackEvent(
+        {
+          name: 'FirstDataLoad',
+        },
+        {
+          timeClass: selectedTimeClass,
+          timeframe: selectedTimeframe,
+        },
+      );
 
       setActiveTimeClass(selectedTimeClass);
       setActiveTimeframe(selectedTimeframe);
