@@ -8,7 +8,10 @@ import { AppInsightsContextProvider } from '../components/context/AppInsightsCon
 export default function MyApp({ Component, pageProps }: AppProps): ReactElement {
   return (
     <AppInsightsContextProvider>
-      <Component {...pageProps} />;
+      <Component {...pageProps} />
+      <div>
+        version: <span>{process.env.NEXT_PUBLIC_APP_VERSION}</span>
+      </div>
     </AppInsightsContextProvider>
   );
 }
