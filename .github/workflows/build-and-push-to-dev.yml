@@ -24,7 +24,7 @@ jobs:
 
     - uses: azure/docker-login@v1
       env:
-        APP_INSIGHTS_INSURMENTATION_KEY: ${{ secrets.NEXT_PUBLIC_APPINSIGHTS_INSTRUMENTATION_KEY_DEV }}
+        APP_INSIGHTS_INSURMENTATION_KEY: ${{ secrets.NEXT_PUBLIC_APP_INSIGHTS_INSTRUMENTATION_KEY_DEV }}
       with:
         login-server: chessstats.azurecr.io
         username: ${{ secrets.REGISTRY_USERNAME }}

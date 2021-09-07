@@ -10,7 +10,7 @@ export default function MyApp({ Component, pageProps }: AppProps): ReactElement 
     <AppInsightsContextProvider>
       <Component {...pageProps} />
       <div>
-        version: <span>{process.env.NEXT_PUBLIC_APP_VERSION}</span>
+        version: <span>{process.env.NEXT_PUBLIC_APP_INSIGHTS_INSTRUMENTATION_KEY}</span>
       </div>
     </AppInsightsContextProvider>
   );

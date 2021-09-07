@@ -1,5 +1,4 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { ApplicationInsights } from '@microsoft/applicationinsights-web';
 import { ReactPlugin, AppInsightsContext } from '@microsoft/applicationinsights-react-js';
@@ -40,7 +39,7 @@ export const AppInsightsContextProvider: React.FC<IProps> = (props) => {
   const [isInitialised, setInitialised] = useState(false);
 
   useEffect(() => {
-    const instrumentationKey = process.env.NEXT_PUBLIC_APPINSIGHTS_INSTRUMENTATION_KEY;
+    const instrumentationKey = process.env.NEXT_PUBLIC_APP_INSIGHTS_INSTRUMENTATION_KEY;
 
     if (!instrumentationKey || !!appInsights) {
       return;

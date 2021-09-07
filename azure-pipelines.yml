@@ -1,8 +1,3 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
   branches:
     include:
@@ -14,24 +9,26 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
-  ImageNameBase: 'chessstats.azurecr.io/chess-stats-dev'
-  ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
-    Environment: chess-stats-prod
-  ${{ if ne(variables['Build.SourceBranch'], 'refs/heads/main') }}:
-    Environment: chess-stats-dev
-  ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/') }}:
-    BranchName: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
-  ${{ if startsWith(variables['Build.SourceBranch'], 'refs/pull/') }}:
-    BranchName: $[ replace(variables['System.PullRequest.TargetBranch'], 'refs/heads/', '') ]
+  - group: chess-stats-dev-variable-group
+  - name: ImageNameBase
+    value: 'chessstats.azurecr.io/chess-stats-dev'
+  # ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
+  #   Environment: chess-stats-prod
+  # ${{ if ne(variables['Build.SourceBranch'], 'refs/heads/main') }}:
+  #   Environment: chess-stats-dev
+  # ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/') }}:
+  #   BranchName: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
+  # ${{ if startsWith(variables['Build.SourceBranch'], 'refs/pull/') }}:
+  #   BranchName: $[ replace(variables['System.PullRequest.TargetBranch'], 'refs/heads/', '') ]
+  - name: Environment
+    value: chess-stats-dev
+  - name: BranchName
+    value: "azure-pipelines"
 
 
 steps:
-  - script: echo This is the main branch
-    displayName: 'Branch Name'
-    condition: eq(variables.isMain, 'true')
-
   - task: CmdLine@2
+    displayName: Generate Commit Short SHA
     inputs:
       script: ' x=`echo "$(Build.SourceVersion)" | head -c 7`; echo "##vso[task.setvariable variable=ShortSha]$x"'
 
@@ -41,7 +38,7 @@ steps:
       command: build
       containerRegistry: chessstats
       repository: $(Environment)/$(BranchName)
-      arguments: --build-arg APP_INSIGHTS_KEY=000000000-0000-000000 --build-arg APP_VERSION=1.0.3
+      arguments: '--build-arg APP_INSIGHTS_KEY=$(APP-INSIGHTS-KEY) --build-arg APP_VERSION=$(BranchName)--$(ShortSha)'
       tags: |
         $(BranchName)--$(ShortSha)
         latest
