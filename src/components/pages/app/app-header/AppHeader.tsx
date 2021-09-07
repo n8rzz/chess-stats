@@ -37,6 +37,7 @@ export const AppHeader: React.FC<IProps> = (props) => {
       <Container>
         <Menu.Item as="a" header={true}>
           Chess Stats
+          <span className={styles.uIsVisuallyHidden}>{process.env.NEXT_PUBLIC_APP_VERSION}</span>
         </Menu.Item>
 
         <Menu.Menu position="right">

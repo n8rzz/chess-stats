@@ -34,6 +34,7 @@ jobs:
           -t chessstats.azurecr.io/chess-stats-dev/${GITHUB_REF##*/}/${{ steps.image-tag.outputs.image-tag }} \
           -t chessstats.azurecr.io/chess-stats-dev/develop:latest \
           --build-arg APP_INSIGHTS_KEY=$APP_INSIGHTS_INSURMENTATION_KEY \
+          --build-arg APP_VERSION=${{ steps.image-tag.outputs.image-tag }} \
           .
         docker push chessstats.azurecr.io/chess-stats-dev/${GITHUB_REF##*/}/${{ steps.image-tag.outputs.image-tag }}
         docker push chessstats.azurecr.io/chess-stats-dev/develop:latest
