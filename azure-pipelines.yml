@@ -16,6 +16,10 @@ pool:
 variables:
   isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
   ImageNameBase: 'chessstats.azurecr.io/chess-stats-dev'
+  ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
+    Environment: chess-stats-prod
+  ${{ if ne(variables['Build.SourceBranch'], 'refs/heads/main') }}:
+    Environment: chess-stats-dev
   ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/') }}:
     BranchName: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
   ${{ if startsWith(variables['Build.SourceBranch'], 'refs/pull/') }}:
@@ -34,16 +38,20 @@ steps:
   - task: Docker@2
     displayName: Build an image
     inputs:
-      containerRegistry: chessstats
-      repository: $(BranchName)
       command: build
+      containerRegistry: chessstats
+      repository: $(Environment)/$(BranchName)
+      arguments: --build-arg APP_INSIGHTS_KEY=000000000-0000-000000 --build-arg APP_VERSION=1.0.3
+      tags: |
+        $(BranchName)--$(ShortSha)
+        latest
 
   - task: Docker@2
     displayName: Push an image
     inputs:
       containerRegistry: chessstats
-      repository: $(BranchName)
+      repository: $(Environment)/$(BranchName)
       command: push
       tags: |
         $(BranchName)--$(ShortSha)
-        $(BranchName):latest
+        latest
