@@ -1,0 +1,19 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pr: none
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  - group: chess-stats-prod-variable-group
+
+extends:
+  template: ./templates/build-and-push-to-registry.yml
+  parameters:
+      AppInsightsKey: $(APP-INSIGHTS-KEY)
+      BranchName: main
+      Environment: chess-stats-prod
