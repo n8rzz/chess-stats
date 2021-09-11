@@ -9,7 +9,7 @@ export default function MyApp({ Component, pageProps }: AppProps): ReactElement 
   return (
     <AppInsightsContextProvider>
       <Component {...pageProps} />
-      <div style={{ padding: '10px', fontSize: '10px' }}>
+      <div style={{ padding: '10px 10px 10px 15px', fontSize: '10px' }}>
         version: <span>{process.env.NEXT_PUBLIC_APP_VERSION}</span>
       </div>
     </AppInsightsContextProvider>
