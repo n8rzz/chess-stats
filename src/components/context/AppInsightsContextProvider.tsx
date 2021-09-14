@@ -15,7 +15,7 @@ const initialise = (instrumentationKey: string): void => {
   appInsights = new ApplicationInsights({
     config: {
       instrumentationKey,
-      extensions: [reactPlugin],
+      extensions: [reactPlugin as any],
     },
   });
 
