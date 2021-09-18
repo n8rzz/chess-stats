@@ -18,7 +18,7 @@ export const EmptyView: React.FC<IProps> = (props) => {
       />
       <Header
         as={'h2'}
-        content={'please search by chess.com username'}
+        content={'Enter your chess.com username above and click search.'}
         style={{
           fontSize: '1.7em',
           fontWeight: 'normal',

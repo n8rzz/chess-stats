@@ -79,7 +79,7 @@ export const AppHeader: React.FC<IProps> = (props) => {
                 </li>
                 <li>
                   <Button type={'submit'} disabled={!isUsernameValid}>
-                    {'Submit'}
+                    {'Search'}
                   </Button>
                 </li>
               </ul>
