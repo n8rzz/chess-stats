@@ -2,6 +2,8 @@ FROM node:15.1-alpine
 
 WORKDIR /app
 
+# note the leading `.` on the copied filename
+COPY ./env ./.env
 COPY . .
 
 ARG APP_INSIGHTS_KEY

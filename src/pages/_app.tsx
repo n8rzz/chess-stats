@@ -6,12 +6,20 @@ import { AppInsightsContextProvider } from '../components/context/AppInsightsCon
 
 // eslint-disable-next-line destructuring/in-params
 export default function MyApp({ Component, pageProps }: AppProps): ReactElement {
+  const shouldShowVersion = React.useMemo(() => process.env.NEXT_PUBLIC_SHOULD_SHOW_VERSION === 'true' ?? false, [
+    process.env,
+  ]);
+
+  console.log('+++', process.env.NEXT_PUBLIC_SHOULD_SHOW_VERSION);
+
   return (
     <AppInsightsContextProvider>
       <Component {...pageProps} />
-      <div style={{ padding: '10px 10px 10px 15px', fontSize: '10px' }}>
-        version: <span>{process.env.NEXT_PUBLIC_APP_VERSION}</span>
-      </div>
+      {shouldShowVersion && (
+        <div style={{ padding: '10px 10px 10px 15px', fontSize: '10px' }}>
+          version: <span>{process.env.NEXT_PUBLIC_APP_VERSION}</span>
+        </div>
+      )}
     </AppInsightsContextProvider>
   );
 }
