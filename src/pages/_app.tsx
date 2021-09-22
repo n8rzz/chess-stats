@@ -10,8 +10,6 @@ export default function MyApp({ Component, pageProps }: AppProps): ReactElement 
     process.env,
   ]);
 
-  console.log('+++', process.env.NEXT_PUBLIC_SHOULD_SHOW_VERSION);
-
   return (
     <AppInsightsContextProvider>
       <Component {...pageProps} />

@@ -25,10 +25,10 @@ describe('App', () => {
         );
 
         const usernameInputElement = getByPlaceholderText('Username');
-        const submitButtonElement = getByText('Submit');
+        const searchButtonElement = getByText('Search');
 
         fireEvent.change(usernameInputElement, { target: { value: 'n8rzz' } });
-        fireEvent.click(submitButtonElement);
+        fireEvent.click(searchButtonElement);
 
         expect(onClickSearchSpy).toHaveBeenCalledTimes(1);
       });
@@ -45,9 +45,9 @@ describe('App', () => {
           </TestWrapper>,
         );
 
-        const submitButtonElement = getByText('Submit');
+        const searchButtonElement = getByText('Search');
 
-        fireEvent.click(submitButtonElement);
+        fireEvent.click(searchButtonElement);
 
         expect(onClickSearchSpy).toHaveBeenCalledTimes(0);
       });
