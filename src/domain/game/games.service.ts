@@ -2,10 +2,13 @@ import axios, { AxiosResponse } from 'axios';
 import { flatten } from 'lodash';
 import { GameCollection } from './models/Game.collection';
 import { IGame, IGameArchiveListResponse, IGameArchiveResponse } from './games.types';
+import { ApiUrl } from '../../constants/api-url.constants';
 
 export const getArchives = async (username: string): Promise<string[]> => {
+  const url = ApiUrl.GameArchives.replace(':username', username);
+
   return axios
-    .get<IGameArchiveListResponse>(`https://api.chess.com/pub/player/${username}/games/archives`)
+    .get<IGameArchiveListResponse>(url)
     .then((response: AxiosResponse<IGameArchiveListResponse>) => response.data.archives);
 };
 
