@@ -22,7 +22,7 @@ describe('App', () => {
         </TestWrapper>,
       );
 
-      expect(() => getAllByText('Submit')).not.toThrow();
+      expect(() => getAllByText('Search')).not.toThrow();
     });
 
     test('should render empty state', () => {
