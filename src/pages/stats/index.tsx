@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
-import { SplashPage } from '../components/pages/SplashPage';
+import { StatsPage } from '../../components/pages/stats/StatsPage';
 
 export default function StatsPageRoute(): ReactElement {
-  return <SplashPage />;
+  return <StatsPage />;
 }

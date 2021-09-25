@@ -3,7 +3,7 @@ import { Container, Header } from 'semantic-ui-react';
 
 interface IProps {}
 
-export const EmptyView: React.FC<IProps> = (props) => {
+export const SplashPage: React.FC<IProps> = (props) => {
   return (
     <Container text={true}>
       <Header
@@ -29,5 +29,5 @@ export const EmptyView: React.FC<IProps> = (props) => {
   );
 };
 
-EmptyView.displayName = 'EmptyView';
-EmptyView.defaultProps = {};
+SplashPage.displayName = 'SplashPage';
+SplashPage.defaultProps = {};

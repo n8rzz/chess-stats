@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Dimmer, Loader, Segment, Image, Button, Select, Grid, GridColumn } from 'semantic-ui-react';
 import clsx from 'clsx';
 import styles from '../../../styles/App.module.css';
@@ -8,15 +8,14 @@ import { getPlayerStats } from '../../../domain/player/player.service';
 import { IPlayerStats } from '../../../domain/player/player.types';
 import { TimePeriodSection } from './time-period-section/TimePeriodSection';
 import { PlayerStats } from './player-stats/PlayerStats';
-import { timeClassOptionList, Timeframe, timeframeLabel, timeframeToPeriod } from './app.constants';
-import { AppHeader } from './app-header/AppHeader';
-import { EmptyView } from './EmptyView';
+import { timeClassOptionList, Timeframe, timeframeLabel, timeframeToPeriod } from './StatsPage.constants';
 import { TimeClass } from '../../../domain/game/games.constants';
 import { appInsights, reactPlugin } from '../../context/AppInsightsContextProvider';
+import { AppHeader } from '../shared/app-header/AppHeader';
 
 interface IProps {}
 
-export const App: React.FC<IProps> = () => {
+export const StatsPage: React.FC<IProps> = () => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [playerStatsModel, setPlayerStatsModel] = React.useState<IPlayerStats>(undefined as any);
   const [activeTimeClass, setActiveTimeClass] = React.useState<TimeClass>(TimeClass.Rapid);
@@ -86,13 +85,10 @@ export const App: React.FC<IProps> = () => {
     }
   };
 
-  const isEmpty = useMemo(() => !isLoading && gameCollection.length === 0, [isLoading, gameCollection.length]);
-
   return (
     <div>
       <AppHeader onClickSearch={onSubmit} />
 
-      {isEmpty && <EmptyView />}
       {isLoading && (
         <Segment style={{ border: 0, height: '250px', overflow: 'hidden' }}>
           <Dimmer active={true} inverted={true}>
@@ -157,5 +153,5 @@ export const App: React.FC<IProps> = () => {
   );
 };
 
-App.displayName = 'App';
-App.defaultProps = {};
+StatsPage.displayName = 'StatsPage';
+StatsPage.defaultProps = {};

@@ -3,8 +3,8 @@ import dynamic from 'next/dynamic';
 import styles from '../../../styles/App.module.css';
 import { IMovingAverageChartData } from '../../../domain/game/games.types';
 import { Menu, Dropdown, DropdownProps } from 'semantic-ui-react';
-import { Timeframe } from '../../pages/app/app.constants';
 import { MovingAveragePeriod } from '../../../domain/game/games.constants';
+import { Timeframe } from '../../pages/stats/StatsPage.constants';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
