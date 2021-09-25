@@ -4,11 +4,15 @@ import { TestWrapper } from '../../test/test.utils';
 import { SplashPage } from './SplashPage';
 
 describe('SplashPage', () => {
+  const defaultProps = {
+    appVersion: '1234',
+  };
+
   test('does not throw with valid props', () => {
     expect(() =>
       render(
         <TestWrapper>
-          <SplashPage />
+          <SplashPage {...defaultProps} />
         </TestWrapper>,
       ),
     ).not.toThrow();
@@ -18,22 +22,11 @@ describe('SplashPage', () => {
     test('should render the user form', () => {
       const { getAllByText } = render(
         <TestWrapper>
-          <SplashPage />
+          <SplashPage {...defaultProps} />
         </TestWrapper>,
       );
 
-      expect(() => getAllByText('Submit')).not.toThrow();
-    });
-
-    test('should render empty state', () => {
-      const emptyText = 'No Data';
-      const { getAllByText } = render(
-        <TestWrapper>
-          <SplashPage />
-        </TestWrapper>,
-      );
-
-      expect(() => getAllByText(emptyText)).not.toThrow();
+      expect(() => getAllByText('Search')).not.toThrow();
     });
   });
 });
