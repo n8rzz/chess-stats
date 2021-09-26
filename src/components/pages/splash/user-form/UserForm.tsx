@@ -61,10 +61,9 @@ export const UserForm: React.FC<IProps> = (props) => {
     <form autoComplete={'on'} onSubmit={onClickSubmit}>
       <div className={styles.vr2}>
         <Form.Field>
-          <label>
-            <b>Chess.com Username</b>
-          </label>
+          <label htmlFor={'username-label'}>{'Chess.com Username'}</label>
           <Input
+            aria-labelledby={'username-label'}
             defaultValue={username}
             error={!isUsernameValid}
             icon={'users'}
