@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Form, Input, Grid, Select, Button, Checkbox } from 'semantic-ui-react';
+import { parseCookies, setCookie, destroyCookie } from 'nookies';
 import styles from '../../../../styles/App.module.css';
 import { TimeClass } from '../../../../domain/game/games.constants';
 import { timeframeOptionList, Timeframe, timeClassOptionList } from '../../stats/StatsPage.constants';
+import { usernameCookieName } from '../../../../domain/user/user.constants';
 
 interface IProps {
   onSubmit: (provider: string, username: string, selectedTimeframe: Timeframe, selectedTimeClass: TimeClass) => void;
@@ -12,8 +14,29 @@ export const UserForm: React.FC<IProps> = (props) => {
   const [username, setUsername] = React.useState<string>('');
   const [selectedTimeClass, setSelectedTimeClass] = React.useState<TimeClass>(TimeClass.Rapid);
   const [isUsernameValid, setIsUsernameValid] = React.useState<boolean>(true);
+  const [shouldStoreUsername, setShouldStoreUsername] = React.useState<boolean>(false);
   const [selectedTimeframe, setSelectedTimeframe] = React.useState<Timeframe>(Timeframe.SevenDays);
   const [provider] = React.useState<string>('chess.com');
+
+  useEffect(() => {
+    const cookies = parseCookies();
+    const storedUsername = cookies[usernameCookieName] ?? '';
+
+    if (storedUsername === '') {
+      return;
+    }
+
+    setUsername(storedUsername);
+    setShouldStoreUsername(true);
+  }, []);
+
+  const onChangeSaveUsername = React.useCallback(() => {
+    if (shouldStoreUsername) {
+      destroyCookie(null, usernameCookieName);
+    }
+
+    setShouldStoreUsername(!shouldStoreUsername);
+  }, [shouldStoreUsername]);
 
   const onClickSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -22,6 +45,13 @@ export const UserForm: React.FC<IProps> = (props) => {
       setIsUsernameValid(false);
 
       return;
+    }
+
+    if (shouldStoreUsername) {
+      setCookie(null, usernameCookieName, username.trim(), {
+        maxAge: 30 * 24 * 60 * 60,
+        path: '/',
+      });
     }
 
     props.onSubmit(provider, username, selectedTimeframe, selectedTimeClass);
@@ -92,7 +122,12 @@ export const UserForm: React.FC<IProps> = (props) => {
         </Button>
       </div>
 
-      <Form.Field control={Checkbox} label={{ children: 'Remember Username' }} />
+      <Form.Field
+        control={Checkbox}
+        defaultChecked={shouldStoreUsername}
+        label={{ children: 'Remember Username' }}
+        onChange={onChangeSaveUsername}
+      />
     </form>
   );
 };
