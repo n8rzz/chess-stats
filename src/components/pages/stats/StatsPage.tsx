@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Dimmer, Loader, Segment, Image, Button, Select, Grid, GridColumn } from 'semantic-ui-react';
+import { Button, Select, Grid, GridColumn } from 'semantic-ui-react';
 import clsx from 'clsx';
 import styles from '../../../styles/App.module.css';
 import { getArchives, getHistorcialGamesFromArchiveList } from '../../../domain/game/games.service';
@@ -14,6 +14,7 @@ import { appInsights, reactPlugin } from '../../context/AppInsightsContextProvid
 import { AppHeader } from '../shared/app-header/AppHeader';
 import { useRouter } from 'next/router';
 import { NextComponentType } from 'next';
+import { PageLoader } from '../shared/page-loader/PageLoader';
 
 // interface IProps {}
 
@@ -91,6 +92,12 @@ export const StatsPage: NextComponentType = () => {
       console.log(error);
 
       setIsDataLoading(false);
+      router.push({
+        pathname: '/',
+        query: {
+          message: encodeURIComponent('Something went wrong'),
+        },
+      });
     }
   };
 
@@ -108,13 +115,7 @@ export const StatsPage: NextComponentType = () => {
     return (
       <React.Fragment>
         <AppHeader isLoading={isLoading} username={gameCollection?.username} />
-        <Segment style={{ border: 0, height: '500px', overflow: 'hidden' }}>
-          <Dimmer active={true} inverted={true}>
-            <Loader size="large">{'Loading game data and generating stats'}</Loader>
-          </Dimmer>
-
-          <Image src="https://react.semantic-ui.com/images/wireframe/paragraph.png" />
-        </Segment>
+        <PageLoader isActive={isLoading} />
       </React.Fragment>
     );
   }

@@ -3,6 +3,14 @@ import { fireEvent, render } from '@testing-library/react';
 import { TestWrapper } from '../../test/test.utils';
 import { SplashPage } from './SplashPage';
 
+jest.mock('next/router', () => ({
+  useRouter: () => ({
+    query: {
+      message: '',
+    },
+  }),
+}));
+
 describe('SplashPage', () => {
   const defaultProps = {
     appVersion: '1234',

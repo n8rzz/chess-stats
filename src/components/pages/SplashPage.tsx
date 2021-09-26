@@ -3,18 +3,27 @@ import { Button, Card, Checkbox, Container, Form, Grid, Header, Icon, Input, Seg
 import styles from '../../styles/App.module.css';
 import { TimeClass } from '../../domain/game/games.constants';
 import { timeClassOptionList, timeframeOptionList, Timeframe } from './stats/StatsPage.constants';
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 
 interface IProps {
   appVersion: string;
 }
 
 export const SplashPage: React.FC<IProps> = (props) => {
+  const router = useRouter();
   const [username, setUsername] = React.useState<string>('');
   const [selectedTimeClass, setSelectedTimeClass] = React.useState<TimeClass>(TimeClass.Rapid);
   const [isUsernameValid, setIsUsernameValid] = React.useState<boolean>(true);
   const [selectedTimeframe, setSelectedTimeframe] = React.useState<Timeframe>(Timeframe.SevenDays);
   const [provider] = React.useState<string>('chess.com');
+
+  const errorMessage = React.useMemo(() => {
+    if (!router.isReady) {
+      return '';
+    }
+
+    return decodeURIComponent(router.query?.message as string);
+  }, [router.query]);
 
   const onClickSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -49,6 +58,7 @@ export const SplashPage: React.FC<IProps> = (props) => {
       >
         <Card>
           <Card.Content header={'Chess.com extended stats'} />
+          {errorMessage !== '' && <Card.Content style={{ color: '#f42000' }}>{errorMessage}</Card.Content>}
           <Card.Content>
             <form autoComplete={'on'} onSubmit={onClickSubmit}>
               <div className={styles.vr2}>
