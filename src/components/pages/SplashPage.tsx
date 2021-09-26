@@ -3,6 +3,7 @@ import { Button, Card, Checkbox, Container, Form, Grid, Header, Icon, Input, Seg
 import styles from '../../styles/App.module.css';
 import { TimeClass } from '../../domain/game/games.constants';
 import { timeClassOptionList, timeframeOptionList, Timeframe } from './stats/StatsPage.constants';
+import Router from 'next/router';
 
 interface IProps {
   appVersion: string;
@@ -13,7 +14,7 @@ export const SplashPage: React.FC<IProps> = (props) => {
   const [selectedTimeClass, setSelectedTimeClass] = React.useState<TimeClass>(TimeClass.Rapid);
   const [isUsernameValid, setIsUsernameValid] = React.useState<boolean>(true);
   const [selectedTimeframe, setSelectedTimeframe] = React.useState<Timeframe>(Timeframe.SevenDays);
-  // const [provider] = React.useState<string>('chess.com');
+  const [provider] = React.useState<string>('chess.com');
 
   const onClickSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -24,7 +25,15 @@ export const SplashPage: React.FC<IProps> = (props) => {
       return;
     }
 
-    // props.onClickSearch(provider, username, selectedTimeframe, selectedTimeClass);
+    Router.push({
+      pathname: '/stats',
+      query: {
+        provider,
+        username,
+        timeframe: selectedTimeframe,
+        timeClass: selectedTimeClass,
+      },
+    });
   };
 
   return (
@@ -62,7 +71,7 @@ export const SplashPage: React.FC<IProps> = (props) => {
                     }}
                   />
                   {!isUsernameValid && (
-                    <div style={{ color: '#f4200066', fontStyle: 'italic' }}>{'I am an Error Message'}</div>
+                    <div style={{ color: '#f4200066', fontStyle: 'italic' }}>{'Username is a required field'}</div>
                   )}
                 </Form.Field>
               </div>

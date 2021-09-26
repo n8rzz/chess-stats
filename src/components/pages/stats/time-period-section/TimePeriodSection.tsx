@@ -29,21 +29,28 @@ export const TimePeriodSection: React.FC<IProps> = (props) => {
     props.gameCollection.period,
     props.timeClass,
     props.timeframe,
+    props.isLoading,
   ]);
   const movingAverage = React.useMemo(() => {
     return props.gameCollection.calculateMovingAverageWithOhlcAndPeriod(ohlcData, movingAveragePeriod);
-  }, [movingAveragePeriod, props.gameCollection, props.timeClass, props.timeframe]);
+  }, [movingAveragePeriod, props.gameCollection, props.timeClass, props.timeframe, props.isLoading]);
+
+  if (props.gameCollection.length === 0) {
+    return null;
+  }
+
+  if (props.isLoading) {
+    return (
+      <Segment placeholder={true}>
+        <Dimmer active={true} inverted={true}>
+          <Loader content={'Loading...'} indeterminate={true} />
+        </Dimmer>
+      </Segment>
+    );
+  }
 
   return (
     <div>
-      {props.isLoading && (
-        <Segment placeholder={true}>
-          <Dimmer active={true} inverted={true}>
-            <Loader content={'Loading...'} indeterminate={true} />
-          </Dimmer>
-        </Segment>
-      )}
-
       <section className={styles.vr2}>
         <TimePeriodSummary
           earliestGameDate={props.gameCollection.findEarliestGameDate()?.toLocaleDateString()}
