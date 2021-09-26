@@ -2,6 +2,8 @@ import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import { TestWrapper } from '../../../../test/test.utils';
 import { UserForm } from './UserForm';
+import { Timeframe, timeframeLabel } from '../../stats/StatsPage.constants';
+import { TimeClass, timeClassLabel } from '../../../../domain/game/games.constants';
 
 jest.mock('nookies', () => ({
   parseCookies: jest.fn().mockReturnValue({}),
@@ -48,8 +50,35 @@ describe('UserForm', () => {
         expect(usernameInputElement.value).toBe('');
       });
 
-      test.todo('should render default timeframe option');
-      test.todo('should render default game type option');
+      test('should render default timeframe option', () => {
+        const { getAllByText } = render(
+          <TestWrapper>
+            <UserForm {...defaultProps} />
+          </TestWrapper>,
+        );
+
+        expect(() => getAllByText(timeframeLabel[Timeframe.SevenDays])).not.toThrow();
+      });
+
+      test('should render default game type option', () => {
+        const { getAllByText } = render(
+          <TestWrapper>
+            <UserForm {...defaultProps} />
+          </TestWrapper>,
+        );
+
+        expect(() => getAllByText(timeClassLabel[TimeClass.Rapid])).not.toThrow();
+      });
+
+      test('should render remember me default state', () => {
+        const { getByText } = render(
+          <TestWrapper>
+            <UserForm {...defaultProps} />
+          </TestWrapper>,
+        );
+
+        expect(() => getByText(/Remember Username/)).not.toThrow();
+      });
     });
   });
 

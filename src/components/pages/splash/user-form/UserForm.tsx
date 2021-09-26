@@ -88,13 +88,14 @@ export const UserForm: React.FC<IProps> = (props) => {
           <Grid.Row>
             <Grid.Column>
               <Form.Field>
-                <label>Timeframe</label>
+                <label htmlFor={'timeframe'}>Timeframe</label>
                 <Select
-                  name={'timeframe'}
-                  options={timeframeOptionList}
                   defaultValue={selectedTimeframe}
-                  onChange={(_, data) => setSelectedTimeframe(data.value as Timeframe)}
                   fluid={true}
+                  label={'Timeframe'}
+                  name={'timeframe'}
+                  onChange={(_, data) => setSelectedTimeframe(data.value as Timeframe)}
+                  options={timeframeOptionList}
                 />
               </Form.Field>
             </Grid.Column>
