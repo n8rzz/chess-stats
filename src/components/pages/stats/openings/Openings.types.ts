@@ -1,6 +1,6 @@
 import { WinLossDraw, PieceColor } from '../../../../domain/game/games.constants';
 import { GameCollection } from '../../../../domain/game/models/Game.collection';
-import { Timeframe } from '../app.constants';
+import { Timeframe } from '../StatsPage.constants';
 import { OpeningsActionName } from './Openings.constants';
 
 export interface IAction<T> {
@@ -8,6 +8,9 @@ export interface IAction<T> {
   type: T;
 }
 
+/**
+ * @deprecated
+ */
 export interface IAction_LEGACY<T> {
   payload: {
     collection: GameCollection | null;

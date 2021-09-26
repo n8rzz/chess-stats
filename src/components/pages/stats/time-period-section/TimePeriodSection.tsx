@@ -5,13 +5,13 @@ import { GameCollection } from '../../../../domain/game/models/Game.collection';
 import { TimePeriodSummary } from './TimePeriodSummary';
 import { PeriodGameSummaryCharts } from '../period-game-summary-charts/PeriodGameSummaryCharts';
 import { Openings } from '../openings/Openings';
-import { Timeframe } from '../app.constants';
 import { MovingAveragePeriod, TimeClass } from '../../../../domain/game/games.constants';
 import { CandlestickChart } from '../../../ui/candlestick-chart/CandlestickChart';
 import { AverageRatingChart } from '../../../ui/average-rating-chart/AverageRatingChart';
 import { OpponentRatingsScatterChart } from '../../../ui/opponent-ratings-scatter-chart/OpponentRatingsScatterChart';
 import { OpponentAccuracyScatterChart } from '../../../ui/accuracy-scatter-chart/AccuracyScatterChart';
 import { GameResultsOverTime } from '../game-results-over-time/GameResultsOverTime';
+import { Timeframe } from '../StatsPage.constants';
 
 interface IProps {
   gameCollection: GameCollection;
@@ -29,21 +29,28 @@ export const TimePeriodSection: React.FC<IProps> = (props) => {
     props.gameCollection.period,
     props.timeClass,
     props.timeframe,
+    props.isLoading,
   ]);
   const movingAverage = React.useMemo(() => {
     return props.gameCollection.calculateMovingAverageWithOhlcAndPeriod(ohlcData, movingAveragePeriod);
-  }, [movingAveragePeriod, props.gameCollection, props.timeClass, props.timeframe]);
+  }, [movingAveragePeriod, props.gameCollection, props.timeClass, props.timeframe, props.isLoading]);
+
+  if (props.gameCollection.length === 0) {
+    return null;
+  }
+
+  if (props.isLoading) {
+    return (
+      <Segment placeholder={true}>
+        <Dimmer active={true} inverted={true}>
+          <Loader content={'Loading...'} indeterminate={true} />
+        </Dimmer>
+      </Segment>
+    );
+  }
 
   return (
     <div>
-      {props.isLoading && (
-        <Segment placeholder={true}>
-          <Dimmer active={true} inverted={true}>
-            <Loader content={'Loading...'} indeterminate={true} />
-          </Dimmer>
-        </Segment>
-      )}
-
       <section className={styles.vr2}>
         <TimePeriodSummary
           earliestGameDate={props.gameCollection.findEarliestGameDate()?.toLocaleDateString()}

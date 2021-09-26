@@ -7,8 +7,8 @@ import { PieceColor, WinLossDraw } from '../../../../domain/game/games.constants
 import { reducer, buildInitialState } from './Openings.reducer';
 import { StackedBarChart } from '../../../ui/stacked-bar-chart/StackedBarChart';
 import { SelectedMoveList } from './selected-move-list/SelectedMoveList';
-import { Timeframe } from '../app.constants';
 import { OpeningsActionName } from './Openings.constants';
+import { Timeframe } from '../StatsPage.constants';
 
 interface IProps {
   collection: GameCollection;
