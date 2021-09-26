@@ -1,9 +1,9 @@
 import React from 'react';
 import styles from '../../../../styles/App.module.css';
-import { ICountByDate, IWinLossDrawByPeriod } from '../../../../domain/game/games.types';
+import { ICountByDate, IWinLossDrawSumByPeriod } from '../../../../domain/game/games.types';
 import { DetailedGameResultsChart } from '../../../ui/detailed-game-results-chart/DetailedGameResultsChart';
 import { WinLossMultiLineChart } from '../../../ui/win-loss-multi-line-chart/WinLossMultiLineChart';
-import { Menu, Dropdown, DropdownProps } from 'semantic-ui-react';
+import { Menu, Dropdown, DropdownProps, Checkbox } from 'semantic-ui-react';
 
 export enum GameResultsOverTimeView {
   DetailedResults = 'detailed-results',
@@ -17,13 +17,14 @@ export const gameResultsOverTimeViewTitleMap: Record<GameResultsOverTimeView, st
 
 interface IProps {
   countResultsByDate: ICountByDate;
-  countWinLossByPeriod: IWinLossDrawByPeriod;
+  countWinLossByPeriod: IWinLossDrawSumByPeriod;
 }
 
 export const GameResultsOverTime: React.FC<IProps> = (props) => {
   const [currentGameResultView, setCurrentGameResultView] = React.useState<GameResultsOverTimeView>(
     GameResultsOverTimeView.WinsAndLosses,
   );
+  const [shouldShowWinLossSumSeries, setShouldShowWinLossSumSeries] = React.useState<boolean>(true);
 
   const onChangeGameResultView = (nextValue: GameResultsOverTimeView) => {
     setCurrentGameResultView(nextValue);
@@ -37,27 +38,42 @@ export const GameResultsOverTime: React.FC<IProps> = (props) => {
             <h3>{gameResultsOverTimeViewTitleMap[currentGameResultView]}</h3>
           </li>
           <li>
-            <Menu compact={true}>
-              <Dropdown
-                compact={true}
-                simple={true}
-                item={true}
-                defaultValue={currentGameResultView}
-                onChange={(_, data: DropdownProps) => onChangeGameResultView(data?.value as GameResultsOverTimeView)}
-                options={[
-                  {
-                    key: 'wins-and-losses',
-                    text: 'Wins and Losses',
-                    value: GameResultsOverTimeView.WinsAndLosses,
-                  },
-                  {
-                    key: 'detailedResults',
-                    text: 'Detailed Results',
-                    value: GameResultsOverTimeView.DetailedResults,
-                  },
-                ]}
-              />
-            </Menu>
+            <ul className={styles.hlist}>
+              {currentGameResultView === GameResultsOverTimeView.WinsAndLosses && (
+                <li>
+                  <Checkbox
+                    defaultChecked={shouldShowWinLossSumSeries}
+                    label={'Show Sum'}
+                    onChange={() => setShouldShowWinLossSumSeries(!shouldShowWinLossSumSeries)}
+                  />
+                </li>
+              )}
+              <li>
+                <Menu compact={true}>
+                  <Dropdown
+                    compact={true}
+                    simple={true}
+                    item={true}
+                    defaultValue={currentGameResultView}
+                    onChange={(_, data: DropdownProps) =>
+                      onChangeGameResultView(data?.value as GameResultsOverTimeView)
+                    }
+                    options={[
+                      {
+                        key: 'wins-and-losses',
+                        text: 'Wins and Losses',
+                        value: GameResultsOverTimeView.WinsAndLosses,
+                      },
+                      {
+                        key: 'detailedResults',
+                        text: 'Detailed Results',
+                        value: GameResultsOverTimeView.DetailedResults,
+                      },
+                    ]}
+                  />
+                </Menu>
+              </li>
+            </ul>
           </li>
         </ul>
       </div>
@@ -66,7 +82,10 @@ export const GameResultsOverTime: React.FC<IProps> = (props) => {
         <DetailedGameResultsChart countByDate={props.countResultsByDate} />
       )}
       {currentGameResultView === GameResultsOverTimeView.WinsAndLosses && (
-        <WinLossMultiLineChart winLossByPeriod={props.countWinLossByPeriod} />
+        <WinLossMultiLineChart
+          shouldShowWinLossSumSeries={shouldShowWinLossSumSeries}
+          winLossByPeriod={props.countWinLossByPeriod}
+        />
       )}
     </React.Fragment>
   );

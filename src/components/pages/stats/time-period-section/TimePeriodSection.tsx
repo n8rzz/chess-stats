@@ -84,7 +84,7 @@ export const TimePeriodSection: React.FC<IProps> = (props) => {
         />
         <GameResultsOverTime
           countResultsByDate={props.gameCollection.countResultsByDate()}
-          countWinLossByPeriod={props.gameCollection.countWinLossByPeriod()}
+          countWinLossByPeriod={props.gameCollection.countWinLossByPeriodWithAverage()}
         />
         <OpponentAccuracyScatterChart
           title={'Accuracy'}
