@@ -117,6 +117,15 @@ export interface IWinLossDrawByPeriod {
   };
 }
 
+export interface IWinLossDrawSumByPeriod {
+  [key: string]: {
+    [WinLossDraw.Draw]: number;
+    [WinLossDraw.Loss]: number;
+    [WinLossDraw.Win]: number;
+    sum: number;
+  };
+}
+
 export type GameResultCountMap = Record<Partial<GameResult>, number>;
 
 export type SimpleGameResultCountMap = Record<Partial<WinLossDraw>, number>;
