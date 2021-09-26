@@ -1,6 +1,6 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
-import { TestWrapper } from '../../test/test.utils';
+import { TestWrapper } from '../../../test/test.utils';
 import { SplashPage } from './SplashPage';
 
 jest.mock('next/router', () => ({
