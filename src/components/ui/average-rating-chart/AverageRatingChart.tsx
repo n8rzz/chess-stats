@@ -5,6 +5,7 @@ import { IMovingAverageChartData } from '../../../domain/game/games.types';
 import { Menu, Dropdown, DropdownProps } from 'semantic-ui-react';
 import { MovingAveragePeriod } from '../../../domain/game/games.constants';
 import { Timeframe } from '../../pages/stats/StatsPage.constants';
+import { averageTimeframeOptionList } from './AverageRatingChart.constants';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
@@ -17,31 +18,6 @@ interface IProps {
 }
 
 export const AverageRatingChart: React.FC<IProps> = (props) => {
-  const averageTimeframeOptionList = React.useMemo(() => {
-    return [
-      {
-        key: '5-days',
-        text: '5 Days',
-        value: MovingAveragePeriod.FiveDays,
-      },
-      {
-        key: '10-days',
-        text: '10 Days',
-        value: MovingAveragePeriod.TenDays,
-      },
-      {
-        key: '15-days',
-        text: '15 Days',
-        value: MovingAveragePeriod.FifteenDays,
-      },
-      {
-        key: '30-days',
-        text: '30 Days',
-        value: MovingAveragePeriod.ThirtyDays,
-      },
-    ];
-  }, [props.timeframe]);
-
   const movingAverageChartData = React.useMemo(() => {
     return props.movingAverage.map((item: IMovingAverageChartData) => ({
       x: item.date,
@@ -64,7 +40,7 @@ export const AverageRatingChart: React.FC<IProps> = (props) => {
                 item={true}
                 defaultValue={props.movingAveragePeriod}
                 onChange={(_, data: DropdownProps) => props.onChangeMovingAverage(data?.value as MovingAveragePeriod)}
-                options={averageTimeframeOptionList}
+                options={averageTimeframeOptionList[props.timeframe]}
               />
             </Menu>
           </li>
