@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { Button, Select, Grid, GridColumn } from 'semantic-ui-react';
 import clsx from 'clsx';
 import styles from '../../../styles/App.module.css';
 import { getArchives, getHistorcialGamesFromArchiveList } from '../../../domain/game/games.service';
@@ -8,17 +7,17 @@ import { getPlayerStats } from '../../../domain/player/player.service';
 import { IPlayerStats } from '../../../domain/player/player.types';
 import { TimePeriodSection } from './time-period-section/TimePeriodSection';
 import { PlayerStats } from './player-stats/PlayerStats';
-import { timeClassOptionList, Timeframe, timeframeLabel, timeframeToPeriod } from './StatsPage.constants';
+import { Timeframe, timeframeToPeriod } from './StatsPage.constants';
 import { TimeClass } from '../../../domain/game/games.constants';
 import { appInsights, reactPlugin } from '../../context/AppInsightsContextProvider';
 import { AppHeader } from '../shared/app-header/AppHeader';
 import { useRouter } from 'next/router';
-import { NextComponentType } from 'next';
 import { PageLoader } from '../shared/page-loader/PageLoader';
+import { TimeOptions } from './time-options/TimeOptions';
 
-// interface IProps {}
+interface IProps {}
 
-export const StatsPage: NextComponentType = () => {
+export const StatsPage: React.FC<IProps> = (props) => {
   const router = useRouter();
   const [isDataLoading, setIsDataLoading] = React.useState<boolean>(false);
   const [playerStatsModel, setPlayerStatsModel] = React.useState<IPlayerStats>(undefined as any);
@@ -111,68 +110,39 @@ export const StatsPage: NextComponentType = () => {
     [isDataLoading, activeTimeframe],
   );
 
-  if (isLoading) {
-    return (
-      <React.Fragment>
-        <AppHeader isLoading={isLoading} username={gameCollection?.username} />
-        <PageLoader isActive={isLoading} />
-      </React.Fragment>
-    );
-  }
-
   return (
     <React.Fragment>
       <AppHeader isLoading={isLoading} username={gameCollection?.username} />
 
-      <React.Fragment>
-        <div className={clsx(styles.container, styles.vr3)}>
-          <div className={styles.vr2}>
-            <Grid>
-              <Grid.Row>
-                <GridColumn width={4}>
-                  <Select
-                    name={'timeClass'}
-                    options={timeClassOptionList}
-                    defaultValue={activeTimeClass}
-                    onChange={(_, data) => setActiveTimeClass(data.value as TimeClass)}
-                    fluid={true}
-                  />
-                </GridColumn>
-                <GridColumn width={8}>
-                  <Button.Group>
-                    {Object.keys(timeframeLabel).map((key: string) => (
-                      <Button
-                        active={activeTimeframe === key}
-                        disabled={activeTimeframe === key}
-                        toggle={true}
-                        size={'tiny'}
-                        key={`${key}-btn`}
-                        onClick={() => onClickPeriodButton(key as Timeframe)}
-                      >
-                        {timeframeLabel[key as Timeframe]}
-                      </Button>
-                    ))}
-                  </Button.Group>
-                </GridColumn>
-              </Grid.Row>
-            </Grid>
+      {isLoading && <PageLoader isActive={isLoading} />}
+      {!isLoading && (
+        <React.Fragment>
+          <div className={clsx(styles.container, styles.vr3)}>
+            <div className={styles.vr2}>
+              <TimeOptions
+                activeTimeClass={activeTimeClass}
+                activeTimeframe={activeTimeframe}
+                onChangeActiveTimeClass={setActiveTimeClass}
+                onClickPeriodButton={onClickPeriodButton}
+              />
+            </div>
+
+            <TimePeriodSection
+              gameCollection={collectionForTimeframeAndTimeClass}
+              isLoading={isLoading}
+              timeClass={activeTimeClass}
+              timeframe={activeTimeframe}
+            />
           </div>
 
-          <TimePeriodSection
-            gameCollection={collectionForTimeframeAndTimeClass}
+          <PlayerStats
+            highLow={playerStatsModel?.tactics}
             isLoading={isLoading}
-            timeClass={activeTimeClass}
-            timeframe={activeTimeframe}
+            label={'Rapid'}
+            stats={playerStatsModel?.chess_rapid}
           />
-        </div>
-
-        <PlayerStats
-          highLow={playerStatsModel?.tactics}
-          isLoading={isLoading}
-          label={'Rapid'}
-          stats={playerStatsModel?.chess_rapid}
-        />
-      </React.Fragment>
+        </React.Fragment>
+      )}
     </React.Fragment>
   );
 };
