@@ -1,4 +1,5 @@
 import React from 'react';
+import { observer } from 'mobx-react-lite';
 import { Dimmer, Loader, Segment } from 'semantic-ui-react';
 import styles from '../../../../styles/App.module.css';
 import { GameCollection } from '../../../../domain/game/models/Game.collection';
@@ -20,7 +21,7 @@ interface IProps {
   timeframe: Timeframe;
 }
 
-export const TimePeriodSection: React.FC<IProps> = (props) => {
+export const TimePeriodSection: React.FC<IProps> = observer((props) => {
   const [movingAveragePeriod, setMovingAveragePeriod] = React.useState<MovingAveragePeriod>(
     MovingAveragePeriod.FiveDays,
   );
@@ -98,7 +99,7 @@ export const TimePeriodSection: React.FC<IProps> = (props) => {
       <Openings collection={props.gameCollection} timeframe={props.timeframe} />
     </div>
   );
-};
+});
 
 TimePeriodSection.displayName = 'TimePeriodSection';
 TimePeriodSection.defaultProps = {};

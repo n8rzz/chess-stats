@@ -1,5 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
+import { observer } from 'mobx-react-lite';
 import dynamic from 'next/dynamic';
 import { Card, Dimmer, Loader, Segment } from 'semantic-ui-react';
 import styles from '../../../../styles/App.module.css';
@@ -15,8 +16,12 @@ interface IProps {
   stats: IChessStats;
 }
 
-export const PlayerStats: React.FC<IProps> = (props) => {
-  if (props.isLoading) {
+export const PlayerStats: React.FC<IProps> = observer((props) => {
+  const isLoading = React.useMemo(() => {
+    return props.isLoading && !props.highLow && !props.stats;
+  }, [props.isLoading, props.highLow, props.stats]);
+
+  if (isLoading) {
     return (
       <Segment placeholder={true}>
         <Dimmer active={true} inverted={true}>
@@ -85,7 +90,7 @@ export const PlayerStats: React.FC<IProps> = (props) => {
       </Card.Group>
     </div>
   );
-};
+});
 
 PlayerStats.displayName = 'PlayerStats';
 PlayerStats.defaultProps = {};

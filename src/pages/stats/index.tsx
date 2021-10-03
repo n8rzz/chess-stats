@@ -1,6 +1,14 @@
-import React, { ReactElement } from 'react';
+import React, { useState } from 'react';
+import { observer } from 'mobx-react-lite';
 import { StatsPage } from '../../components/pages/stats/StatsPage';
+import { StatsPageStore } from '../../components/pages/stats/StatsPage.store';
 
-export default function StatsPageRoute(): ReactElement {
-  return <StatsPage />;
-}
+interface IProps {}
+
+export const StatsPageRoute: React.FC<IProps> = observer((props) => {
+  const [localStore] = useState(() => new StatsPageStore());
+
+  return <StatsPage localStore={localStore} />;
+});
+
+export default StatsPageRoute;

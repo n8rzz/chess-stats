@@ -4,6 +4,7 @@ import { StatsPage } from './StatsPage';
 import { TestWrapper } from '../../../test/test.utils';
 import { Timeframe } from './StatsPage.constants';
 import { TimeClass } from '../../../domain/game/games.constants';
+import { StatsPageStore } from './StatsPage.store';
 
 jest.mock('../../../domain/game/games.service');
 jest.mock('../../../domain/player/player.service');
@@ -27,7 +28,7 @@ describe('StatsPage', () => {
     expect(() =>
       render(
         <TestWrapper>
-          <StatsPage />
+          <StatsPage localStore={new StatsPageStore()} />
         </TestWrapper>,
       ),
     ).not.toThrow();
