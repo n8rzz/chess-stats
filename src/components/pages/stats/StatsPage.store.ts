@@ -64,9 +64,9 @@ export class StatsPageStore {
   }
 
   async loadPlayerStats(username: string): Promise<void> {
-    runInAction(async () => {
-      const res = await getPlayerStats(username);
+    const res = await getPlayerStats(username);
 
+    runInAction(async () => {
       this.playerStatsModel = {
         isRequesting: false,
         data: res,
@@ -75,10 +75,10 @@ export class StatsPageStore {
   }
 
   async loadGameArchives(username: string): Promise<void> {
-    runInAction(async () => {
-      const gameList = await getArchives(username);
-      const collection = await getHistorcialGamesFromArchiveList(gameList, username);
+    const gameList = await getArchives(username);
+    const collection = await getHistorcialGamesFromArchiveList(gameList, username);
 
+    runInAction(async () => {
       this._gameCollection = {
         isRequesting: false,
         data: collection,
