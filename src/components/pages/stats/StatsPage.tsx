@@ -1,29 +1,37 @@
 import React, { useEffect } from 'react';
 import clsx from 'clsx';
+import { observer } from 'mobx-react-lite';
+import { useRouter } from 'next/router';
 import styles from '../../../styles/App.module.css';
 import { getArchives, getHistorcialGamesFromArchiveList } from '../../../domain/game/games.service';
 import { GameCollection } from '../../../domain/game/models/Game.collection';
 import { getPlayerStats } from '../../../domain/player/player.service';
 import { IPlayerStats } from '../../../domain/player/player.types';
 import { TimePeriodSection } from './time-period-section/TimePeriodSection';
-import { PlayerStats } from './player-stats/PlayerStats';
-import { Timeframe, timeframeToPeriod } from './StatsPage.constants';
 import { TimeClass } from '../../../domain/game/games.constants';
 import { appInsights, reactPlugin } from '../../context/AppInsightsContextProvider';
 import { AppHeader } from '../shared/app-header/AppHeader';
-import { useRouter } from 'next/router';
 import { PageLoader } from '../shared/page-loader/PageLoader';
+import { PlayerStats } from './player-stats/PlayerStats';
+import { Timeframe, timeframeToPeriod } from './StatsPage.constants';
 import { TimeOptions } from './time-options/TimeOptions';
+import { StatsPageStore } from './StatsPage.store';
 
-interface IProps {}
+interface IProps {
+  localStore: StatsPageStore;
+}
 
-export const StatsPage: React.FC<IProps> = (props) => {
+export const StatsPage: React.FC<IProps> = observer((props) => {
   const router = useRouter();
   const [isDataLoading, setIsDataLoading] = React.useState<boolean>(false);
   const [playerStatsModel, setPlayerStatsModel] = React.useState<IPlayerStats>(undefined as any);
   const [activeTimeClass, setActiveTimeClass] = React.useState<TimeClass>(TimeClass.Rapid);
   const [activeTimeframe, setActiveTimeframe] = React.useState<Timeframe>(Timeframe.SevenDays);
   const [gameCollection, setGameCollection] = React.useState<GameCollection>(new GameCollection('', [], 0));
+
+  useEffect(() => {
+    props.localStore.init();
+  }, [props.localStore]);
 
   useEffect(() => {
     if (!router.isReady) {
@@ -145,7 +153,7 @@ export const StatsPage: React.FC<IProps> = (props) => {
       )}
     </React.Fragment>
   );
-};
+});
 
 StatsPage.displayName = 'StatsPage';
 StatsPage.defaultProps = {};
