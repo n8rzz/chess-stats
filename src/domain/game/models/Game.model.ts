@@ -145,24 +145,86 @@ export class GameModel implements IGame {
     };
   }
 
-  private buildMoveKey(moveGroup: PgnItem[]): string {
-    let key = moveGroup[0].notation.notation;
+  /**
+   * Generates a move key for a pair of moves separated by a `:`
+   *
+   * when only one move exists (white won), will return only that move
+   */
+  private buildMoveKey(movePair: PgnItem[]): string {
+    let key = movePair[0].notation.notation;
 
-    if (moveGroup.length > 1) {
-      key = `${key}:${moveGroup[1].notation.notation}`;
+    if (movePair.length > 1) {
+      key = `${key}:${movePair[1].notation.notation}`;
     }
 
     return key;
   }
 
+  /**
+   * Builds a list of white:black moves for an entire game.
+   *
+   * Given a game of:
+   *
+   * ```
+   * 1. e4 e5 2. Bc4 Nc6 3. Qf3 Bc5 4. Qxf7#
+   * ```
+   *
+   * This will result in a #moveList of:
+   *
+   * ```js
+   * ['e4:e5', 'Bc4:Nc6', 'Qf3:Bc5', 'Qxf7#']
+   * ```
+   *
+   */
   private _buildMoveList(): void {
-    const chunkedMoves = chunk(this.pgn_json, 2);
+    const chunkedMoves = this._chunkPgnMoveList();
 
     this.moveList = chunkedMoves.map((moveGroup: PgnItem[]) => this.buildMoveKey(moveGroup));
   }
 
+  /**
+   * Starts from the last move in a game and builds up a tree of moves and result for an entire game.
+   *
+   * Given a game of:
+   *
+   * ```
+   * 1. e4 e5 2. Bc4 Nc6 3. Qf3 Bc5 4. Qxf7#
+   * ```
+   *
+   * This will result in a #moveTree of:
+   *
+   * ```json
+   * {
+   *   "e4:e5": {
+   *       "Bc4:Nc6": {
+   *           "Qf3:Bc5": {
+   *               "Qxf7#": {
+   *                   "results": {
+   *                       "win": 1
+   *                   }
+   *               },
+   *               "results": {
+   *                   "win": 1
+   *               }
+   *           },
+   *           "results": {
+   *               "win": 1
+   *           }
+   *       },
+   *       "results": {
+   *           "win": 1
+   *       }
+   *   }
+   * }
+   * ```
+   *
+   * This structure will later be used by the `GameCollection`, where each `GameModel.moveTree` is merged
+   * to build a tree of all moves for every game and result. This later supports the `Openings`
+   * section of the app, and allows users to drill into each move for every game and see results
+   * for each move.
+   */
   private _buildMoveTree(): void {
-    const chunkedMoves = chunk(this.pgn_json, 2);
+    const chunkedMoves = this._chunkPgnMoveList();
     const result = this.getResult(this._username);
     const ratingEffect = gameResultToWinLossDraw[result];
 
@@ -178,6 +240,14 @@ export class GameModel implements IGame {
         },
       };
     }, {});
+  }
+
+  /**
+   * Groups a game's pgn move list into a 2D array of moves. Each interior
+   * array represents one move for white and one move for black.
+   */
+  private _chunkPgnMoveList(size = 2): PgnItem[][] {
+    return chunk(this.pgn_json, size);
   }
 
   private _parsePgn(rawPgn: string): void {
