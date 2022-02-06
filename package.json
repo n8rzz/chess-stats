@@ -30,6 +30,8 @@
     "@mliebelt/pgn-parser": "1.2.6",
     "apexcharts": "3.26.0",
     "axios": "0.21.1",
+    "chess-eco-codes": "0.0.0",
+    "chess.js": "0.12.1",
     "clsx": "1.1.1",
     "date-fns": "2.21.1",
     "lodash.chunk": "4.2.0",

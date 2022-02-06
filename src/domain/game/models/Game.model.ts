@@ -17,16 +17,18 @@ export class GameModel implements IGame {
   public readonly end_time: number = -1;
   public readonly fen: string = '';
   public readonly initial_setup: string = '';
-  public moveList: string[] = [];
-  public moveTree: any = {};
   public readonly pgn: string = '';
-  public pgn_json: PgnItem[] = [];
   public readonly rated: boolean = false;
   public readonly rules: ChessRules = ChessRules.Chess;
   public readonly time_class: TimeClass = TimeClass.Rapid;
   public readonly time_control: string = '';
   public readonly url: string = '';
   public readonly white: IGamePlayer = {} as IGamePlayer;
+
+  public moveList: string[] = [];
+  public moveTree: any = {};
+  public openingTree: any = {};
+  public pgn_json: PgnItem[] = [];
 
   private _username: string = '';
 
@@ -78,6 +80,7 @@ export class GameModel implements IGame {
     this._parsePgn(json.pgn);
     this._buildMoveList();
     this._buildMoveTree();
+    this._buildOpeningTree();
   }
 
   public buildWhiteBlackMoveKeyForMoveNumber(moveNumber: number): string {
@@ -242,12 +245,31 @@ export class GameModel implements IGame {
     }, {});
   }
 
+  private _buildOpeningTree(): void {
+    const openingsList = this._findOpeningsForMoveList();
+
+    console.log('+++ _buildOpeningTree', openingsList);
+
+    // loop through openings in reverse order
+    // build object with openeing name as key and value as meta + result
+  }
+
   /**
    * Groups a game's pgn move list into a 2D array of moves. Each interior
    * array represents one move for white and one move for black.
    */
   private _chunkPgnMoveList(size = 2): PgnItem[][] {
     return chunk(this.pgn_json, size);
+  }
+
+  private _findOpeningsForMoveList(): any[] {
+    // create chess.js game
+    // add move
+    // generate fen
+    // query chess-eco-codes for openeing
+    // add opening meta to array
+
+    return [];
   }
 
   private _parsePgn(rawPgn: string): void {
