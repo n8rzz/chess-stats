@@ -18,10 +18,6 @@ jest.mock('next/router', () => ({
     },
   }),
 }));
-jest.mock('../../context/AppInsightsContextProvider', () => ({
-  appInsights: jest.fn(),
-  reactPlugin: jest.fn(),
-}));
 
 describe('StatsPage', () => {
   test('does not throw with valid props', () => {

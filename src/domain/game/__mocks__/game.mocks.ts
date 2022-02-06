@@ -1,6 +1,9 @@
 import { TimeClass, ChessRules, GameResult, PgnTurn } from '../games.constants';
 import { IGame, PgnItem } from '../games.types';
 
+// FIXME: #initial_setup is the same for each record, and possibly incorrect
+//        adding as a placeholder until the prop is actually in use
+
 export const validGameResponse: IGame = {
   accuracies: {
     black: 50.2,
@@ -15,6 +18,7 @@ export const validGameResponse: IGame = {
   end_time: 1618627850,
   rated: true,
   fen: 'N1b3k1/pp3ppp/2n1p3/8/5Q2/2b5/P1P3PP/R1Bq1K1n w - -',
+  initial_setup: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
   time_class: TimeClass.Rapid,
   rules: ChessRules.Chess,
   white: {
@@ -191,6 +195,7 @@ export const gameResponseWithWhiteWinner = {
   },
   end_time: 1618639614,
   fen: 'r2q2k1/ppp2pQp/6pn/7N/8/1B6/P1P2K1P/8 b - -',
+  initial_setup: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
   pgn:
     '[Event "Live Chess"]\n[Site "Chess.com"]\n[Date "2021.04.17"]\n[Round "-"]\n[White "n8rzz"]\n[Black "fistyourface"]\n[Result "1-0"]\n[CurrentPosition "r2q2k1/ppp2pQp/6pn/7N/8/1B6/P1P2K1P/8 b - -"]\n[Timezone "UTC"]\n[ECO "C55"]\n[ECOUrl "https://www.chess.com/openings/Italian-Game-Two-Knights-Defense-4.O-O"]\n[UTCDate "2021.04.17"]\n[UTCTime "05:57:20"]\n[WhiteElo "661"]\n[BlackElo "605"]\n[TimeControl "600"]\n[Termination "n8rzz won by checkmate"]\n[StartTime "05:57:20"]\n[EndDate "2021.04.17"]\n[EndTime "06:06:54"]\n[Link "https://www.chess.com/game/live/12377833777"]\n\n1. e4 {[%clk 0:10:00]} 1... e5 {[%clk 0:10:00]} 2. Nf3 {[%clk 0:09:56.9]} 2... Nc6 {[%clk 0:09:56.8]} 3. Bc4 {[%clk 0:09:53.4]} 3... Nf6 {[%clk 0:09:48.3]} 4. O-O {[%clk 0:09:52]} 4... d5 {[%clk 0:09:40.5]} 5. Bb3 {[%clk 0:09:45]} 5... dxe4 {[%clk 0:09:30.6]} 6. Ne1 {[%clk 0:09:35]} 6... Bg4 {[%clk 0:09:17.4]} 7. f3 {[%clk 0:09:32.1]} 7... exf3 {[%clk 0:09:14.6]} 8. gxf3 {[%clk 0:09:28.8]} 8... Bc5+ {[%clk 0:09:04.3]} 9. d4 {[%clk 0:09:21.9]} 9... Bxd4+ {[%clk 0:08:57.5]} 10. Kg2 {[%clk 0:09:16.2]} 10... Bh5 {[%clk 0:08:43.2]} 11. Nd3 {[%clk 0:09:10.1]} 11... O-O {[%clk 0:08:31.4]} 12. Qe1 {[%clk 0:09:00.6]} 12... Re8 {[%clk 0:08:19.9]} 13. Qg3 {[%clk 0:08:55.4]} 13... g6 {[%clk 0:07:44.4]} 14. Bh6 {[%clk 0:08:41.2]} 14... Bxb2 {[%clk 0:07:13.9]} 15. Nd2 {[%clk 0:08:33.2]} 15... Bxa1 {[%clk 0:06:55.5]} 16. Rxa1 {[%clk 0:08:29.5]} 16... e4 {[%clk 0:06:38.5]} 17. fxe4 {[%clk 0:08:22.3]} 17... Nxe4 {[%clk 0:06:24.1]} 18. Nxe4 {[%clk 0:07:42.1]} 18... Rxe4 {[%clk 0:06:19.8]} 19. Re1 {[%clk 0:07:40.7]} 19... Rxe1 {[%clk 0:05:37.1]} 20. Qxe1 {[%clk 0:07:38.5]} 20... Ne7 {[%clk 0:05:06]} 21. Qc3 {[%clk 0:07:24.4]} 21... Nf5 {[%clk 0:04:50.8]} 22. Nf4 {[%clk 0:07:18]} 22... Ne3+ {[%clk 0:04:35.6]} 23. Kf2 {[%clk 0:07:12.1]} 23... Nf5 {[%clk 0:03:37]} 24. Nxh5 {[%clk 0:07:08.1]} 24... Nxh6 {[%clk 0:03:32.7]} 25. Qg7# {[%clk 0:07:06.5]} 1-0\n',
   pgn_json: {},

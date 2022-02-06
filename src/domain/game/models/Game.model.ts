@@ -16,6 +16,7 @@ export class GameModel implements IGame {
   public readonly black: IGamePlayer = {} as IGamePlayer;
   public readonly end_time: number = -1;
   public readonly fen: string = '';
+  public readonly initial_setup: string = '';
   public moveList: string[] = [];
   public moveTree: any = {};
   public readonly pgn: string = '';
@@ -63,6 +64,7 @@ export class GameModel implements IGame {
     this.black = json.black;
     this.end_time = json.end_time;
     this.fen = json.fen;
+    this.initial_setup = json.initial_setup;
     this.pgn = json.pgn;
     this.rated = json.rated;
     this.rules = json.rules;
@@ -131,6 +133,7 @@ export class GameModel implements IGame {
       black: this.black,
       end_time: this.end_time,
       fen: this.fen,
+      initial_setup: this.initial_setup,
       pgn: this.pgn,
       pgn_json: this.pgn_json,
       rated: this.rated,

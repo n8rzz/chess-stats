@@ -4,7 +4,6 @@ import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 import styles from '../../../styles/App.module.css';
 import { TimePeriodSection } from './time-period-section/TimePeriodSection';
-import { reactPlugin } from '../../context/AppInsightsContextProvider';
 import { AppHeader } from '../shared/app-header/AppHeader';
 import { PageLoader } from '../shared/page-loader/PageLoader';
 import { PlayerStats } from './player-stats/PlayerStats';
@@ -29,7 +28,6 @@ export const StatsPage: React.FC<IProps> = observer((props) => {
 
   const onClickPeriodButton = React.useCallback(
     (nextTimeframe: Timeframe) => {
-      reactPlugin?.trackEvent({ name: 'ChangeTimePeriod' }, { timeframe: nextTimeframe });
       props.localStore.setActiveTimeframe(nextTimeframe);
     },
     [props.localStore.isStoreReady, props.localStore.activeTimeframe],

@@ -17,6 +17,7 @@ export interface IGame {
   black: IGamePlayer;
   end_time: number;
   fen: string;
+  initial_setup: string;
   pgn: string;
   pgn_json: any;
   rated: boolean;

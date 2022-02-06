@@ -6,7 +6,6 @@ import { GameCollection } from '../../../domain/game/models/Game.collection';
 import { getPlayerStats } from '../../../domain/player/player.service';
 import { IPlayerStats } from '../../../domain/player/player.types';
 import { initialResponseStatus } from '../../../util/mobx/mobx.utils';
-import { appInsights } from '../../context/AppInsightsContextProvider';
 import { Timeframe, timeframeToPeriod } from './StatsPage.constants';
 
 export class StatsPageStore {
@@ -45,7 +44,6 @@ export class StatsPageStore {
   }
 
   *init(): any {
-    const provider = Router.router?.query?.provider as string;
     const username = Router.router?.query?.username as string;
     const timeframe = Router.router?.query?.timeframe as Timeframe;
     const timeclass = Router.router?.query?.timeClass as TimeClass;
@@ -56,9 +54,6 @@ export class StatsPageStore {
     });
 
     yield Promise.all([this.loadPlayerStats(username), this.loadGameArchives(username)]);
-
-    appInsights?.setAuthenticatedUserContext(username, provider, true);
-    appInsights?.startTrackEvent('DataLoad');
 
     this.isStoreReady = true;
   }
