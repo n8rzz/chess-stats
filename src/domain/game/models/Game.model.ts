@@ -1,5 +1,7 @@
 // @ts-ignore
 import * as parser from '@mliebelt/pgn-parser';
+import Chess from 'chess.js';
+import ChessEcoCodes from 'chess-eco-codes';
 import chunk from 'lodash.chunk';
 import {
   ChessRules,
@@ -60,6 +62,10 @@ export class GameModel implements IGame {
     end.setUTCSeconds(this.end_time);
 
     return end;
+  }
+
+  get moves(): string[] {
+    return this.pgn_json.map((pgn: PgnItem) => pgn.notation.notation);
   }
 
   constructor(json: IGame, username: string) {
@@ -246,9 +252,11 @@ export class GameModel implements IGame {
   }
 
   private _buildOpeningTree(): void {
+    const result = this.getResult(this._username);
+    const ratingEffect = gameResultToWinLossDraw[result];
     const openingsList = this._findOpeningsForMoveList();
 
-    console.log('+++ _buildOpeningTree', openingsList);
+    console.log('+++ _buildOpeningTree', result, ratingEffect, openingsList);
 
     // loop through openings in reverse order
     // build object with openeing name as key and value as meta + result
@@ -263,13 +271,27 @@ export class GameModel implements IGame {
   }
 
   private _findOpeningsForMoveList(): any[] {
-    // create chess.js game
-    // add move
-    // generate fen
-    // query chess-eco-codes for openeing
-    // add opening meta to array
+    const openingList = [];
+    const game = new Chess();
 
-    return [];
+    for (let i = 0; i < this.moves.length; i++) {
+      const move = this.moves[i];
+
+      game.move(move);
+      const openingMeta = ChessEcoCodes(game.fen());
+
+      if (!openingMeta && i > 1) {
+        break;
+      }
+
+      if (!openingMeta) {
+        continue;
+      }
+
+      openingList.push(openingMeta);
+    }
+
+    return openingList;
   }
 
   private _parsePgn(rawPgn: string): void {
