@@ -1,8 +1,7 @@
-// @ts-ignore
 import * as parser from '@mliebelt/pgn-parser';
-import Chess from 'chess.js';
 import ChessEcoCodes from 'chess-eco-codes';
 import chunk from 'lodash.chunk';
+import { ChessEngineService } from '../../chess-engine/ChessEngine.service';
 import {
   ChessRules,
   TimeClass,
@@ -32,6 +31,7 @@ export class GameModel implements IGame {
   public openingTree: any = {};
   public pgn_json: PgnItem[] = [];
 
+  private _chessEngineService: ChessEngineService = null;
   private _username: string = '';
 
   /**
@@ -68,7 +68,7 @@ export class GameModel implements IGame {
     return this.pgn_json.map((pgn: PgnItem) => pgn.notation.notation);
   }
 
-  constructor(json: IGame, username: string) {
+  constructor(json: IGame, username: string, chessEngineService: ChessEngineService) {
     this.black = json.black;
     this.end_time = json.end_time;
     this.fen = json.fen;
@@ -80,6 +80,7 @@ export class GameModel implements IGame {
     this.time_control = json.time_control;
     this.url = json.url;
     this.white = json.white;
+    this._chessEngineService = chessEngineService;
     this._username = username ?? this._username;
 
     this._setAccuracies(json.accuracies);
@@ -272,13 +273,14 @@ export class GameModel implements IGame {
 
   private _findOpeningsForMoveList(): any[] {
     const openingList = [];
-    const game = new Chess();
+
+    this._chessEngineService.init();
 
     for (let i = 0; i < this.moves.length; i++) {
       const move = this.moves[i];
 
-      game.move(move);
-      const openingMeta = ChessEcoCodes(game.fen());
+      this._chessEngineService.move(move);
+      const openingMeta = ChessEcoCodes(this._chessEngineService.fen());
 
       if (!openingMeta && i > 1) {
         break;

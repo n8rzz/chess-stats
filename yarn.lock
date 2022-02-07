@@ -1520,6 +1520,11 @@
     "@types/node" "*"
     "@types/responselike" "*"
 
+"@types/chess.js@0.11.2":
+  version "0.11.2"
+  resolved "https://registry.yarnpkg.com/@types/chess.js/-/chess.js-0.11.2.tgz#e5d5f502b38f24efe854572ee33a939e1e395005"
+  integrity sha512-ZgT0f5Dm1x+kjA/RhCQpBM2NoUGkdk9JFdwncW7/GdqzHCOkLsOTq4k/EKRiRTCFLXR4fTKk8j7KNOmzzHQVgg==
+
 "@types/date-fns@2.6.0":
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/@types/date-fns/-/date-fns-2.6.0.tgz#b062ca46562002909be0c63a6467ed173136acc1"
