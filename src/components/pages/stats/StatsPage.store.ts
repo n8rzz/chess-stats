@@ -1,5 +1,6 @@
 import { makeAutoObservable, runInAction } from 'mobx';
 import Router from 'next/router';
+import { ChessEngineService } from '../../../domain/chess-engine/ChessEngine.service';
 import { TimeClass } from '../../../domain/game/games.constants';
 import { getArchives, getHistorcialGamesFromArchiveList } from '../../../domain/game/games.service';
 import { GameCollection } from '../../../domain/game/models/Game.collection';
@@ -28,7 +29,7 @@ export class StatsPageStore {
   }
 
   get gameCollection(): GameCollection {
-    return this._gameCollection.data ?? new GameCollection('', [], -1);
+    return this._gameCollection.data ?? new GameCollection('', [], -1, new ChessEngineService());
   }
 
   get username(): string {

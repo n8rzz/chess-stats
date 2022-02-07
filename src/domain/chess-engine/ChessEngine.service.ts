@@ -1,12 +1,6 @@
-import { Chess } from 'chess.js';
+import * as Chess from 'chess.js';
 import { ChessInstance } from 'chess.js';
-
-export interface IChessEngineService {
-  clear: () => void;
-  fen: () => string;
-  init: () => void;
-  move: (nextMove: string) => void;
-}
+import { IChessEngineService } from './ChessEngine.types';
 
 export class ChessEngineService implements IChessEngineService {
   private _game!: ChessInstance;
@@ -28,7 +22,8 @@ export class ChessEngineService implements IChessEngineService {
       this._game.clear();
     }
 
-    this._game = new Chess();
+    // @ts-ignore
+    this._game = Chess();
   }
 
   fen(): string {

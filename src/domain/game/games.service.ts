@@ -3,6 +3,7 @@ import { flatten } from 'lodash';
 import { GameCollection } from './models/Game.collection';
 import { IGame, IGameArchiveListResponse, IGameArchiveResponse } from './games.types';
 import { ApiUrl } from '../../constants/api-url.constants';
+import { ChessEngineService } from '../chess-engine/ChessEngine.service';
 
 export const getArchives = async (username: string): Promise<string[]> => {
   const url = ApiUrl.GameArchives.replace(':username', username);
@@ -38,5 +39,5 @@ export const getHistorcialGamesFromArchiveList = async (
 
   const flatGameList = flatten(gameArchiveForMonthRequestList);
 
-  return Promise.resolve(new GameCollection(username, flatGameList, flatGameList.length));
+  return Promise.resolve(new GameCollection(username, flatGameList, flatGameList.length, new ChessEngineService()));
 };

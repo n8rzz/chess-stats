@@ -1,7 +1,7 @@
 import * as parser from '@mliebelt/pgn-parser';
 import ChessEcoCodes from 'chess-eco-codes';
 import chunk from 'lodash.chunk';
-import { ChessEngineService } from '../../chess-engine/ChessEngine.service';
+import { IChessEngineService } from '../../chess-engine/ChessEngine.types';
 import {
   ChessRules,
   TimeClass,
@@ -31,7 +31,7 @@ export class GameModel implements IGame {
   public openingTree: any = {};
   public pgn_json: PgnItem[] = [];
 
-  private _chessEngineService: ChessEngineService = null;
+  private _chessEngineService: IChessEngineService = null as any;
   private _username: string = '';
 
   /**
@@ -68,7 +68,7 @@ export class GameModel implements IGame {
     return this.pgn_json.map((pgn: PgnItem) => pgn.notation.notation);
   }
 
-  constructor(json: IGame, username: string, chessEngineService: ChessEngineService) {
+  constructor(json: IGame, username: string, chessEngineService: IChessEngineService) {
     this.black = json.black;
     this.end_time = json.end_time;
     this.fen = json.fen;
@@ -254,10 +254,12 @@ export class GameModel implements IGame {
 
   private _buildOpeningTree(): void {
     const result = this.getResult(this._username);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const ratingEffect = gameResultToWinLossDraw[result];
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const openingsList = this._findOpeningsForMoveList();
 
-    console.log('+++ _buildOpeningTree', result, ratingEffect, openingsList);
+    // console.log('+++ _buildOpeningTree', result, ratingEffect, openingsList);
 
     // loop through openings in reverse order
     // build object with openeing name as key and value as meta + result

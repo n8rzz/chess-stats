@@ -22,7 +22,6 @@ interface IProps {
 }
 
 export const TimePeriodSection: React.FC<IProps> = observer((props) => {
-  console.log('---', props.gameCollection);
   const [movingAveragePeriod, setMovingAveragePeriod] = React.useState<MovingAveragePeriod>(
     MovingAveragePeriod.FiveDays,
   );

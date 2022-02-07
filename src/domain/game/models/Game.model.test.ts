@@ -1,19 +1,21 @@
 import { gameResponseWithWhiteWinner, validGameResponse } from '../__mocks__/game.mocks';
 import { IGame } from '../games.types';
 import { GameModel } from './Game.model';
+import { ChessEngineServiceFixture } from '../../chess-engine/__mocks__/ChessEngine.service.fixture';
 
 describe('GameModel', () => {
   const usernameMock = 'n8rzz';
+  const chessEngineServiceFixture = new ChessEngineServiceFixture();
 
   describe('when called without valid args', () => {
     test('should throw', () => {
-      expect(() => new GameModel({} as IGame, usernameMock)).toThrow();
+      expect(() => new GameModel({} as IGame, usernameMock, chessEngineServiceFixture)).toThrow();
     });
   });
 
   describe('when called with valid args', () => {
     test('should not throw', () => {
-      expect(() => new GameModel(validGameResponse, usernameMock)).not.toThrow();
+      expect(() => new GameModel(validGameResponse, usernameMock, chessEngineServiceFixture)).not.toThrow();
     });
   });
 
@@ -25,7 +27,9 @@ describe('GameModel', () => {
           accuracies: undefined as any,
         };
 
-        expect(() => new GameModel(validGameResponseWithoutAccuracies, usernameMock)).not.toThrow();
+        expect(
+          () => new GameModel(validGameResponseWithoutAccuracies, usernameMock, chessEngineServiceFixture),
+        ).not.toThrow();
       });
 
       test('should return -1', () => {
@@ -33,7 +37,7 @@ describe('GameModel', () => {
           ...validGameResponse,
           accuracies: undefined as any,
         };
-        const model = new GameModel(validGameResponseWithoutAccuracies, usernameMock);
+        const model = new GameModel(validGameResponseWithoutAccuracies, usernameMock, chessEngineServiceFixture);
 
         expect(model.accuracy).toEqual(-1);
       });
@@ -41,7 +45,7 @@ describe('GameModel', () => {
 
     describe('when player is white', () => {
       test('should return the corrct value', () => {
-        const model = new GameModel(validGameResponse, usernameMock);
+        const model = new GameModel(validGameResponse, usernameMock, chessEngineServiceFixture);
 
         expect(model.accuracy).toEqual(validGameResponse.accuracies.black);
       });
@@ -49,7 +53,7 @@ describe('GameModel', () => {
 
     describe('when player is black', () => {
       test('should return the corrct value', () => {
-        const model = new GameModel(validGameResponse, 'fafamnl');
+        const model = new GameModel(validGameResponse, 'fafamnl', chessEngineServiceFixture);
 
         expect(model.accuracy).toEqual(validGameResponse.accuracies.white);
       });
@@ -58,13 +62,13 @@ describe('GameModel', () => {
 
   describe('#moveTree', () => {
     test('should be set on instantiation', () => {
-      const model = new GameModel(validGameResponse, usernameMock);
+      const model = new GameModel(validGameResponse, usernameMock, chessEngineServiceFixture);
 
       expect(model.moveTree).not.toEqual({});
     });
 
     test('should include a list of move pairs for a game', () => {
-      const model = new GameModel(validGameResponse, usernameMock);
+      const model = new GameModel(validGameResponse, usernameMock, chessEngineServiceFixture);
       const expectedResult = [
         'e4:e5',
         'Nf3:Nf6',
@@ -88,7 +92,7 @@ describe('GameModel', () => {
     });
 
     test('should be a deeply nested object with move pairs as keys', () => {
-      const model = new GameModel(validGameResponse, usernameMock);
+      const model = new GameModel(validGameResponse, usernameMock, chessEngineServiceFixture);
       const expectedResult = {
         'e4:e5': {
           results: {
@@ -179,7 +183,7 @@ describe('GameModel', () => {
   describe('.findMovesForMoveNumber()', () => {
     describe('when a move exists for both piece colors', () => {
       test('should return a list of both moves', () => {
-        const model = new GameModel(validGameResponse, usernameMock);
+        const model = new GameModel(validGameResponse, usernameMock, chessEngineServiceFixture);
         const result = model.findMovesForMoveNumber(1);
 
         expect(result.length).toEqual(2);
@@ -190,7 +194,7 @@ describe('GameModel', () => {
       describe('and the last moveNumber is requested', () => {
         test('should return a list of just the white move', () => {
           const lastMoveNumber = 25;
-          const model = new GameModel(gameResponseWithWhiteWinner, usernameMock);
+          const model = new GameModel(gameResponseWithWhiteWinner, usernameMock, chessEngineServiceFixture);
           const result = model.findMovesForMoveNumber(lastMoveNumber);
 
           expect(result.length).toEqual(1);

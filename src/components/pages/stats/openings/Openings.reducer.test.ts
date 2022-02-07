@@ -1,3 +1,4 @@
+import { ChessEngineServiceFixture } from '../../../../domain/chess-engine/__mocks__/ChessEngine.service.fixture';
 import { PieceColor } from '../../../../domain/game/games.constants';
 import { GameCollection } from '../../../../domain/game/models/Game.collection';
 import { gameListForSinglePeriod } from '../../../../domain/game/__mocks__/game-day-archive.mocks';
@@ -11,10 +12,12 @@ import {
 } from './__mocks__/openings.reducer.mocks';
 
 describe('openings reducer', () => {
+  const chessEngineServiceFixture = new ChessEngineServiceFixture();
+
   describe('.buildInitialState()', () => {
     describe('when passed valid params', () => {
       test('should not throw', () => {
-        const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 7);
+        const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 7, chessEngineServiceFixture);
 
         expect(() => buildInitialState(collection, PieceColor.White, Timeframe.SevenDays)).not.toThrow();
       });
@@ -24,7 +27,7 @@ describe('openings reducer', () => {
   describe('AddMove action', () => {
     describe('from initialState', () => {
       test('should add #move to #moveList', () => {
-        const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 7);
+        const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 7, chessEngineServiceFixture);
         const initialState = buildInitialState(collection, PieceColor.White, Timeframe.SevenDays);
         const result = reducer(initialState, addMoveActionMock);
 
@@ -32,7 +35,7 @@ describe('openings reducer', () => {
       });
 
       test('should recalculate #chartData', () => {
-        const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 7);
+        const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 7, chessEngineServiceFixture);
         const initialState = buildInitialState(collection, PieceColor.White, Timeframe.SevenDays);
         const originalChartData = { ...initialState.chartData };
         const result = reducer(initialState, addMoveActionMock);
@@ -44,9 +47,9 @@ describe('openings reducer', () => {
 
   describe('ChangeTimeframe action', () => {
     test('should reset #selectedMoveList', () => {
-      const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 7);
+      const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 7, chessEngineServiceFixture);
       const initialState = buildInitialState(collection, PieceColor.White, Timeframe.SevenDays);
-      const nextCollection = new GameCollection('n8rzz', gameListForSinglePeriod, 30);
+      const nextCollection = new GameCollection('n8rzz', gameListForSinglePeriod, 30, chessEngineServiceFixture);
       const result = reducer(initialState, {
         type: changeTimeframeActionMock.type,
         payload: {
@@ -59,9 +62,9 @@ describe('openings reducer', () => {
     });
 
     test('should reset #collection', () => {
-      const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 7);
+      const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 7, chessEngineServiceFixture);
       const initialState = buildInitialState(collection, PieceColor.White, Timeframe.SevenDays);
-      const nextCollection = new GameCollection('n8rzz', gameListForSinglePeriod, 30);
+      const nextCollection = new GameCollection('n8rzz', gameListForSinglePeriod, 30, chessEngineServiceFixture);
       const result = reducer(initialState, {
         type: changeTimeframeActionMock.type,
         payload: {
@@ -76,7 +79,7 @@ describe('openings reducer', () => {
 
   describe('ChangePieceColor action', () => {
     test('should reset #selectedMoveList', () => {
-      const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 7);
+      const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 7, chessEngineServiceFixture);
       const initialState = buildInitialState(collection, PieceColor.White, Timeframe.SevenDays);
 
       initialState.selectedMoveList = ['one', 'two', 'three'];
@@ -87,7 +90,7 @@ describe('openings reducer', () => {
     });
 
     test('should reset #side', () => {
-      const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 7);
+      const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 7, chessEngineServiceFixture);
       const initialState = buildInitialState(collection, PieceColor.White, Timeframe.SevenDays);
       const result = reducer(initialState, changePieceColorActionMock);
 
@@ -97,7 +100,7 @@ describe('openings reducer', () => {
 
   describe('UpdateMoveList action', () => {
     test('should reset #selectedMoveList', () => {
-      const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 7);
+      const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 7, chessEngineServiceFixture);
       const initialState = buildInitialState(collection, PieceColor.White, Timeframe.SevenDays);
 
       initialState.selectedMoveList = ['e4:e5', 'c4:c5', 'f4:f5'];

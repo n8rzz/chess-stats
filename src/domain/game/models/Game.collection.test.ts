@@ -1,3 +1,4 @@
+import { ChessEngineServiceFixture } from '../../chess-engine/__mocks__/ChessEngine.service.fixture';
 import { TimeClass } from '../games.constants';
 import {
   gameListForDate,
@@ -7,9 +8,11 @@ import {
 import { GameCollection } from './Game.collection';
 
 describe('GameCollection', () => {
+  const chessEngineServiceFixture = new ChessEngineServiceFixture();
+
   describe('#firstGame', () => {
     test('should return the first game in #_items', () => {
-      const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 1);
+      const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 1, chessEngineServiceFixture);
 
       // eslint-disable-next-line dot-notation
       expect(collection.firstGame).toBe(collection['_items'][0]);
@@ -18,7 +21,7 @@ describe('GameCollection', () => {
 
   describe('#lastGame', () => {
     test('should return the last game in #_items', () => {
-      const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 1);
+      const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 1, chessEngineServiceFixture);
 
       // eslint-disable-next-line dot-notation
       expect(collection.lastGame).toBe(collection['_items'][collection.length - 1]);
@@ -27,7 +30,7 @@ describe('GameCollection', () => {
 
   describe('#moveTree', () => {
     test('should be set on instantiation', () => {
-      const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 1);
+      const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 1, chessEngineServiceFixture);
 
       // eslint-disable-next-line dot-notation
       expect(collection.moveTree).not.toEqual({});
@@ -37,7 +40,7 @@ describe('GameCollection', () => {
   describe('.groupByPeriod()', () => {
     describe('when #period is 1', () => {
       test('should call .groupByHour()', () => {
-        const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 1);
+        const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 1, chessEngineServiceFixture);
         const groupByHourSpy = jest.spyOn(collection, 'groupByHour');
 
         collection.groupByHour();
@@ -48,7 +51,7 @@ describe('GameCollection', () => {
 
     describe('when #period is not 1', () => {
       test('should call .groupByDay()', () => {
-        const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 2);
+        const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 2, chessEngineServiceFixture);
         const groupByDaySpy = jest.spyOn(collection, 'groupByDay');
 
         collection.groupByDay();
@@ -60,7 +63,7 @@ describe('GameCollection', () => {
 
   describe('.calculateOhlcForPeriod()', () => {
     test('returns the correct data for #period', () => {
-      const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 2);
+      const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 2, chessEngineServiceFixture);
       const result = collection.calculateOhlcForPeriod();
       const expectedResult = [
         {
@@ -80,14 +83,14 @@ describe('GameCollection', () => {
   describe('.createCollectionForPeriodAndTimeClass()', () => {
     describe('when games with TimeClass are present', () => {
       test('returns a new collection instance', () => {
-        const collection = new GameCollection('n8rzz', gameListWithMixedTimeClass, 2);
+        const collection = new GameCollection('n8rzz', gameListWithMixedTimeClass, 2, chessEngineServiceFixture);
         const result = collection.createCollectionForPeriodAndTimeClass(7, TimeClass.Rapid);
 
         expect(result instanceof GameCollection).toEqual(true);
       });
 
       test('returns only games with passed `TimeClass`', () => {
-        const collection = new GameCollection('n8rzz', gameListWithMixedTimeClass, 2);
+        const collection = new GameCollection('n8rzz', gameListWithMixedTimeClass, 2, chessEngineServiceFixture);
         const result = collection.createCollectionForPeriodAndTimeClass(7, TimeClass.Daily);
         // eslint-disable-next-line dot-notation
         const itemsWithExpectedTimeClass = result['_items'].filter((item) => item.time_class === TimeClass.Daily);
@@ -98,13 +101,13 @@ describe('GameCollection', () => {
 
     describe('when games with TimeClass are not present', () => {
       test('does not throw', () => {
-        const collection = new GameCollection('n8rzz', gameListWithMixedTimeClass, 2);
+        const collection = new GameCollection('n8rzz', gameListWithMixedTimeClass, 2, chessEngineServiceFixture);
 
         expect(() => collection.createCollectionForPeriodAndTimeClass(7, TimeClass.Blitz)).not.toThrow();
       });
 
       test('returns an empty collection', () => {
-        const collection = new GameCollection('n8rzz', gameListWithMixedTimeClass, 2);
+        const collection = new GameCollection('n8rzz', gameListWithMixedTimeClass, 2, chessEngineServiceFixture);
         const result = collection.createCollectionForPeriodAndTimeClass(7, TimeClass.Blitz);
 
         expect(result.length).toEqual(0);
@@ -114,7 +117,7 @@ describe('GameCollection', () => {
 
   describe('.countGamesByDate()', () => {
     test('should return a dictionary of dates and numbers', () => {
-      const collection = new GameCollection('n8rzz', gameListForDate, 2);
+      const collection = new GameCollection('n8rzz', gameListForDate, 2, chessEngineServiceFixture);
       const result = collection.countGamesByDate();
       const expectedResult = {
         '4/17/2021': 9,
@@ -126,7 +129,7 @@ describe('GameCollection', () => {
 
   describe('.countResultsByDate()', () => {
     test('should return IDataLabels', () => {
-      const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 1);
+      const collection = new GameCollection('n8rzz', gameListForSinglePeriod, 1, chessEngineServiceFixture);
       const result = collection.countResultsByDate();
       const expectedResult = {
         data: {
@@ -143,7 +146,7 @@ describe('GameCollection', () => {
 
   describe('.calculateMinRating()', () => {
     test('should return the lowest rating from #_items', () => {
-      const collection = new GameCollection('n8rzz', gameListForDate, 1);
+      const collection = new GameCollection('n8rzz', gameListForDate, 1, chessEngineServiceFixture);
 
       expect(collection.findMaxRating()).toEqual(668);
     });
@@ -151,7 +154,7 @@ describe('GameCollection', () => {
 
   describe('.calculateMaxRating()', () => {
     test('should return the highest rating from #_items', () => {
-      const collection = new GameCollection('n8rzz', gameListForDate, 1);
+      const collection = new GameCollection('n8rzz', gameListForDate, 1, chessEngineServiceFixture);
 
       expect(collection.findMaxRating()).toEqual(668);
     });
@@ -159,7 +162,7 @@ describe('GameCollection', () => {
 
   describe('.findOpeningRating()', () => {
     test('returns the rating from the first game', () => {
-      const collection = new GameCollection('n8rzz', gameListForDate, 1);
+      const collection = new GameCollection('n8rzz', gameListForDate, 1, chessEngineServiceFixture);
 
       expect(collection.findOpeningRating()).toEqual(gameListForDate[0].white.rating);
     });
@@ -167,7 +170,7 @@ describe('GameCollection', () => {
 
   describe('.findClosingRating()', () => {
     test('returns the rating from the last game', () => {
-      const collection = new GameCollection('n8rzz', gameListForDate, 1);
+      const collection = new GameCollection('n8rzz', gameListForDate, 1, chessEngineServiceFixture);
 
       expect(collection.findClosingRating()).toEqual(gameListForDate[gameListForDate.length - 1].white.rating);
     });
@@ -175,7 +178,7 @@ describe('GameCollection', () => {
 
   describe('.countGamesBySide()', () => {
     test('returns a count of games from the collection broken down by piece color', () => {
-      const collection = new GameCollection('n8rzz', gameListForDate, 1);
+      const collection = new GameCollection('n8rzz', gameListForDate, 1, chessEngineServiceFixture);
       const result = collection.countGamesBySide();
       const expectedResult = {
         black: 4,
@@ -188,7 +191,7 @@ describe('GameCollection', () => {
 
   describe('.findMaxRating()', () => {
     test('returns the highest rating found in #_items', () => {
-      const collection = new GameCollection('n8rzz', gameListForDate, 1);
+      const collection = new GameCollection('n8rzz', gameListForDate, 1, chessEngineServiceFixture);
       const result = collection.findMaxRating();
 
       expect(result).toEqual(668);
@@ -197,7 +200,7 @@ describe('GameCollection', () => {
 
   describe('.findMinRating()', () => {
     test('returns the lowest rating found in #_items', () => {
-      const collection = new GameCollection('n8rzz', gameListForDate, 1);
+      const collection = new GameCollection('n8rzz', gameListForDate, 1, chessEngineServiceFixture);
       const result = collection.findMinRating();
 
       expect(result).toEqual(647);
@@ -206,7 +209,7 @@ describe('GameCollection', () => {
 
   describe('.findEarliestGameDate()', () => {
     test('returns the date of the first game from #_items', () => {
-      const collection = new GameCollection('n8rzz', gameListForDate, 1);
+      const collection = new GameCollection('n8rzz', gameListForDate, 1, chessEngineServiceFixture);
       const result = collection.findEarliestGameDate();
       const expectedResult = new Date('2021-04-17T05:42:24.000Z');
 
@@ -216,7 +219,7 @@ describe('GameCollection', () => {
 
   describe('.findEarliestRating()', () => {
     test('returns the rating from the earliest game', () => {
-      const collection = new GameCollection('n8rzz', gameListForDate, 1);
+      const collection = new GameCollection('n8rzz', gameListForDate, 1, chessEngineServiceFixture);
       const result = collection.findEarliestRating();
       const expectedResult = 647;
 
@@ -226,7 +229,7 @@ describe('GameCollection', () => {
 
   describe('.findLatestGameDate()', () => {
     test('returns the date of the latest game from #_items', () => {
-      const collection = new GameCollection('n8rzz', gameListForDate, 1);
+      const collection = new GameCollection('n8rzz', gameListForDate, 1, chessEngineServiceFixture);
       const result = collection.findLatestGameDate();
       const expectedResult = new Date('2021-04-18T01:47:29.000Z');
 
@@ -236,7 +239,7 @@ describe('GameCollection', () => {
 
   describe('.findLatestRating()', () => {
     test('returns the rating from the latest game', () => {
-      const collection = new GameCollection('n8rzz', gameListForDate, 1);
+      const collection = new GameCollection('n8rzz', gameListForDate, 1, chessEngineServiceFixture);
       const result = collection.findLatestRating();
       const expectedResult = 661;
 
@@ -246,7 +249,7 @@ describe('GameCollection', () => {
 
   describe('.gatherDetailedGameResults()', () => {
     test('returns totals for each game result from collection', () => {
-      const collection = new GameCollection('n8rzz', gameListForDate, 1);
+      const collection = new GameCollection('n8rzz', gameListForDate, 1, chessEngineServiceFixture);
       const result = collection.gatherDetailedGameResults();
       const expectedResult = {
         checkmated: 3,
@@ -260,7 +263,7 @@ describe('GameCollection', () => {
 
   describe('.gatherSimpleGameResults()', () => {
     test('returns totals for each game result from collection', () => {
-      const collection = new GameCollection('n8rzz', gameListForDate, 1);
+      const collection = new GameCollection('n8rzz', gameListForDate, 1, chessEngineServiceFixture);
       const result = collection.gatherSimpleGameResults();
       const expectedResult = {
         loss: 4,
@@ -273,7 +276,7 @@ describe('GameCollection', () => {
 
   describe('.gatherOpponentAndUserRatingsByDate()', () => {
     test('returns correct #maxRating from both series', () => {
-      const collection = new GameCollection('n8rzz', gameListForDate, 1);
+      const collection = new GameCollection('n8rzz', gameListForDate, 1, chessEngineServiceFixture);
       const result = collection.gatherOpponentAndUserRatingsByDate();
       const expectedResult = 715;
 
@@ -281,7 +284,7 @@ describe('GameCollection', () => {
     });
 
     test('returns correct #minRating from both series', () => {
-      const collection = new GameCollection('n8rzz', gameListForDate, 1);
+      const collection = new GameCollection('n8rzz', gameListForDate, 1, chessEngineServiceFixture);
       const result = collection.gatherOpponentAndUserRatingsByDate();
       const expectedResult = 604;
 
@@ -289,7 +292,7 @@ describe('GameCollection', () => {
     });
 
     test('returns equal length arrays for #opponent and #user', () => {
-      const collection = new GameCollection('n8rzz', gameListForDate, 1);
+      const collection = new GameCollection('n8rzz', gameListForDate, 1, chessEngineServiceFixture);
       const result = collection.gatherOpponentAndUserRatingsByDate();
       const expectedResult = 9;
 

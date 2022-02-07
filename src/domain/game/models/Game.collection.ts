@@ -28,12 +28,14 @@ import {
   TimeClass,
   WinLossDraw,
 } from '../games.constants';
+import { IChessEngineService } from '../../chess-engine/ChessEngine.types';
 
 export class GameCollection {
   public moveTree: any = {};
   public period: number = 0;
   public username: string = '';
 
+  private _chessEngineService: IChessEngineService = null as any;
   private _items: GameModel[] = [];
 
   get firstGame(): GameModel {
@@ -56,9 +58,10 @@ export class GameCollection {
     return this.findEarliestRating() > this.findLatestRating();
   }
 
-  constructor(username: string, json: IGame[], period: number) {
+  constructor(username: string, json: IGame[], period: number, chessEngineService: IChessEngineService) {
     this.period = period;
     this.username = username;
+    this._chessEngineService = chessEngineService;
 
     if (json.length === 0) {
       return;
@@ -70,7 +73,7 @@ export class GameCollection {
 
   public addItems(items: IGame[]): void {
     items.forEach((gameJson: IGame) => {
-      const model = new GameModel(gameJson, this.username);
+      const model = new GameModel(gameJson, this.username, this._chessEngineService);
 
       this.addItem(model);
     });
@@ -133,7 +136,7 @@ export class GameCollection {
   public calculateOhlcForPeriod(): IDayOhlc[] {
     const gamesByDate = this.groupByPeriod();
     const unsortedOhlcData = Object.keys(gamesByDate).reduce((sum: IDayOhlc[], dateKey: string) => {
-      const period = new GameCollection(this.username, gamesByDate[dateKey], 1);
+      const period = new GameCollection(this.username, gamesByDate[dateKey], 1, this._chessEngineService);
 
       return [
         ...sum,
@@ -255,7 +258,7 @@ export class GameCollection {
       return [...sum, item];
     }, []);
 
-    return new GameCollection(this.username, itemsWithinPeriod, period);
+    return new GameCollection(this.username, itemsWithinPeriod, period, this._chessEngineService);
   }
 
   public findOpeningRating(): number {
