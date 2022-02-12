@@ -1,6 +1,6 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
-import { Dimmer, Header, Loader, Segment } from 'semantic-ui-react';
+import { Dimmer, Loader, Segment } from 'semantic-ui-react';
 import styles from '../../../../styles/App.module.css';
 import { GameCollection } from '../../../../domain/game/models/Game.collection';
 import { TimePeriodSummary } from './TimePeriodSummary';
@@ -13,6 +13,7 @@ import { OpponentRatingsScatterChart } from '../../../ui/opponent-ratings-scatte
 import { OpponentAccuracyScatterChart } from '../../../ui/accuracy-scatter-chart/AccuracyScatterChart';
 import { GameResultsOverTime } from '../game-results-over-time/GameResultsOverTime';
 import { Timeframe } from '../StatsPage.constants';
+import { OpeningsHistory } from '../openings-history/OpeningsHistory';
 
 interface IProps {
   gameCollection: GameCollection;
@@ -97,7 +98,7 @@ export const TimePeriodSection: React.FC<IProps> = observer((props) => {
         />
       </section>
       <section className={styles.vr2}>
-        <Header as={'h2'}>{'Openings'}</Header>
+        <OpeningsHistory collection={props.gameCollection} />
       </section>
       <MoveHistory collection={props.gameCollection} timeframe={props.timeframe} />
     </div>
