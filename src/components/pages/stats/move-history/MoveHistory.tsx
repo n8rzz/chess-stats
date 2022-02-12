@@ -4,10 +4,10 @@ import { Button, Header } from 'semantic-ui-react';
 import styles from '../../../../styles/App.module.css';
 import type { GameCollection } from '../../../../domain/game/models/Game.collection';
 import { PieceColor, WinLossDraw } from '../../../../domain/game/games.constants';
-import { reducer, buildInitialState } from './Openings.reducer';
+import { reducer, buildInitialState } from './MoveHistory.reducer';
 import { StackedBarChart } from '../../../ui/stacked-bar-chart/StackedBarChart';
 import { SelectedMoveList } from './selected-move-list/SelectedMoveList';
-import { OpeningsActionName } from './Openings.constants';
+import { MoveHistoryActionName } from './MoveHistory.constants';
 import { Timeframe } from '../StatsPage.constants';
 
 interface IProps {
@@ -15,7 +15,7 @@ interface IProps {
   timeframe: Timeframe;
 }
 
-export const Openings: React.FC<IProps> = (props) => {
+export const MoveHistory: React.FC<IProps> = (props) => {
   const [state, dispatch] = React.useReducer(
     reducer,
     buildInitialState(props.collection, PieceColor.Black, props.timeframe),
@@ -27,7 +27,7 @@ export const Openings: React.FC<IProps> = (props) => {
     };
 
     if (props.timeframe !== state.timeframe) {
-      dispatch({ type: OpeningsActionName.ChangeTimeframe, payload });
+      dispatch({ type: MoveHistoryActionName.ChangeTimeframe, payload });
     }
   }, [props.timeframe]);
 
@@ -37,7 +37,7 @@ export const Openings: React.FC<IProps> = (props) => {
       result: value,
     };
 
-    dispatch({ type: OpeningsActionName.AddMove, payload });
+    dispatch({ type: MoveHistoryActionName.AddMove, payload });
   }, []);
 
   const handleChangePieceColor = React.useCallback((side: PieceColor) => {
@@ -45,7 +45,7 @@ export const Openings: React.FC<IProps> = (props) => {
       result: null,
     };
 
-    dispatch({ type: OpeningsActionName.ChangePieceColor, payload });
+    dispatch({ type: MoveHistoryActionName.ChangePieceColor, payload });
   }, []);
 
   const handleClickMoveListItem = React.useCallback((move: string, index: number) => {
@@ -54,7 +54,7 @@ export const Openings: React.FC<IProps> = (props) => {
       result: null,
     };
 
-    dispatch({ type: OpeningsActionName.UpdateMoveList, payload });
+    dispatch({ type: MoveHistoryActionName.UpdateMoveList, payload });
   }, []);
 
   return (
@@ -104,5 +104,5 @@ export const Openings: React.FC<IProps> = (props) => {
   );
 };
 
-Openings.displayName = 'Openings';
-Openings.defaultProps = {};
+MoveHistory.displayName = 'MoveHistory';
+MoveHistory.defaultProps = {};

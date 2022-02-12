@@ -5,7 +5,7 @@ import styles from '../../../../styles/App.module.css';
 import { GameCollection } from '../../../../domain/game/models/Game.collection';
 import { TimePeriodSummary } from './TimePeriodSummary';
 import { PeriodGameSummaryCharts } from '../period-game-summary-charts/PeriodGameSummaryCharts';
-import { Openings } from '../openings/Openings';
+import { MoveHistory } from '../move-history/MoveHistory';
 import { MovingAveragePeriod, TimeClass } from '../../../../domain/game/games.constants';
 import { CandlestickChart } from '../../../ui/candlestick-chart/CandlestickChart';
 import { AverageRatingChart } from '../../../ui/average-rating-chart/AverageRatingChart';
@@ -99,7 +99,7 @@ export const TimePeriodSection: React.FC<IProps> = observer((props) => {
       <section className={styles.vr2}>
         <Header as={'h2'}>{'Openings'}</Header>
       </section>
-      <Openings collection={props.gameCollection} timeframe={props.timeframe} />
+      <MoveHistory collection={props.gameCollection} timeframe={props.timeframe} />
     </div>
   );
 });

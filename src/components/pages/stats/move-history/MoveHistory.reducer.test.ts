@@ -3,15 +3,15 @@ import { PieceColor } from '../../../../domain/game/games.constants';
 import { GameCollection } from '../../../../domain/game/models/Game.collection';
 import { gameListForSinglePeriod } from '../../../../domain/game/__mocks__/game-day-archive.mocks';
 import { Timeframe } from '../StatsPage.constants';
-import { buildInitialState, reducer } from './Openings.reducer';
+import { buildInitialState, reducer } from './MoveHistory.reducer';
 import {
   addMoveActionMock,
   changePieceColorActionMock,
   changeTimeframeActionMock,
   updateMoveListActionMock,
-} from './__mocks__/openings.reducer.mocks';
+} from './__mocks__/move-history.reducer.mocks';
 
-describe('openings reducer', () => {
+describe('MoveHistory.reducer', () => {
   const chessEngineServiceFixture = new ChessEngineServiceFixture();
 
   describe('.buildInitialState()', () => {

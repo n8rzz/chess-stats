@@ -1,7 +1,7 @@
 import { WinLossDraw, PieceColor } from '../../../../domain/game/games.constants';
 import { GameCollection } from '../../../../domain/game/models/Game.collection';
 import { Timeframe } from '../StatsPage.constants';
-import { OpeningsActionName } from './Openings.constants';
+import { MoveHistoryActionName } from './MoveHistory.constants';
 
 export interface IAction<T> {
   payload: unknown;
@@ -23,7 +23,7 @@ export interface IAction_LEGACY<T> {
   type: T;
 }
 
-export interface IOpeningsState {
+export interface IMoveHistoryState {
   chartData: { [key: string]: number };
   collection: GameCollection;
   selectedMoveList: string[];
@@ -31,26 +31,26 @@ export interface IOpeningsState {
   timeframe: Timeframe;
 }
 
-export interface IAddMoveAction extends IAction<OpeningsActionName.AddMove> {
+export interface IAddMoveAction extends IAction<MoveHistoryActionName.AddMove> {
   payload: {
     move: string;
     result: WinLossDraw;
   };
 }
 
-export interface IChangePieceColorAction extends IAction<OpeningsActionName.ChangePieceColor> {
+export interface IChangePieceColorAction extends IAction<MoveHistoryActionName.ChangePieceColor> {
   payload: {
     result: WinLossDraw | null;
   };
 }
 
-export interface IChangeTimeframeAction extends IAction<OpeningsActionName.ChangeTimeframe> {
+export interface IChangeTimeframeAction extends IAction<MoveHistoryActionName.ChangeTimeframe> {
   payload: {
     collection: GameCollection;
   };
 }
 
-export interface IUpdateMoveListAction extends IAction<OpeningsActionName.UpdateMoveList> {
+export interface IUpdateMoveListAction extends IAction<MoveHistoryActionName.UpdateMoveList> {
   payload: {
     index: number;
     result: WinLossDraw | null;

@@ -1,4 +1,4 @@
-export enum OpeningsActionName {
+export enum MoveHistoryActionName {
   AddMove = 'ADD_MOVE',
   ChangePieceColor = 'CHANGE_PIECE_COLOR',
   ChangeTimeframe = 'CHANGE_TIMEFRAME',
