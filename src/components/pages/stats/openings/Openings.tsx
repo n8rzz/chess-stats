@@ -62,7 +62,7 @@ export const Openings: React.FC<IProps> = (props) => {
       <div className={styles.vr1}>
         <ul className={styles.stereo}>
           <li>
-            <Header as={'h2'}>{'Openings'}</Header>
+            <Header as={'h2'}>{'Move History'}</Header>
           </li>
           <li>
             <Button.Group>

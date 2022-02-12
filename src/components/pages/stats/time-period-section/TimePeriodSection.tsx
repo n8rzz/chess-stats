@@ -1,6 +1,6 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
-import { Dimmer, Loader, Segment } from 'semantic-ui-react';
+import { Dimmer, Header, Loader, Segment } from 'semantic-ui-react';
 import styles from '../../../../styles/App.module.css';
 import { GameCollection } from '../../../../domain/game/models/Game.collection';
 import { TimePeriodSummary } from './TimePeriodSummary';
@@ -95,6 +95,9 @@ export const TimePeriodSection: React.FC<IProps> = observer((props) => {
           title={'Ratings'}
           opponentAndUserRatingsByDate={props.gameCollection.gatherOpponentAndUserRatingsByDate()}
         />
+      </section>
+      <section className={styles.vr2}>
+        <Header as={'h2'}>{'Openings'}</Header>
       </section>
       <Openings collection={props.gameCollection} timeframe={props.timeframe} />
     </div>

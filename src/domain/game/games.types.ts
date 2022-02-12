@@ -142,3 +142,9 @@ export interface IOpponentAccuracyScatterChartData {
   opponent: [Date, number][];
   user: [Date, number][];
 }
+
+export interface IBookOpening {
+  eco: string;
+  moves: string;
+  name: string;
+}

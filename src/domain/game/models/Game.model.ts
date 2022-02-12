@@ -10,7 +10,7 @@ import {
   pieceColorToPgnTurn,
   gameResultToWinLossDraw,
 } from '../games.constants';
-import { IGame, IGameAccuracies, IGamePlayer, PgnItem } from '../games.types';
+import { IBookOpening, IGame, IGameAccuracies, IGamePlayer, PgnItem } from '../games.types';
 
 export class GameModel implements IGame {
   public readonly accuracies: IGameAccuracies = { black: -1, white: -1 };
@@ -29,6 +29,7 @@ export class GameModel implements IGame {
   public moveList: string[] = [];
   public moveTree: any = {};
   public openingTree: any = {};
+  public openingsNameList: string[] = [];
   public pgn_json: PgnItem[] = [];
 
   private _chessEngineService: IChessEngineService = null as any;
@@ -160,14 +161,14 @@ export class GameModel implements IGame {
    *
    * when only one move exists (white won), will return only that move
    */
-  private buildMoveKey(movePair: PgnItem[]): string {
-    let key = movePair[0].notation.notation;
+  private _buildMoveKey(movePair: PgnItem[]): string {
+    const key = movePair[0].notation.notation;
 
-    if (movePair.length > 1) {
-      key = `${key}:${movePair[1].notation.notation}`;
+    if (movePair.length <= 1) {
+      return key;
     }
 
-    return key;
+    return `${key}:${movePair[1].notation.notation}`;
   }
 
   /**
@@ -189,7 +190,7 @@ export class GameModel implements IGame {
   private _buildMoveList(): void {
     const chunkedMoves = this._chunkPgnMoveList();
 
-    this.moveList = chunkedMoves.map((moveGroup: PgnItem[]) => this.buildMoveKey(moveGroup));
+    this.moveList = chunkedMoves.map((moveGroup: PgnItem[]) => this._buildMoveKey(moveGroup));
   }
 
   /**
@@ -238,8 +239,8 @@ export class GameModel implements IGame {
     const result = this.getResult(this._username);
     const ratingEffect = gameResultToWinLossDraw[result];
 
-    this.moveTree = chunkedMoves.reverse().reduce((acc: any, moveGroup: PgnItem[], index: number) => {
-      const key = this.buildMoveKey(moveGroup);
+    this.moveTree = chunkedMoves.reverse().reduce((acc: any, moveGroup: PgnItem[]) => {
+      const key = this._buildMoveKey(moveGroup);
 
       return {
         [key]: {
@@ -259,10 +260,21 @@ export class GameModel implements IGame {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const openingsList = this._findOpeningsForMoveList();
 
-    // console.log('+++ _buildOpeningTree', result, ratingEffect, openingsList);
+    this.openingTree = openingsList.reverse().reduce((acc: any, opening: IBookOpening) => {
+      const key = opening.name;
 
-    // loop through openings in reverse order
-    // build object with openeing name as key and value as meta + result
+      this.openingsNameList.push(opening.name);
+
+      return {
+        [key]: {
+          ...acc,
+          opening,
+          results: {
+            [ratingEffect]: 1,
+          },
+        },
+      };
+    }, {});
   }
 
   /**
@@ -273,7 +285,7 @@ export class GameModel implements IGame {
     return chunk(this.pgn_json, size);
   }
 
-  private _findOpeningsForMoveList(): any[] {
+  private _findOpeningsForMoveList(): IBookOpening[] {
     const openingList = [];
 
     this._chessEngineService.init();
@@ -282,7 +294,7 @@ export class GameModel implements IGame {
       const move = this.moves[i];
 
       this._chessEngineService.move(move);
-      const openingMeta = ChessEcoCodes(this._chessEngineService.fen());
+      const openingMeta: IBookOpening = ChessEcoCodes(this._chessEngineService.fen());
 
       if (!openingMeta && i > 1) {
         break;

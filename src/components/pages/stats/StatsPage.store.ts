@@ -1,4 +1,4 @@
-import { makeAutoObservable, runInAction } from 'mobx';
+import { makeAutoObservable, runInAction, toJS } from 'mobx';
 import Router from 'next/router';
 import { ChessEngineService } from '../../../domain/chess-engine/ChessEngine.service';
 import { TimeClass } from '../../../domain/game/games.constants';
@@ -57,6 +57,7 @@ export class StatsPageStore {
     yield Promise.all([this.loadPlayerStats(username), this.loadGameArchives(username)]);
 
     this.isStoreReady = true;
+    console.log('===', toJS(this._gameCollection.data));
   }
 
   async loadPlayerStats(username: string): Promise<void> {
