@@ -32,6 +32,7 @@ import { IChessEngineService } from '../../chess-engine/ChessEngine.types';
 
 export class GameCollection {
   public moveTree: any = {};
+  public openingsTree: any = {};
   public period: number = 0;
   public username: string = '';
 
@@ -69,6 +70,7 @@ export class GameCollection {
 
     this.addItems(json);
     this._buildMoveTree();
+    this._buildOpeningsTree();
   }
 
   public addItems(items: IGame[]): void {
@@ -490,18 +492,23 @@ export class GameCollection {
     return this._items.map((model: GameModel): IGame => model.toJson());
   }
 
+  private _isNotUndefinedAndIsWinLossDraw(key: string): boolean {
+    const isGameResult = key === WinLossDraw.Draw || key === WinLossDraw.Loss || key === WinLossDraw.Win;
+
+    return typeof key !== 'undefined' && isGameResult;
+  }
+
   // TODO: define type
   // `sumObj` is a recursive type { [key: string]: { recursive } }
-  private _merge(sumObj: any, sourceObj: any): any {
+  private _mergeMoveTrees(sumObj: any, sourceObj: any): any {
     if (typeof sourceObj === 'undefined') {
       return sumObj;
     }
 
     for (const key in sourceObj) {
       try {
-        // Property in destination object set; update its value.
         if (sourceObj[key].constructor == Object) {
-          sumObj[key] = this._merge(sumObj[key], sourceObj[key]);
+          sumObj[key] = this._mergeMoveTrees(sumObj[key], sourceObj[key]);
 
           continue;
         }
@@ -521,13 +528,73 @@ export class GameCollection {
     return sumObj;
   }
 
+  private _mergeOpeningsTrees(sum: any, opening: any): any {
+    if (typeof opening === 'undefined') {
+      return sum;
+    }
+
+    for (const key in opening) {
+      try {
+        const isOpeningKey = key !== 'results' && key !== 'opening';
+        // const focusedOpening = opening[key];
+
+        if (isOpeningKey && opening[key].constructor == Object) {
+          sum[key] = this._mergeOpeningsTrees(sum[key], opening[key]);
+
+          continue;
+        }
+
+        if (key === 'opening') {
+          sum[key] = opening[key];
+
+          continue;
+        }
+
+        if (key === 'results') {
+          const sumResults = sum[key];
+          const focusedOpeningResults = opening[key];
+
+          sum.results = {
+            [WinLossDraw.Draw]: sumResults[WinLossDraw.Draw] + focusedOpeningResults[WinLossDraw.Draw],
+            [WinLossDraw.Loss]: sumResults[WinLossDraw.Loss] + focusedOpeningResults[WinLossDraw.Loss],
+            [WinLossDraw.Win]: sumResults[WinLossDraw.Win] + focusedOpeningResults[WinLossDraw.Win],
+          };
+
+          continue;
+        }
+
+        sum[key] = opening[key];
+      } catch (e) {
+        sum[key] = opening[key];
+      }
+    }
+
+    return sum;
+  }
+
   private _buildMoveTree(): void {
     const moveTreesForBlack = this._gatherGamesForSide(PieceColor.Black).map((game: GameModel) => game.moveTree);
     const moveTreesForWhite = this._gatherGamesForSide(PieceColor.White).map((game: GameModel) => game.moveTree);
 
     this.moveTree = {
-      [PieceColor.Black]: moveTreesForBlack.reduce((sum: any, moveTree: any[]) => this._merge(sum, moveTree), {}),
-      [PieceColor.White]: moveTreesForWhite.reduce((sum: any, moveTree: any[]) => this._merge(sum, moveTree), {}),
+      [PieceColor.Black]: moveTreesForBlack.reduce(
+        (sum: any, moveTree: any[]) => this._mergeMoveTrees(sum, moveTree),
+        {},
+      ),
+      [PieceColor.White]: moveTreesForWhite.reduce(
+        (sum: any, moveTree: any[]) => this._mergeMoveTrees(sum, moveTree),
+        {},
+      ),
+    };
+  }
+
+  private _buildOpeningsTree(): void {
+    const openingsTreeForBlack = this._gatherGamesForSide(PieceColor.Black).map((game: GameModel) => game.openingTree);
+    const openingsTreeForWhite = this._gatherGamesForSide(PieceColor.White).map((game: GameModel) => game.openingTree);
+
+    this.openingsTree = {
+      [PieceColor.Black]: openingsTreeForBlack.reduce((sum, opening) => this._mergeOpeningsTrees(sum, opening), {}),
+      [PieceColor.White]: openingsTreeForWhite.reduce((sum, opening) => this._mergeOpeningsTrees(sum, opening), {}),
     };
   }
 

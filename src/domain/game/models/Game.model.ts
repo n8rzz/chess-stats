@@ -9,6 +9,7 @@ import {
   GameResult,
   pieceColorToPgnTurn,
   gameResultToWinLossDraw,
+  WinLossDraw,
 } from '../games.constants';
 import { IBookOpening, IGame, IGameAccuracies, IGamePlayer, PgnItem } from '../games.types';
 
@@ -255,13 +256,16 @@ export class GameModel implements IGame {
 
   private _buildOpeningTree(): void {
     const result = this.getResult(this._username);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const ratingEffect = gameResultToWinLossDraw[result];
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const openingsList = this._findOpeningsForMoveList();
 
     this.openingTree = openingsList.reverse().reduce((acc: any, opening: IBookOpening) => {
       const key = opening.name;
+      const defaultResults = {
+        [WinLossDraw.Draw]: 0,
+        [WinLossDraw.Loss]: 0,
+        [WinLossDraw.Win]: 0,
+      };
 
       this.openingsNameList.push(opening.name);
 
@@ -270,6 +274,7 @@ export class GameModel implements IGame {
           ...acc,
           opening,
           results: {
+            ...defaultResults,
             [ratingEffect]: 1,
           },
         },

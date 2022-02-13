@@ -3,12 +3,15 @@ import clsx from 'clsx';
 import { Button, Header } from 'semantic-ui-react';
 import styles from '../../../../styles/App.module.css';
 import { GameCollection } from '../../../../domain/game/models/Game.collection';
+import { PieceColor } from '../../../../domain/game/games.constants';
 
 interface IProps {
   collection: GameCollection;
 }
 
 export const OpeningsHistory: React.FC<IProps> = (props) => {
+  const [side, setSide] = React.useState<PieceColor>(PieceColor.Black);
+
   return (
     <div className={clsx(styles.container, styles.vr3)}>
       <div className={styles.vr1}>
@@ -19,22 +22,21 @@ export const OpeningsHistory: React.FC<IProps> = (props) => {
           <li>
             <Button.Group>
               <Button
-                active={true}
-                // active={state.side === PieceColor.Black}
-                // disabled={state.side === PieceColor.Black}
+                active={side === PieceColor.Black}
+                disabled={side === PieceColor.Black}
                 toggle={true}
                 size={'tiny'}
-                // onClick={() => handleChangePieceColor(PieceColor.Black)}
+                onClick={() => setSide(PieceColor.Black)}
               >
                 Black
               </Button>
               <Button.Or />
               <Button
-                // active={state.side === PieceColor.White}
-                // disabled={state.side === PieceColor.White}
+                active={side === PieceColor.White}
+                disabled={side === PieceColor.White}
                 toggle={true}
                 size={'tiny'}
-                // onClick={() => handleChangePieceColor(PieceColor.White)}
+                onClick={() => setSide(PieceColor.White)}
               >
                 White
               </Button>
@@ -42,7 +44,7 @@ export const OpeningsHistory: React.FC<IProps> = (props) => {
           </li>
         </ul>
       </div>
-      <div>OPENINGS LIST FOR SIDE</div>
+      <div>OPENINGS LIST FOR {side}</div>
     </div>
   );
 };
