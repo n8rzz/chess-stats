@@ -3,6 +3,7 @@ import React from 'react';
 import { WinLossDraw } from '../../../domain/game/games.constants';
 import styles from '../../../styles/App.module.css';
 
+// FIXME: move to shared location
 export interface IStackedBarChartRowItem {
   label: WinLossDraw;
   value: number;
@@ -44,6 +45,8 @@ export const StackedBarChartRow: React.FC<IProps> = (props) => {
           if (dataItem.value === 0) {
             return null;
           }
+
+          console.log('winLossDraw', dataItem.label === WinLossDraw.Win);
 
           return (
             <div

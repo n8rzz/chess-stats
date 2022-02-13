@@ -3,7 +3,8 @@ import clsx from 'clsx';
 import { Button, Header } from 'semantic-ui-react';
 import styles from '../../../../styles/App.module.css';
 import { GameCollection } from '../../../../domain/game/models/Game.collection';
-import { PieceColor } from '../../../../domain/game/games.constants';
+import { PieceColor, WinLossDraw } from '../../../../domain/game/games.constants';
+import { IStackedBarChartRowItem, StackedBarChartRow } from '../../../ui/stacked-bar-chart/StackedBarChartRow';
 
 interface IProps {
   collection: GameCollection;
@@ -11,6 +12,12 @@ interface IProps {
 
 export const OpeningsHistory: React.FC<IProps> = (props) => {
   const [side, setSide] = React.useState<PieceColor>(PieceColor.Black);
+
+  const handleAddOpening = React.useCallback((move: string, value: WinLossDraw) => {
+    console.log('+++', move, value);
+  }, []);
+
+  console.log('===', props.collection);
 
   return (
     <div className={clsx(styles.container, styles.vr3)}>
@@ -44,7 +51,38 @@ export const OpeningsHistory: React.FC<IProps> = (props) => {
           </li>
         </ul>
       </div>
-      <div>OPENINGS LIST FOR {side}</div>
+
+      <section className={styles.vr2}>
+        <div className={styles.stackedBarChart}>
+          <div className={styles.stackedBarChartHd}>
+            {/* <ul className={styles.stereo}>
+              <li>{leftColumnTitle}</li>
+              <li>{rightColumnTitle}</li>
+            </ul> */}
+          </div>
+          <div className={styles.stackedBarChartBd}>
+            {Object.keys(props.collection.openingsTree[side]).map((key) => {
+              const barChartData = Object.keys(props.collection.openingsTree[side][key].results).map(
+                (winLossDraw: string): IStackedBarChartRowItem => ({
+                  label: winLossDraw as WinLossDraw,
+                  value: props.collection.openingsTree[side][key].results[winLossDraw],
+                }),
+              );
+
+              return (
+                <StackedBarChartRow
+                  data={barChartData}
+                  key={key}
+                  leftAxisLabel={key}
+                  move={key}
+                  onClickDataItem={handleAddOpening}
+                  rightAxisLabel=""
+                />
+              );
+            })}
+          </div>
+        </div>
+      </section>
     </div>
   );
 };
