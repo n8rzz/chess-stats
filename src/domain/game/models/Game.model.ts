@@ -262,9 +262,9 @@ export class GameModel implements IGame {
     this.openingTree = openingsList.reverse().reduce((acc: any, opening: IBookOpening) => {
       const key = opening.name;
       const defaultResults = {
+        [WinLossDraw.Win]: 0,
         [WinLossDraw.Draw]: 0,
         [WinLossDraw.Loss]: 0,
-        [WinLossDraw.Win]: 0,
       };
 
       this.openingsNameList.push(opening.name);

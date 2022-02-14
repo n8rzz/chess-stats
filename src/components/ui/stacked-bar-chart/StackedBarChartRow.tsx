@@ -36,7 +36,14 @@ export const StackedBarChartRow: React.FC<IProps> = (props) => {
 
   return (
     <div className={styles.stackedBarChartBdRow}>
-      <div className={styles.stackedBarChartBdRowLeftAxisLabel}>{props.leftAxisLabel}</div>
+      <div
+        className={clsx({
+          [styles.stackedBarChartBdRowLeftAxisLabel]: true,
+          [styles.stackedBarChartBdRowLeftAxisLabelFocusedLabel]: props.rightAxisLabel === '',
+        })}
+      >
+        {props.leftAxisLabel}
+      </div>
       <div className={styles.stackedBarChartBdRowData}>
         {props.data.map((dataItem: IStackedBarChartRowItem, index: number) => {
           const isLastItem = props.data.length === index;
@@ -45,8 +52,6 @@ export const StackedBarChartRow: React.FC<IProps> = (props) => {
           if (dataItem.value === 0) {
             return null;
           }
-
-          console.log('winLossDraw', dataItem.label === WinLossDraw.Win);
 
           return (
             <div

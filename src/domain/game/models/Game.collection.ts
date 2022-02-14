@@ -555,9 +555,9 @@ export class GameCollection {
           const focusedOpeningResults = opening[key];
 
           sum.results = {
+            [WinLossDraw.Win]: sumResults[WinLossDraw.Win] + focusedOpeningResults[WinLossDraw.Win],
             [WinLossDraw.Draw]: sumResults[WinLossDraw.Draw] + focusedOpeningResults[WinLossDraw.Draw],
             [WinLossDraw.Loss]: sumResults[WinLossDraw.Loss] + focusedOpeningResults[WinLossDraw.Loss],
-            [WinLossDraw.Win]: sumResults[WinLossDraw.Win] + focusedOpeningResults[WinLossDraw.Win],
           };
 
           continue;

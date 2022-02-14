@@ -5,6 +5,7 @@ import styles from '../../../../styles/App.module.css';
 import { GameCollection } from '../../../../domain/game/models/Game.collection';
 import { PieceColor, WinLossDraw } from '../../../../domain/game/games.constants';
 import { IStackedBarChartRowItem, StackedBarChartRow } from '../../../ui/stacked-bar-chart/StackedBarChartRow';
+import { SelectedMoveList } from '../move-history/selected-move-list/SelectedMoveList';
 
 interface IProps {
   collection: GameCollection;
@@ -12,12 +13,32 @@ interface IProps {
 
 export const OpeningsHistory: React.FC<IProps> = (props) => {
   const [side, setSide] = React.useState<PieceColor>(PieceColor.Black);
+  const [selectedOpeningsList, setSelectedOpeningsList] = React.useState<string[]>([]);
+  const [selectedOpeningsTree, setSelectedOpeningsTree] = React.useState(props.collection.openingsTree[side]);
 
-  const handleAddOpening = React.useCallback((move: string, value: WinLossDraw) => {
-    console.log('+++', move, value);
-  }, []);
+  const handleChangeSide = React.useCallback(
+    (nextSide: PieceColor) => {
+      setSide(nextSide);
+      setSelectedOpeningsList([]);
+      setSelectedOpeningsTree(props.collection.openingsTree[nextSide]);
+    },
+    [selectedOpeningsList, props.collection],
+  );
 
-  console.log('===', props.collection);
+  const handleClicOpeningListItem = React.useCallback(
+    (move: string, index: number) => {
+      console.log('+++ handleClicOpeningListItem', move, index);
+    },
+    [selectedOpeningsTree],
+  );
+
+  const handleAddOpening = React.useCallback(
+    (move: string, value: WinLossDraw) => {
+      setSelectedOpeningsList([...selectedOpeningsList, move]);
+      setSelectedOpeningsTree(selectedOpeningsTree[move]);
+    },
+    [selectedOpeningsList, selectedOpeningsTree],
+  );
 
   return (
     <div className={clsx(styles.container, styles.vr3)}>
@@ -33,7 +54,7 @@ export const OpeningsHistory: React.FC<IProps> = (props) => {
                 disabled={side === PieceColor.Black}
                 toggle={true}
                 size={'tiny'}
-                onClick={() => setSide(PieceColor.Black)}
+                onClick={() => handleChangeSide(PieceColor.Black)}
               >
                 Black
               </Button>
@@ -43,7 +64,7 @@ export const OpeningsHistory: React.FC<IProps> = (props) => {
                 disabled={side === PieceColor.White}
                 toggle={true}
                 size={'tiny'}
-                onClick={() => setSide(PieceColor.White)}
+                onClick={() => handleChangeSide(PieceColor.White)}
               >
                 White
               </Button>
@@ -53,33 +74,33 @@ export const OpeningsHistory: React.FC<IProps> = (props) => {
       </div>
 
       <section className={styles.vr2}>
-        <div className={styles.stackedBarChart}>
-          <div className={styles.stackedBarChartHd}>
-            {/* <ul className={styles.stereo}>
-              <li>{leftColumnTitle}</li>
-              <li>{rightColumnTitle}</li>
-            </ul> */}
-          </div>
-          <div className={styles.stackedBarChartBd}>
-            {Object.keys(props.collection.openingsTree[side]).map((key) => {
-              const barChartData = Object.keys(props.collection.openingsTree[side][key].results).map(
-                (winLossDraw: string): IStackedBarChartRowItem => ({
-                  label: winLossDraw as WinLossDraw,
-                  value: props.collection.openingsTree[side][key].results[winLossDraw],
-                }),
-              );
+        <SelectedMoveList moveList={selectedOpeningsList} onClickMove={handleClicOpeningListItem} />
+      </section>
 
-              return (
-                <StackedBarChartRow
-                  data={barChartData}
-                  key={key}
-                  leftAxisLabel={key}
-                  move={key}
-                  onClickDataItem={handleAddOpening}
-                  rightAxisLabel=""
-                />
-              );
-            })}
+      <section className={styles.vr2}>
+        <div className={styles.stackedBarChart}>
+          <div className={styles.stackedBarChartBd}>
+            {Object.keys(selectedOpeningsTree)
+              .filter((key: string) => key !== 'opening' && key !== 'results')
+              .map((key) => {
+                const chartData = Object.keys(selectedOpeningsTree[key].results).map(
+                  (winLossDraw: string): IStackedBarChartRowItem => ({
+                    label: winLossDraw as WinLossDraw,
+                    value: selectedOpeningsTree[key].results[winLossDraw],
+                  }),
+                );
+
+                return (
+                  <StackedBarChartRow
+                    data={chartData}
+                    key={key}
+                    leftAxisLabel={key}
+                    move={key}
+                    onClickDataItem={handleAddOpening}
+                    rightAxisLabel=""
+                  />
+                );
+              })}
           </div>
         </div>
       </section>

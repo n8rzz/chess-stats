@@ -6,6 +6,7 @@
 .hlistSpacious {
   align-items: center;
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-start;
   list-style: none;
 }
@@ -117,6 +118,11 @@
 .stackedBarChartBdRowLeftAxisLabel {
   padding-right: 10px;
   text-align: right;
+}
+
+.stackedBarChartBdRowLeftAxisLabelFocusedLabel {
+  min-width: 200px !important;
+  text-align: left;
 }
 
 .stackedBarChartBdRowRightAxisLabel {
